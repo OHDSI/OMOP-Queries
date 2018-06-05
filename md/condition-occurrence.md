@@ -1,48 +1,49 @@
-### CO04:Count In what place of service where condition diagnoses.
+CO04:Count In what place of service where condition diagnoses.
+------------------
 
-### Returns the distribution of the visit place of service where the condition was reported.
+Returns the distribution of the visit place of service where the condition was reported.
 
 **Sample query:**
 
-SELECT concept\_name AS place\_of\_service\_name, place\_freq
+    SELECT concept\_name AS place\_of\_service\_name, place\_freq
 
-FROM (
+    FROM (
 
-SELECT care\_site\_id, count(\*) AS place\_freq
+    SELECT care\_site\_id, count(\*) AS place\_freq
 
-FROM (
+    FROM (
 
-SELECT care\_site\_id
+    SELECT care\_site\_id
 
-FROM (
+    FROM (
 
-SELECT visit\_occurrence\_id
+    SELECT visit\_occurrence\_id
 
-FROM condition\_occurrence
+    FROM condition\_occurrence
 
-WHERE condition\_concept\_id = 31967
+    WHERE condition\_concept\_id = 31967
 
-AND visit\_occurrence\_id
+    AND visit\_occurrence\_id
 
-IS NOT NULL) AS from\_cond
+    IS NOT NULL) AS from\_cond
 
-LEFT JOIN (
+    LEFT JOIN (
 
-SELECT visit\_occurrence\_id, care\_site\_id
+    SELECT visit\_occurrence\_id, care\_site\_id
 
-FROM visit\_occurrence) AS from\_visit ON from\_cond.visit\_occurrence\_id=from\_visit.visit\_occurrence\_id )
+    FROM visit\_occurrence) AS from\_visit ON from\_cond.visit\_occurrence\_id=from\_visit.visit\_occurrence\_id )
 
-GROUP BY care\_site\_id
+    GROUP BY care\_site\_id
 
-ORDER BY place\_freq ) AS place\_id\_count
+    ORDER BY place\_freq ) AS place\_id\_count
 
-LEFT JOIN (
+    LEFT JOIN (
 
-SELECT concept\_id, concept\_name
+    SELECT concept\_id, concept\_name
 
-FROM concept) AS place\_concept ON place\_id\_count.care\_site\_id=place\_concept.concept\_id
+    FROM concept) AS place\_concept ON place\_id\_count.care\_site\_id=place\_concept.concept\_id
 
-ORDER BY place\_freq;
+    ORDER BY place\_freq;
 
 **Input:**
 
@@ -67,79 +68,78 @@ ORDER BY place\_freq;
 | --- | --- |
 | place\_of\_service\_name | Emergency Room |
 | place\_freq | 35343 |
-**CO05**** :**Breakout of condition by gender, age
+
+CO05: Breakout of condition by gender, age
+---------------
 
 Returns the distribution of condition breakouts per gender and age.
 
 **Sample query:**
 
-SELECT
-
-  concept\_name AS gender,
-
-  age,
-
-  gender\_age\_freq
-
-FROM (
-
-  SELECT
-
-    gender\_concept\_id,
-
-    age,
-
-    COUNT(1) gender\_age\_freq
-
-  FROM (
-
     SELECT
-
-      year\_of\_birth,
-
-      month\_of\_birth,
-
-      day\_of\_birth,
-
-      gender\_concept\_id,
-
-      condition\_start\_date,
-
-      DATEDIFF(years, CONVERT(DateTime, year\_of\_birth||'-01-01'), condition\_start\_date) AS age
+      concept\_name AS gender,
+      age,
+      gender\_age\_freq
 
     FROM (
 
       SELECT
 
-        person\_id,
+        gender\_concept\_id,
 
-        condition\_start\_date
+        age,
 
-      FROM condition\_occurrence
+        COUNT(1) gender\_age\_freq
 
-      WHERE
+      FROM (
 
-        condition\_concept\_id = 31967 AND
+        SELECT
 
-        person\_id IS NOT NULL
+          year\_of\_birth,
+    
+          month\_of\_birth,
 
-    ) AS from\_cond
+          day\_of\_birth,
 
-    LEFT JOIN person as from\_person ON from\_cond.person\_id=from\_person.person\_id ) AS gender\_count
+          gender\_concept\_id,
 
-  GROUP BY
+          condition\_start\_date,
 
-    gender\_concept\_id,
+          DATEDIFF(years, CONVERT(DateTime, year\_of\_birth||'-01-01'), condition\_start\_date) AS age
 
-    age
+        FROM (
 
-  ORDER BY gender\_age\_freq
+          SELECT
 
-) AS gender\_id\_age\_count
+            person\_id,
 
-LEFT JOIN concept as concept\_list ON gender\_id\_age\_count.gender\_concept\_id=concept\_list.concept\_id
+            condition\_start\_date
 
-ORDER BY gender\_age\_freq DESC;
+          FROM condition\_occurrence
+
+          WHERE
+
+            condition\_concept\_id = 31967 AND
+
+            person\_id IS NOT NULL
+
+        ) AS from\_cond
+
+        LEFT JOIN person as from\_person ON from\_cond.person\_id=from\_person.person\_id ) AS gender\_count
+
+      GROUP BY
+
+        gender\_concept\_id,
+
+        age
+
+      ORDER BY gender\_age\_freq
+
+    ) AS gender\_id\_age\_count
+
+    LEFT JOIN concept as concept\_list ON gender\_id\_age\_count.gender\_concept\_id=concept\_list.concept\_id
+
+    ORDER BY gender\_age\_freq DESC;
 
 **Input:**
 
@@ -162,65 +162,67 @@ ORDER BY gender\_age\_freq DESC;
 | gender | Female |
 | age | 50 |
 | gender\_age\_freq | 3136 |
-### CO06:What are a person's comorbidities.
+
+CO06:What are a person's comorbidities.
+-------------------
 
 ### Returns all coexisting conditions for a given person as defined in the condition\_era table.
 
 **Sample query:**
 
-SELECT DISTINCT
+    SELECT DISTINCT
 
-  CASE WHEN concept\_name\_1>concept\_name\_2 THEN concept\_name\_1 ELSE concept\_name\_2 END as condition1,
+      CASE WHEN concept\_name\_1>concept\_name\_2 THEN concept\_name\_1 ELSE concept\_name\_2 END as condition1,
 
-  CASE WHEN concept\_name\_1>concept\_name\_2 THEN concept\_name\_2 ELSE concept\_name\_1 END AS condition2
-
-FROM (
-
-  SELECT
-
-    concept\_name\_1,
-
-    concept\_name AS concept\_name\_2
-
-  FROM (
-
-    SELECT
-
-      condition\_concept\_id\_2,
-
-      concept\_name AS concept\_name\_1
+      CASE WHEN concept\_name\_1>concept\_name\_2 THEN concept\_name\_2 ELSE concept\_name\_1 END AS condition2
 
     FROM (
 
       SELECT
 
-        table1.condition\_concept\_id AS condition\_concept\_id\_1,
+        concept\_name\_1,
 
-        table2.condition\_concept\_id AS condition\_concept\_id\_2
+        concept\_name AS concept\_name\_2
 
-      FROM
+      FROM (
 
-        (SELECT \* FROM condition\_era WHERE person\_id = 136931019) AS table1,
+        SELECT
 
-        (SELECT \* FROM condition\_era WHERE person\_id = 136931019) AS table2
+          condition\_concept\_id\_2,
 
-      WHERE
+          concept\_name AS concept\_name\_1
 
-        table2.condition\_era\_start\_date <= table1.condition\_era\_end\_date AND
+        FROM (
 
-        (table2.condition\_era\_end\_date IS NULL OR table2.condition\_era\_end\_date >= table1.condition\_era\_start\_date) AND
+          SELECT
 
-        table1.condition\_concept\_id<>table2.condition\_concept\_id
+            table1.condition\_concept\_id AS condition\_concept\_id\_1,
 
-    ) AS comorb
+            table2.condition\_concept\_id AS condition\_concept\_id\_2
 
-    LEFT JOIN concept AS concept\_list ON comorb.condition\_concept\_id\_1=concept\_list.concept\_id
+          FROM
 
-  ) AS comorb2
+            (SELECT \* FROM condition\_era WHERE person\_id = 136931019) AS table1,
 
-  LEFT JOIN concept AS concept\_list ON comorb2.condition\_concept\_id\_2=concept\_list.concept\_id
+            (SELECT \* FROM condition\_era WHERE person\_id = 136931019) AS table2
 
-) AS condition\_pairs;
+          WHERE
+
+            table2.condition\_era\_start\_date <= table1.condition\_era\_end\_date AND
+
+            (table2.condition\_era\_end\_date IS NULL OR table2.condition\_era\_end\_date >= table1.condition\_era\_start\_date) AND
+
+            table1.condition\_concept\_id<>table2.condition\_concept\_id
+
+        ) AS comorb
+
+        LEFT JOIN concept AS concept\_list ON comorb.condition\_concept\_id\_1=concept\_list.concept\_id
+
+      ) AS comorb2
+
+      LEFT JOIN concept AS concept\_list ON comorb2.condition\_concept\_id\_2=concept\_list.concept\_id
+
+    ) AS condition\_pairs;
 
 **Input:**
 
@@ -241,115 +243,117 @@ FROM (
 | --- | --- |
 | Condition 1 | Hyperlipidemia |
 | Condition 2 | Abnormal breathing |
-**CO07**** :**Frequency of hospitalized for a condition
+
+CO07: Frequency of hospitalized for a condition
+-----------
 
 Returns the distribution of number of times a person has been hospitalized where a certain condition was reported.
 
 **Sample query:**
 
-SELECT
+    SELECT
 
-  number\_of\_hospitlizations,
+      number\_of\_hospitlizations,
 
-  count(\*) AS persons\_freq
-
-FROM (
-
-  SELECT
-
-    person\_id,
-
-    COUNT(\*) AS number\_of\_hospitlizations
-
-  FROM (
-
-    SELECT distinct
-
-      condition\_era\_id,
-
-      era.person\_id
+      count(\*) AS persons\_freq
 
     FROM (
 
       SELECT
 
-        condition\_start\_date,
+        person\_id,
 
-        condition\_end\_date,
-
-        from\_cond.person\_id
+        COUNT(\*) AS number\_of\_hospitlizations
 
       FROM (
 
-        SELECT
+        SELECT distinct
 
-          visit\_occurrence\_id,
+          condition\_era\_id,
 
-          condition\_start\_date,
+          era.person\_id
 
-          condition\_end\_date,
+        FROM (
 
-          person\_id
+          SELECT
 
-        FROM condition\_occurrence
+            condition\_start\_date,
+
+            condition\_end\_date,
+
+            from\_cond.person\_id
+
+          FROM (
+
+            SELECT
+
+              visit\_occurrence\_id,
+
+              condition\_start\_date,
+
+              condition\_end\_date,
+
+              person\_id
+
+            FROM condition\_occurrence
+
+            WHERE
+
+              condition\_concept\_id=31967 AND
+
+              visit\_occurrence\_id IS NOT NULL
+
+          ) AS FROM\_cond
+
+          JOIN visit\_occurrence AS FROM\_visit
+
+            ON FROM\_cond.visit\_occurrence\_id=FROM\_visit.visit\_occurrence\_id
+
+          JOIN care\_site cs on from\_visit.care\_site\_id=cs.care\_site\_id
+
+             where place\_of\_service\_concept\_id=8717
+
+        ) AS occurr,
+
+        (
+
+          SELECT
+
+            condition\_era\_id,
+
+            person\_id,
+
+            condition\_era\_start\_date,
+
+            condition\_era\_end\_date
+
+          FROM condition\_era
+
+          WHERE condition\_concept\_id=31967
+
+        ) AS era
 
         WHERE
 
-          condition\_concept\_id=31967 AND
+          era.person\_id=occurr.person\_id AND
 
-          visit\_occurrence\_id IS NOT NULL
+          era.condition\_era\_start\_date <= occurr.condition\_end\_date AND
 
-      ) AS FROM\_cond
+          (era.condition\_era\_end\_date IS NULL OR era.condition\_era\_end\_date >= occurr.condition\_start\_date)
 
-      JOIN visit\_occurrence AS FROM\_visit
+      )
 
-        ON FROM\_cond.visit\_occurrence\_id=FROM\_visit.visit\_occurrence\_id
+      GROUP BY person\_id
 
-      JOIN care\_site cs on from\_visit.care\_site\_id=cs.care\_site\_id
+      ORDER BY number\_of\_hospitlizations desc
 
-         where place\_of\_service\_concept\_id=8717
+    )
 
-    ) AS occurr,
+    GROUP BY number\_of\_hospitlizations
 
-    (
+    ORDER BY persons\_freq desc
 
-      SELECT
-
-        condition\_era\_id,
-
-        person\_id,
-
-        condition\_era\_start\_date,
-
-        condition\_era\_end\_date
-
-      FROM condition\_era
-
-      WHERE condition\_concept\_id=31967
-
-    ) AS era
-
-    WHERE
-
-      era.person\_id=occurr.person\_id AND
-
-      era.condition\_era\_start\_date <= occurr.condition\_end\_date AND
-
-      (era.condition\_era\_end\_date IS NULL OR era.condition\_era\_end\_date >= occurr.condition\_start\_date)
-
-  )
-
-  GROUP BY person\_id
-
-  ORDER BY number\_of\_hospitlizations desc
-
-)
-
-GROUP BY number\_of\_hospitlizations
-
-ORDER BY persons\_freq desc
-
-;
+    ;
 
 **Input:**
 
@@ -370,63 +374,65 @@ ORDER BY persons\_freq desc
 | --- | --- |
 | number\_of\_hospitlizations | 2 |
 | persons\_freq | 177 |
-**CO08**** :**Duration of hospitalization for a conditions
+
+CO08: Duration of hospitalization for a conditions
+-----------
 
 Returns the the average length in days of all hospitalizations where a certain condition was reported
 
 **Sample query:**
 
-SELECT
-
-  avg(hosp\_no\_days) AS average\_hosp\_duration\_count
-
-FROM (
-
-  SELECT DISTINCT
-
-    hosp\_no\_days,
-
-    person\_id,
-
-    from\_visit.visit\_occurrence\_id
-
-  FROM (
-
     SELECT
 
-      visit\_occurrence\_id, condition\_start\_date, condition\_end\_date, person\_id
+      avg(hosp\_no\_days) AS average\_hosp\_duration\_count
 
-    FROM condition\_occurrence
+    FROM (
 
-    WHERE
+      SELECT DISTINCT
 
-      condition\_concept\_id = 31967 AND
+        hosp\_no\_days,
 
-      visit\_occurrence\_id IS NOT NULL
+        person\_id,
 
-  ) AS from\_cond
+        from\_visit.visit\_occurrence\_id
 
-  JOIN (
+      FROM (
 
-    SELECT
+        SELECT
 
-      DATEDIFF(DAY, visit\_start\_date, visit\_end\_date) + 1 AS hosp\_no\_days,
+          visit\_occurrence\_id, condition\_start\_date, condition\_end\_date, person\_id
 
-      visit\_start\_date,
+        FROM condition\_occurrence
 
-      visit\_occurrence\_id,
+        WHERE
 
-      place\_of\_service\_concept\_id
+          condition\_concept\_id = 31967 AND
 
-    FROM visit\_occurrence v
+          visit\_occurrence\_id IS NOT NULL
 
-    JOIN care\_site c on v.care\_site\_id=c.care\_site\_id
+      ) AS from\_cond
 
-    WHERE place\_of\_service\_concept\_id = 8717
+      JOIN (
 
-  ) AS from\_visit
+        SELECT
 
-    ON from\_cond.visit\_occurrence\_id = from\_visit.visit\_occurrence\_id );
+          DATEDIFF(DAY, visit\_start\_date, visit\_end\_date) + 1 AS hosp\_no\_days,
+
+          visit\_start\_date,
+
+          visit\_occurrence\_id,
+
+          place\_of\_service\_concept\_id
+
+        FROM visit\_occurrence v
+
+        JOIN care\_site c on v.care\_site\_id=c.care\_site\_id
+
+        WHERE place\_of\_service\_concept\_id = 8717
+
+      ) AS from\_visit
+
+        ON from\_cond.visit\_occurrence\_id = from\_visit.visit\_occurrence\_id );
 
 
 
@@ -447,7 +453,9 @@ FROM (
 | **Field** | ** Description** |
 | --- | --- |
 | average\_hosp\_duration\_count | 7 |
-**CO09**** :**Is a condition seasonal, alergies for example
+
+CO09: Is a condition seasonal, alergies for example
+---------------
 
 Returns the distribution of condition occurrence per season in the northern hemisphere, defined in the following way:
 
@@ -459,48 +467,45 @@ Returns the distribution of condition occurrence per season in the northern hemi
 
 **Sample query:**
 
-SELECT season, COUNT(\*) as season\_freq
+    SELECT season, COUNT(\*) as season\_freq
 
-FROM (
+    FROM (
 
-SELECT CASE
+    SELECT CASE
 
-WHEN (daymonth>0320
+    WHEN (daymonth>0320
 
-AND daymonth<=0621) THEN 'Spring' WHEN (daymonth>0621
+    AND daymonth<=0621) THEN 'Spring' WHEN (daymonth>0621
 
-AND daymonth<=0922) THEN 'Summer' WHEN (daymonth>0922
+    AND daymonth<=0922) THEN 'Summer' WHEN (daymonth>0922
 
-AND daymonth<=1221) THEN 'Fall' WHEN (daymonth>1221
+    AND daymonth<=1221) THEN 'Fall' WHEN (daymonth>1221
 
-OR (daymonth>0000
+    OR (daymonth>0000
 
-AND daymonth<=0520)) THEN 'Winter' ELSE 'Unknown' end AS season
+    AND daymonth<=0520)) THEN 'Winter' ELSE 'Unknown' end AS season
 
-FROM (
+    FROM (
 
-SELECT cast(substring(condition\_start\_date
+    SELECT cast(substring(condition\_start\_date
 
-from 6 for 2)|| substring(condition\_start\_date
+    from 6 for 2)|| substring(condition\_start\_date
 
-from 9 for 2) as int) AS daymonth,condition\_start\_date
+    from 9 for 2) as int) AS daymonth,condition\_start\_date
 
-FROM condition\_occurrence
+    FROM condition\_occurrence
 
-WHERE condition\_concept\_id = 31967 ) ) AS condition\_season
+    WHERE condition\_concept\_id = 31967 ) ) AS condition\_season
 
-GROUP BY season
+    GROUP BY season
 
-ORDER BY season\_freq;
+    ORDER BY season\_freq;
 
 **Input:**
 
 | **Parameter** | ** Example** | ** Mandatory** | ** Notes** |
 | --- | --- | --- | --- |
 | condition\_concept\_id | 31967 | Yes | Condition concept identifier for 'Nausea' |
-
-
-
 
 
 **Output:**
@@ -516,115 +521,117 @@ ORDER BY season\_freq;
 | --- | --- |
 | season | Summer |
 | season\_freq | 62924 |
-**CO12** : Distribution of condition end dates.
+
+CO12: Distribution of condition end dates.
+------------
 
 This query is used to to provide summary statistics for condition occurrence end dates (condition\_occurrence\_end\_date) across all condition occurrence records: the mean, the standard deviation, the minimum, the 25th percentile, the median, the 75th percentile, the maximum and the number of missing values. No input is required for this query.
 
 **Sample query:**
 
-with end\_rank as (
+    with end\_rank as (
 
-  SELECT
+      SELECT
 
-    condition\_end\_date-'0001-01-01' as num\_end\_date,
+        condition\_end\_date-'0001-01-01' as num\_end\_date,
 
-    condition\_end\_date,
+        condition\_end\_date,
 
-    sum(1) over (partition by 1 order by condition\_end\_date asc rows between unbounded preceding and current row) as rownumasc
+        sum(1) over (partition by 1 order by condition\_end\_date asc rows between unbounded preceding and current row) as rownumasc
 
-  FROM
+      FROM
 
-    condition\_occurrence
+        condition\_occurrence
 
-),
+    ),
 
-other\_stat as (
+    other\_stat as (
 
-  SELECT
+      SELECT
 
-    count(condition\_end\_date) as condition\_end\_date\_count,
+        count(condition\_end\_date) as condition\_end\_date\_count,
 
-    min(condition\_end\_date) as condition\_end\_date\_min,
+        min(condition\_end\_date) as condition\_end\_date\_min,
 
-    max(condition\_end\_date) as condition\_end\_date\_max,
+        max(condition\_end\_date) as condition\_end\_date\_max,
 
-    to\_date('0001-01-01', 'yyyy/mm/dd')+ cast(avg(condition\_end\_date-'0001-01-01') as int) as condition\_end\_date\_average,
+        to\_date('0001-01-01', 'yyyy/mm/dd')+ cast(avg(condition\_end\_date-'0001-01-01') as int) as condition\_end\_date\_average,
 
-    stddev((condition\_end\_date-'0001-01-01')) as condition\_end\_date\_stddev
+        stddev((condition\_end\_date-'0001-01-01')) as condition\_end\_date\_stddev
 
-  FROM
+      FROM
 
-    condition\_occurrence
+        condition\_occurrence
 
-  WHERE
+      WHERE
 
-    condition\_end\_date is not null
+        condition\_end\_date is not null
 
-)
+    )
 
-SELECT
+    SELECT
 
-  (SELECT count(condition\_end\_date) FROM condition\_occurrence WHERE condition\_end\_date is null) AS condition\_end\_date\_null\_count,
+      (SELECT count(condition\_end\_date) FROM condition\_occurrence WHERE condition\_end\_date is null) AS condition\_end\_date\_null\_count,
 
-  \*
-
-FROM
-
-  other\_stat,
-
-  ( SELECT
-
-      to\_date('0001-01-01', 'yyyy/mm/dd')+cast(avg(condition\_end\_date-'0001-01-01') as int) AS condition\_end\_date\_25percentile
+      \*
 
     FROM
 
-      (select \*,(select count(\*) from end\_rank) as rowno from end\_rank)
+      other\_stat,
 
-    WHERE
+      ( SELECT
 
-      (rownumasc=cast (rowno\*0.25 as int) and mod(rowno\*25,100)=0) or
+          to\_date('0001-01-01', 'yyyy/mm/dd')+cast(avg(condition\_end\_date-'0001-01-01') as int) AS condition\_end\_date\_25percentile
 
-      (rownumasc=cast (rowno\*0.25 as int) and mod(rowno\*25,100)>0) or
+        FROM
 
-      (rownumasc=cast (rowno\*0.25 as int)+1 and mod(rowno\*25,100)>0)
+          (select \*,(select count(\*) from end\_rank) as rowno from end\_rank)
 
-  ) AS condition\_end\_date\_25percentile,
+        WHERE
 
-  ( SELECT
+          (rownumasc=cast (rowno\*0.25 as int) and mod(rowno\*25,100)=0) or
 
-      to\_date('0001-01-01', 'yyyy/mm/dd')+cast(avg(condition\_end\_date-'0001-01-01') as int) as condition\_end\_date\_median
+          (rownumasc=cast (rowno\*0.25 as int) and mod(rowno\*25,100)>0) or
 
-    FROM
+          (rownumasc=cast (rowno\*0.25 as int)+1 and mod(rowno\*25,100)>0)
 
-      (select \*,(select count(\*) from end\_rank) as rowno from end\_rank)
+      ) AS condition\_end\_date\_25percentile,
 
-    WHERE
+      ( SELECT
 
-      (rownumasc=cast (rowno\*0.50 as int) and mod(rowno\*50,100)=0) or
+          to\_date('0001-01-01', 'yyyy/mm/dd')+cast(avg(condition\_end\_date-'0001-01-01') as int) as condition\_end\_date\_median
 
-      (rownumasc=cast (rowno\*0.50 as int) and mod(rowno\*50,100)>0) or
+        FROM
 
-      (rownumasc=cast (rowno\*0.50 as int)+1 and mod(rowno\*50,100)>0)
+          (select \*,(select count(\*) from end\_rank) as rowno from end\_rank)
 
-  ) AS condition\_end\_date\_median,
+        WHERE
 
-  ( SELECT
+          (rownumasc=cast (rowno\*0.50 as int) and mod(rowno\*50,100)=0) or
 
-      to\_date('0001-01-01', 'yyyy/mm/dd')+cast(avg(condition\_end\_date-'0001-01-01') as int) as condition\_end\_date\_75percentile
+          (rownumasc=cast (rowno\*0.50 as int) and mod(rowno\*50,100)>0) or
 
-    FROM
+          (rownumasc=cast (rowno\*0.50 as int)+1 and mod(rowno\*50,100)>0)
 
-      (select \*,(select count(\*) from end\_rank) as rowno from end\_rank)
+      ) AS condition\_end\_date\_median,
 
-    WHERE
+      ( SELECT
 
-      (rownumasc=cast (rowno\*0.75 as int) and mod(rowno\*75,100)=0) or
+          to\_date('0001-01-01', 'yyyy/mm/dd')+cast(avg(condition\_end\_date-'0001-01-01') as int) as condition\_end\_date\_75percentile
 
-      (rownumasc=cast (rowno\*0.75 as int) and mod(rowno\*75,100)>0) or
+        FROM
 
-      (rownumasc=cast (rowno\*0.75 as int)+1 and mod(rowno\*75,100)>0)
+          (select \*,(select count(\*) from end\_rank) as rowno from end\_rank)
 
-  ) AS condition\_end\_date\_75percentile;
+        WHERE
+
+          (rownumasc=cast (rowno\*0.75 as int) and mod(rowno\*75,100)=0) or
+
+          (rownumasc=cast (rowno\*0.75 as int) and mod(rowno\*75,100)>0) or
+
+          (rownumasc=cast (rowno\*0.75 as int)+1 and mod(rowno\*75,100)>0)
+
+      ) AS condition\_end\_date\_75percentile;
 
 **Input:**
 
@@ -659,115 +666,117 @@ None
 | condition\_end\_date\_25percentile | 2007-10-30 |
 | condition\_end\_date\_median | 2009-05-07 |
 | condition\_end\_date\_75percentile | 2010-05-04 |
-**CO13:** Distribution of condition start dates
+
+CO13: Distribution of condition start dates
+-----------
 
 This query is used to to provide summary statistics for condition occurrence start dates (condition\_occurrence\_start\_date) across all condition occurrence records: the mean, the standard deviation, the minimum, the 25th percentile, the median, the 75th percentile, the maximum and the number of missing values. No input is required for this query.
 
 **Sample query:**
 
-with end\_rank as (
+    with end\_rank as (
 
-  SELECT
+      SELECT
 
-    condition\_start\_date-'0001-01-01' as num\_start\_date,
+        condition\_start\_date-'0001-01-01' as num\_start\_date,
 
-    condition\_start\_date,
+        condition\_start\_date,
 
-    sum(1) over (partition by 1 order by condition\_start\_date asc rows between unbounded preceding and current row) as rownumasc
+        sum(1) over (partition by 1 order by condition\_start\_date asc rows between unbounded preceding and current row) as rownumasc
 
-  FROM
+      FROM
 
-    condition\_occurrence
+        condition\_occurrence
 
-),
+    ),
 
-other\_stat as (
+    other\_stat as (
 
-  SELECT
+      SELECT
 
-    count(condition\_start\_date) as condition\_start\_date\_count,
+        count(condition\_start\_date) as condition\_start\_date\_count,
 
-    min(condition\_start\_date) as condition\_start\_date\_min,
+        min(condition\_start\_date) as condition\_start\_date\_min,
 
-    max(condition\_start\_date) as condition\_start\_date\_max,
+        max(condition\_start\_date) as condition\_start\_date\_max,
 
-    to\_date('0001-01-01', 'yyyy/mm/dd')+ cast(avg(condition\_start\_date-'0001-01-01') as int) as condition\_start\_date\_average,
+        to\_date('0001-01-01', 'yyyy/mm/dd')+ cast(avg(condition\_start\_date-'0001-01-01') as int) as condition\_start\_date\_average,
 
-    stddev((condition\_start\_date-'0001-01-01')) as condition\_start\_date\_stddev
+        stddev((condition\_start\_date-'0001-01-01')) as condition\_start\_date\_stddev
 
-  FROM
+      FROM
 
-    condition\_occurrence
+        condition\_occurrence
 
-  WHERE
+      WHERE
 
-    condition\_start\_date is not null
+        condition\_start\_date is not null
 
-)
+    )
 
-SELECT
+    SELECT
 
-  (SELECT count(condition\_start\_date) FROM condition\_occurrence WHERE condition\_start\_date is null) AS condition\_start\_date\_null\_count,
+      (SELECT count(condition\_start\_date) FROM condition\_occurrence WHERE condition\_start\_date is null) AS condition\_start\_date\_null\_count,
 
-  \*
-
-FROM
-
-  other\_stat,
-
-  ( SELECT
-
-      to\_date('0001-01-01', 'yyyy/mm/dd')+cast(avg(condition\_start\_date-'0001-01-01') as int) AS condition\_start\_date\_25percentile
+      \*
 
     FROM
 
-      (select \*,(select count(\*) from end\_rank) as rowno from end\_rank)
+      other\_stat,
 
-    WHERE
+      ( SELECT
 
-      (rownumasc=cast (rowno\*0.25 as int) and mod(rowno\*25,100)=0) or
+          to\_date('0001-01-01', 'yyyy/mm/dd')+cast(avg(condition\_start\_date-'0001-01-01') as int) AS condition\_start\_date\_25percentile
 
-      (rownumasc=cast (rowno\*0.25 as int) and mod(rowno\*25,100)>0) or
+        FROM
 
-      (rownumasc=cast (rowno\*0.25 as int)+1 and mod(rowno\*25,100)>0)
+          (select \*,(select count(\*) from end\_rank) as rowno from end\_rank)
 
-  ) AS condition\_start\_date\_25percentile,
+        WHERE
 
-  ( SELECT
+          (rownumasc=cast (rowno\*0.25 as int) and mod(rowno\*25,100)=0) or
 
-      to\_date('0001-01-01', 'yyyy/mm/dd')+cast(avg(condition\_start\_date-'0001-01-01') as int) as condition\_start\_date\_median
+          (rownumasc=cast (rowno\*0.25 as int) and mod(rowno\*25,100)>0) or
 
-    FROM
+          (rownumasc=cast (rowno\*0.25 as int)+1 and mod(rowno\*25,100)>0)
 
-      (select \*,(select count(\*) from end\_rank) as rowno from end\_rank)
+      ) AS condition\_start\_date\_25percentile,
 
-    WHERE
+      ( SELECT
 
-      (rownumasc=cast (rowno\*0.50 as int) and mod(rowno\*50,100)=0) or
+          to\_date('0001-01-01', 'yyyy/mm/dd')+cast(avg(condition\_start\_date-'0001-01-01') as int) as condition\_start\_date\_median
 
-      (rownumasc=cast (rowno\*0.50 as int) and mod(rowno\*50,100)>0) or
+        FROM
 
-      (rownumasc=cast (rowno\*0.50 as int)+1 and mod(rowno\*50,100)>0)
+          (select \*,(select count(\*) from end\_rank) as rowno from end\_rank)
 
-  ) AS condition\_start\_date\_median,
+        WHERE
 
-  ( SELECT
+          (rownumasc=cast (rowno\*0.50 as int) and mod(rowno\*50,100)=0) or
 
-      to\_date('0001-01-01', 'yyyy/mm/dd')+cast(avg(condition\_start\_date-'0001-01-01') as int) as condition\_start\_date\_75percentile
+          (rownumasc=cast (rowno\*0.50 as int) and mod(rowno\*50,100)>0) or
 
-    FROM
+          (rownumasc=cast (rowno\*0.50 as int)+1 and mod(rowno\*50,100)>0)
 
-      (select \*,(select count(\*) from end\_rank) as rowno from end\_rank)
+      ) AS condition\_start\_date\_median,
 
-    WHERE
+      ( SELECT
 
-      (rownumasc=cast (rowno\*0.75 as int) and mod(rowno\*75,100)=0) or
+          to\_date('0001-01-01', 'yyyy/mm/dd')+cast(avg(condition\_start\_date-'0001-01-01') as int) as condition\_start\_date\_75percentile
 
-      (rownumasc=cast (rowno\*0.75 as int) and mod(rowno\*75,100)>0) or
+        FROM
 
-      (rownumasc=cast (rowno\*0.75 as int)+1 and mod(rowno\*75,100)>0)
+          (select \*,(select count(\*) from end\_rank) as rowno from end\_rank)
 
-  ) AS condition\_start\_date\_75percentile;
+        WHERE
+
+          (rownumasc=cast (rowno\*0.75 as int) and mod(rowno\*75,100)=0) or
+
+          (rownumasc=cast (rowno\*0.75 as int) and mod(rowno\*75,100)>0) or
+
+          (rownumasc=cast (rowno\*0.75 as int)+1 and mod(rowno\*75,100)>0)
+
+      ) AS condition\_start\_date\_75percentile;
 
 **Input:**
 
@@ -800,35 +809,36 @@ None
 | condition\_end\_date\_25percentile | 2007-10-30 |
 | condition\_end\_date\_median | 2009-05-06 |
 | condition\_end\_date\_75percentile | 2010-05-03 |
-**CO14:** Counts of condition types
+
+CO14: Counts of condition types
 
 This query is used to count the condition type concepts (condition\_type\_concept\_id, in the CDM V2 condition\_occurrence\_type) across all condition occurrence records. The input to the query is a value of a condition\_type\_concept\_id.
 
 **Sample query:**
 
-SELECT condition\_type\_freq, condition\_type\_concept\_id, concept\_name
+    SELECT condition\_type\_freq, condition\_type\_concept\_id, concept\_name
 
-FROM (
+    FROM (
 
-SELECT condition\_type\_concept\_id, count(\*) as condition\_type\_freq
+    SELECT condition\_type\_concept\_id, count(\*) as condition\_type\_freq
 
-FROM (
+    FROM (
 
-SELECT \*
+    SELECT \*
 
-from condition\_occurrence)
+    from condition\_occurrence)
 
-WHERE condition\_concept\_id = 31967
+    WHERE condition\_concept\_id = 31967
 
-GROUP BY condition\_type\_concept\_id) AS condition\_type\_count
+    GROUP BY condition\_type\_concept\_id) AS condition\_type\_count
 
-LEFT JOIN (
+    LEFT JOIN (
 
-SELECT concept\_id, concept\_name
+    SELECT concept\_id, concept\_name
 
-FROM concept) AS type\_concept ON condition\_type\_count.condition\_type\_concept\_id=type\_concept.concept\_id
+    FROM concept) AS type\_concept ON condition\_type\_count.condition\_type\_concept\_id=type\_concept.concept\_id
 
-ORDER BY condition\_type\_freq;
+    ORDER BY condition\_type\_freq;
 
 **Input:**
 
@@ -851,133 +861,135 @@ ORDER BY condition\_type\_freq;
 | condition\_type\_freq | 4735 |
 | condition\_type\_concept\_id | 38000235 |
 | concept\_name | Outpatient header - 6th position |
-**CO15:** Distribution of number of distinct conditions persons have
+
+CO15: Distribution of number of distinct conditions persons have
+----------
 
 This query is used to provide summary statistics for the number of different distinct conditions (condition\_concept\_id) of all persons: the mean, the standard deviation, the minimum, the 25th percentile, the median, the 75th percentile, the maximum and the number of missing values. No input is required for this query.
 
 **Sample query:**
 
-with ranked as (
+    with ranked as (
 
-  SELECT
+      SELECT
 
-    num\_of\_conditions,
+        num\_of\_conditions,
 
-    row\_number() over (order by num\_of\_conditions asc) AS rownumasc
+        row\_number() over (order by num\_of\_conditions asc) AS rownumasc
 
-  FROM(
+      FROM(
 
-    select
+        select
 
-      person\_id,
+          person\_id,
 
-      count(distinct condition\_concept\_id) AS num\_of\_conditions
+          count(distinct condition\_concept\_id) AS num\_of\_conditions
 
-    FROM condition\_occurrence
+        FROM condition\_occurrence
 
-    where person\_id!=0
+        where person\_id!=0
 
-    GROUP BY person\_id
+        GROUP BY person\_id
 
-  )
+      )
 
-),
+    ),
 
-other\_stat AS (
+    other\_stat AS (
 
-  SELECT
+      SELECT
 
-    count(num\_of\_conditions) as condition\_dist\_num\_count,
+        count(num\_of\_conditions) as condition\_dist\_num\_count,
 
-    min(num\_of\_conditions) as condition\_dist\_num\_min,
+        min(num\_of\_conditions) as condition\_dist\_num\_min,
 
-    max(num\_of\_conditions) as condition\_dist\_num\_max,
+        max(num\_of\_conditions) as condition\_dist\_num\_max,
 
-    avg(num\_of\_conditions) as condition\_dist\_num\_averege,
+        avg(num\_of\_conditions) as condition\_dist\_num\_averege,
 
-    stddev(num\_of\_conditions) as condition\_dist\_num\_stddev
+        stddev(num\_of\_conditions) as condition\_dist\_num\_stddev
 
-  FROM (
+      FROM (
+
+        SELECT
+
+          count(distinct condition\_concept\_id) AS num\_of\_conditions,
+
+          person\_id
+
+        FROM condition\_occurrence
+
+        WHERE person\_id!=0
+
+        GROUP BY person\_id
+
+      )
+
+    )
 
     SELECT
 
-      count(distinct condition\_concept\_id) AS num\_of\_conditions,
+      (SELECT count(distinct person\_id) FROM condition\_occurrence WHERE person\_id!=0 and condition\_occurrence\_id is null) AS condition\_null\_count,
 
-      person\_id
-
-    FROM condition\_occurrence
-
-    WHERE person\_id!=0
-
-    GROUP BY person\_id
-
-  )
-
-)
-
-SELECT
-
-  (SELECT count(distinct person\_id) FROM condition\_occurrence WHERE person\_id!=0 and condition\_occurrence\_id is null) AS condition\_null\_count,
-
-  \*
-
-FROM
-
-  other\_stat,
-
-  ( SELECT distinct
-
-      num\_of\_conditions as condition\_dist\_num\_25percentile
+      \*
 
     FROM
 
-      (select \*,(select count(\*) from ranked) as rowno from ranked)
+      other\_stat,
 
-    WHERE
+      ( SELECT distinct
 
-      (rownumasc=cast (rowno\*0.25 as int) and mod(rowno\*25,100)=0) or
+          num\_of\_conditions as condition\_dist\_num\_25percentile
 
-      (rownumasc=cast (rowno\*0.25 as int) and mod(rowno\*25,100)>0) or
+        FROM
 
-      (rownumasc=cast (rowno\*0.25 as int)+1 and mod(rowno\*25,100)>0)
+          (select \*,(select count(\*) from ranked) as rowno from ranked)
 
-  ) AS condition\_end\_date\_25percentile,
+        WHERE
 
-  ( SELECT distinct
+          (rownumasc=cast (rowno\*0.25 as int) and mod(rowno\*25,100)=0) or
 
-      num\_of\_conditions as condition\_dist\_num\_median
+          (rownumasc=cast (rowno\*0.25 as int) and mod(rowno\*25,100)>0) or
 
-    FROM
+          (rownumasc=cast (rowno\*0.25 as int)+1 and mod(rowno\*25,100)>0)
 
-      (select \*,(select count(\*) from ranked) as rowno from ranked)
+      ) AS condition\_end\_date\_25percentile,
 
-    WHERE
+      ( SELECT distinct
 
-      (rownumasc=cast (rowno\*0.50 as int) and mod(rowno\*50,100)=0) or
+          num\_of\_conditions as condition\_dist\_num\_median
 
-      (rownumasc=cast (rowno\*0.50 as int) and mod(rowno\*50,100)>0) or
+        FROM
 
-      (rownumasc=cast (rowno\*0.50 as int)+1 and mod(rowno\*50,100)>0)
+          (select \*,(select count(\*) from ranked) as rowno from ranked)
 
-  ) AS condition\_end\_date\_median,
+        WHERE
 
-  ( SELECT distinct
+          (rownumasc=cast (rowno\*0.50 as int) and mod(rowno\*50,100)=0) or
 
-      num\_of\_conditions as condition\_dist\_num\_75percentile
+          (rownumasc=cast (rowno\*0.50 as int) and mod(rowno\*50,100)>0) or
 
-    FROM
+          (rownumasc=cast (rowno\*0.50 as int)+1 and mod(rowno\*50,100)>0)
 
-      (select \*,(select count(\*) from ranked) as rowno from ranked)
+      ) AS condition\_end\_date\_median,
 
-    WHERE
+      ( SELECT distinct
 
-      (rownumasc=cast (rowno\*0.75 as int) and mod(rowno\*75,100)=0) or
+          num\_of\_conditions as condition\_dist\_num\_75percentile
 
-      (rownumasc=cast (rowno\*0.75 as int) and mod(rowno\*75,100)>0) or
+        FROM
 
-      (rownumasc=cast (rowno\*0.75 as int)+1 and mod(rowno\*75,100)>0)
+          (select \*,(select count(\*) from ranked) as rowno from ranked)
 
-  ) AS condition\_end\_date\_75percentile;
+        WHERE
+
+          (rownumasc=cast (rowno\*0.75 as int) and mod(rowno\*75,100)=0) or
+
+          (rownumasc=cast (rowno\*0.75 as int) and mod(rowno\*75,100)>0) or
+
+          (rownumasc=cast (rowno\*0.75 as int)+1 and mod(rowno\*75,100)>0)
+
+      ) AS condition\_end\_date\_75percentile;
 
 **Input:**
 
@@ -1010,23 +1022,25 @@ None
 | condition\_dist\_num\_25percentile | 6 |
 | condition\_dist\_num\_median | 12 |
 | condition\_dist\_num\_75percentile | 23 |
-**CO16:** Counts of number of distinct conditions persons have
+
+CO16: Counts of number of distinct conditions persons have
+----------
 
 This query is used to count the number of different distinct conditions (condition\_concept\_id) of all persons. The input to the query is a value for a concept identifier.
 
 **Sample query:**
 
-SELECT count(c.condition\_concept\_id) conditions\_count, c.person\_id
+    SELECT count(c.condition\_concept\_id) conditions\_count, c.person\_id
 
-FROM condition\_occurrence c
+    FROM condition\_occurrence c
 
-WHERE condition\_concept\_id = 201820
+    WHERE condition\_concept\_id = 201820
 
-GROUP BY c.person\_id
+    GROUP BY c.person\_id
 
-ORDER BY 1
+    ORDER BY 1
 
-DESC;
+    DESC;
 
 **Input:**
 
@@ -1047,117 +1061,119 @@ DESC;
 | --- | --- |
 | conditions\_count |  39 |
 | person\_id |  20017834818 |
-**CO17:** Distribution of condition occurrence records per person
+
+CO17: Distribution of condition occurrence records per person
+-----------
 
 This query is used to provide summary statistics for the number of condition occurrence records (condition\_occurrence\_id) for all persons: the mean, the standard deviation, the minimum, the 25th percentile, the median, the 75th percentile, the maximum and the number of missing values. There is no input required for this query.
 
 **Sample query:**
 
-with ranked as
+    with ranked as
 
-  (
+      (
 
-  SELECT num\_of\_conditions, sum(1) over (partition by 1
+      SELECT num\_of\_conditions, sum(1) over (partition by 1
 
-  ORDER BY num\_of\_conditions asc rows BETWEEN unbounded preceding AND current row) AS rownumasc
+      ORDER BY num\_of\_conditions asc rows BETWEEN unbounded preceding AND current row) AS rownumasc
 
-  FROM (
+      FROM (
 
-                                        SELECT count(\*) as num\_of\_conditions
+                                            SELECT count(\*) as num\_of\_conditions
 
-                                        FROM condition\_occurrence
+                                            FROM condition\_occurrence
 
-                                        WHERE person\_id!=0
+                                            WHERE person\_id!=0
 
-                                        GROUP BY person\_id
+                                            GROUP BY person\_id
 
-                                )
+                                    )
 
-  ),
+      ),
 
-  other\_stat AS
+      other\_stat AS
 
-  (
+      (
 
-   SELECT count(num\_of\_conditions) AS condition\_num\_count,
+       SELECT count(num\_of\_conditions) AS condition\_num\_count,
 
-                        min(num\_of\_conditions) AS condition\_num\_min,
+                            min(num\_of\_conditions) AS condition\_num\_min,
 
-      max(num\_of\_conditions) AS condition\_num\_max,
+          max(num\_of\_conditions) AS condition\_num\_max,
 
-                        avg(num\_of\_conditions) AS condition\_num\_averege,
+                            avg(num\_of\_conditions) AS condition\_num\_averege,
 
-      stddev(num\_of\_conditions) as condition\_num\_stddev
+          stddev(num\_of\_conditions) as condition\_num\_stddev
 
-   FROM (
+       FROM (
 
-                                   SELECT count(\*) AS num\_of\_conditions, person\_id
+                                       SELECT count(\*) AS num\_of\_conditions, person\_id
 
-                                   FROM   condition\_occurrence
+                                       FROM   condition\_occurrence
 
-                                   WHERE person\_id!=0
+                                       WHERE person\_id!=0
 
-                                   GROUP BY person\_id
+                                       GROUP BY person\_id
 
-                           )
+                               )
 
-  )
+      )
 
-SELECT
+    SELECT
 
- (
+     (
 
-        SELECT count(distinct person\_id)
+            SELECT count(distinct person\_id)
 
-        FROM condition\_occurrence
+            FROM condition\_occurrence
 
-        WHERE person\_id!=0 AND condition\_occurrence\_id IS NULL
+            WHERE person\_id!=0 AND condition\_occurrence\_id IS NULL
 
- ) AS condition\_null\_count,
+     ) AS condition\_null\_count,
 
- \* FROM other\_stat,
+     \* FROM other\_stat,
 
- (
+     (
 
-  SELECT num\_of\_conditions AS condition\_num\_25percentile
+      SELECT num\_of\_conditions AS condition\_num\_25percentile
 
-  FROM (SELECT \*,(SELECT count(\*) FROM ranked) as rowno FROM ranked)
+      FROM (SELECT \*,(SELECT count(\*) FROM ranked) as rowno FROM ranked)
 
-  WHERE (rownumasc=cast (rowno\*0.25 as int) AND mod(rowno\*25,100)=0) OR
+      WHERE (rownumasc=cast (rowno\*0.25 as int) AND mod(rowno\*25,100)=0) OR
 
-     (rownumasc=cast (rowno\*0.25 as int) AND mod(rowno\*25,100)>0) OR
+         (rownumasc=cast (rowno\*0.25 as int) AND mod(rowno\*25,100)>0) OR
 
-     (rownumasc=cast (rowno\*0.25 as int)+1 AND mod(rowno\*25,100)>0)
+         (rownumasc=cast (rowno\*0.25 as int)+1 AND mod(rowno\*25,100)>0)
 
- ) AS condition\_num\_25percentile,
+     ) AS condition\_num\_25percentile,
 
- (
+     (
 
-  SELECT num\_of\_conditions AS condition\_num\_median
+      SELECT num\_of\_conditions AS condition\_num\_median
 
-  FROM (SELECT \*,(SELECT count(\*) FROM ranked) AS rowno FROM ranked)
+      FROM (SELECT \*,(SELECT count(\*) FROM ranked) AS rowno FROM ranked)
 
-  WHERE (rownumasc=cast (rowno\*0.50 AS int) AND mod(rowno\*50,100)=0) OR
+      WHERE (rownumasc=cast (rowno\*0.50 AS int) AND mod(rowno\*50,100)=0) OR
 
-     (rownumasc=cast (rowno\*0.50 AS int) AND mod(rowno\*50,100)>0) OR
+         (rownumasc=cast (rowno\*0.50 AS int) AND mod(rowno\*50,100)>0) OR
 
-     (rownumasc=cast (rowno\*0.50 AS int)+1 AND mod(rowno\*50,100)>0)
+         (rownumasc=cast (rowno\*0.50 AS int)+1 AND mod(rowno\*50,100)>0)
 
- ) AS condition\_num\_median,
+     ) AS condition\_num\_median,
 
- (
+     (
 
-  SELECT num\_of\_conditions AS condition\_num\_75percentile
+      SELECT num\_of\_conditions AS condition\_num\_75percentile
 
-  FROM (SELECT \*,(SELECT count(\*) FROM ranked) as rowno FROM ranked)
+      FROM (SELECT \*,(SELECT count(\*) FROM ranked) as rowno FROM ranked)
 
-  WHERE (rownumasc=cast (rowno\*0.75 as int) AND mod(rowno\*75,100)=0) OR
+      WHERE (rownumasc=cast (rowno\*0.75 as int) AND mod(rowno\*75,100)=0) OR
 
-     (rownumasc=cast (rowno\*0.75 as int) AND mod(rowno\*75,100)>0) OR
+         (rownumasc=cast (rowno\*0.75 as int) AND mod(rowno\*75,100)>0) OR
 
-     (rownumasc=cast (rowno\*0.75 as int)+1 AND mod(rowno\*75,100)>0)
+         (rownumasc=cast (rowno\*0.75 as int)+1 AND mod(rowno\*75,100)>0)
 
- ) AS condition\_num\_75percentile
+     ) AS condition\_num\_75percentile
 
 **Input:**
 
