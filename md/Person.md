@@ -8,11 +8,11 @@ Use this query to determine the number of women and men in an a databse. The gen
 
 Sample query:
 
-  SELECT COUNT(person_ID) AS num_persons_count
+    SELECT COUNT(person_ID) AS num_persons_count
 
-  FROM Person
+    FROM Person
 
-  WHERE GENDER_CONCEPT_ID = 8532
+    WHERE GENDER_CONCEPT_ID = 8532
 
 Input:
 
@@ -40,13 +40,13 @@ This query is similar to PE02, but it lists all available genders (male, female,
 
 Sample query:
 
-  SELECT person.GENDER_CONCEPT_ID, concept.CONCEPT_NAME AS gender_name, COUNT(person.person_ID) AS num_persons_count
+    SELECT person.GENDER_CONCEPT_ID, concept.CONCEPT_NAME AS gender_name, COUNT(person.person_ID) AS num_persons_count
 
-  FROM person
+    FROM person
 
-  INNER JOIN concept ON person.GENDER_CONCEPT_ID = concept.CONCEPT_ID
+    INNER JOIN concept ON person.GENDER_CONCEPT_ID = concept.CONCEPT_ID
 
-  GROUP BY person.GENDER_CONCEPT_ID, concept.CONCEPT_NAME;
+    GROUP BY person.GENDER_CONCEPT_ID, concept.CONCEPT_NAME;
 
 Input:
 
@@ -76,13 +76,13 @@ Counts the year of birth (year_of_birth) across all person records. All existing
 
 Sample query:
 
-  SELECT year_of_birth, COUNT(person_id) AS Num_Persons_count
+    SELECT year_of_birth, COUNT(person_id) AS Num_Persons_count
 
-  FROM person
+    FROM person
 
-  GROUP BY year_of_birth
+    GROUP BY year_of_birth
 
-  ORDER BY year_of_birth;
+    ORDER BY year_of_birth;
 
 Input:
 
@@ -110,19 +110,19 @@ This query is used to count the locations (location_id) across all person record
 
 Sample query:
 
-  SELECT NVL( state, 'XX' )
+    SELECT NVL( state, 'XX' )
 
-  AS state_abbr, count(\*) as Num_Persons_count
+    AS state_abbr, count(\*) as Num_Persons_count
 
-  FROM person
+    FROM person
 
-  LEFT OUTER JOIN location
+    LEFT OUTER JOIN location
 
-  USING( location_id )
+    USING( location_id )
 
-  GROUP BY NVL( state, 'XX' )
+    GROUP BY NVL( state, 'XX' )
 
-  ORDER BY 1;
+    ORDER BY 1;
 
 Input:
 
@@ -150,17 +150,17 @@ Counts the patients' zip of their residence location across all person records. 
 
 Sample query:
 
-  SELECT state, NVL( zip, '9999999' ) AS zip, count(\*) Num_Persons_count
+    SELECT state, NVL( zip, '9999999' ) AS zip, count(\*) Num_Persons_count
 
-  FROM person
+    FROM person
 
-  LEFT OUTER JOIN location
+    LEFT OUTER JOIN location
 
-  USING( location_id )
+    USING( location_id )
 
-  GROUP BY state, NVL( zip, '9999999' )
+    GROUP BY state, NVL( zip, '9999999' )
 
-  ORDER BY 1, 2;
+    ORDER BY 1, 2;
 
 Input:
 
@@ -190,15 +190,15 @@ Count the genders (gender_concept_id) across all person records, arrange into gr
 
 Sample query:
 
-  SELECT gender_concept_id, c.concept_name AS gender_name, year_of_birth, COUNT(p.person_id) AS num_persons
+    SELECT gender_concept_id, c.concept_name AS gender_name, year_of_birth, COUNT(p.person_id) AS num_persons
 
-  FROM person p
+    FROM person p
 
-  INNER JOIN concept c ON p.gender_concept_id = c.concept_id
+    INNER JOIN concept c ON p.gender_concept_id = c.concept_id
 
-  GROUP BY gender_concept_id, c.concept_name, year_of_birth
+    GROUP BY gender_concept_id, c.concept_name, year_of_birth
 
-  ORDER BY concept_name, year_of_birth;
+    ORDER BY concept_name, year_of_birth;
 
 Input:
 
@@ -230,13 +230,13 @@ This query is used to count the day of birth (day_of_birth) across all person re
 
 Sample query:
 
-  SELECT day_of_birth, COUNT(person_ID) AS num_persons
+    SELECT day_of_birth, COUNT(person_ID) AS num_persons
 
-  FROM person
+    FROM person
 
-  GROUP BY day_of_birth
+    GROUP BY day_of_birth
 
-  ORDER BY day_of_birth;
+    ORDER BY day_of_birth;
 
 Input:
 
@@ -264,13 +264,13 @@ This query is used to count number of patients grouped by month of birth within 
 
 Sample query:
 
-  SELECT NVL(month_of_birth,1) AS month_of_year, count(\*) AS num_records
+    SELECT NVL(month_of_birth,1) AS month_of_year, count(\*) AS num_records
 
-  FROM person
+    FROM person
 
-  GROUP BY month_of_birth
+    GROUP BY month_of_birth
 
-  ORDER BY 1;
+    ORDER BY 1;
 
 Input:
 
@@ -298,75 +298,75 @@ This query is used to to provide summary statistics for the age across all patie
 
 Sample query:
 
-  SELECT percentile_25
+    SELECT percentile_25
 
-       , median
+         , median
 
-       , percentile_75
+         , percentile_75
 
-       , MIN( year_of_birth )    AS minimum
+         , MIN( year_of_birth )    AS minimum
 
-       , MAX( year_of_birth )    AS maximum
+         , MAX( year_of_birth )    AS maximum
 
-       , CAST(AVG( year_of_birth ) AS INTEGER)   AS mean
+         , CAST(AVG( year_of_birth ) AS INTEGER)   AS mean
 
-       , STDDEV( year_of_birth ) AS stddev
+         , STDDEV( year_of_birth ) AS stddev
 
-  FROM
+    FROM
 
-  (SELECT MAX( CASE WHEN( percentile = 1 ) THEN year_of_birth END ) AS percentile_25
+    (SELECT MAX( CASE WHEN( percentile = 1 ) THEN year_of_birth END ) AS percentile_25
 
-        , MAX( CASE WHEN( percentile = 2 ) THEN year_of_birth END ) AS median
+          , MAX( CASE WHEN( percentile = 2 ) THEN year_of_birth END ) AS median
 
-        , MAX( CASE WHEN( percentile = 3 ) THEN year_of_birth END ) AS percentile_75
+          , MAX( CASE WHEN( percentile = 3 ) THEN year_of_birth END ) AS percentile_75
 
-    FROM -- year of birth / percentile
+      FROM -- year of birth / percentile
 
-       ( SELECT year_of_birth, births
+         ( SELECT year_of_birth, births
 
-              /\* The first sum is the sum of all the values from the first year of birth
+                /\* The first sum is the sum of all the values from the first year of birth
 
-                 to the current year.  The second sum is the total of all the years of birth.
+                   to the current year.  The second sum is the total of all the years of birth.
 
-                 The result is a cumulative percent of the total for each year.  You want to
+                   The result is a cumulative percent of the total for each year.  You want to
 
-                 capture when the percentage goes from 24 to 25 as percentile_25, from 49 to 50
+                   capture when the percentage goes from 24 to 25 as percentile_25, from 49 to 50
 
-                 as the median and from 74 to 75 as the percentile_75.  Multiplying by 4 then SA
+                   as the median and from 74 to 75 as the percentile_75.  Multiplying by 4 then SA
 
-                 adding 1 just makes so that instead of looking at percentage, you get the whole
+                   adding 1 just makes so that instead of looking at percentage, you get the whole
 
-                 number 1 if the percentage is less than 25, 2 when the percentage is between 25
+                   number 1 if the percentage is less than 25, 2 when the percentage is between 25
 
-                 and 50, and so on.
+                   and 50, and so on.
 
-               \*/
+                 \*/
 
-              , FLOOR( CAST( SUM( births ) OVER( ORDER BY year_of_birth ROWS UNBOUNDED PRECEDING ) AS DECIMAL )
+                , FLOOR( CAST( SUM( births ) OVER( ORDER BY year_of_birth ROWS UNBOUNDED PRECEDING ) AS DECIMAL )
 
-                     / CAST( SUM( births ) OVER( ORDER BY year_of_birth ROWS BETWEEN UNBOUNDED PRECEDING
+                       / CAST( SUM( births ) OVER( ORDER BY year_of_birth ROWS BETWEEN UNBOUNDED PRECEDING
 
-                                                                        AND UNBOUNDED FOLLOWING )  AS DECIMAL )
+                                                                          AND UNBOUNDED FOLLOWING )  AS DECIMAL )
 
-                     \* 4
+                       \* 4
 
-                     ) + 1 percentile
+                       ) + 1 percentile
 
-          FROM -- Year with number of birthsQ
+            FROM -- Year with number of birthsQ
 
-             ( SELECT year_of_birth, count(\*) AS births
+               ( SELECT year_of_birth, count(\*) AS births
 
-                 FROM person
+                   FROM person
 
-                GROUP BY year_of_birth
+                  GROUP BY year_of_birth
 
-             )
+               )
 
-      )where percentile <= 3
+        )where percentile <= 3
 
-  ) percentile_table, person
+    ) percentile_table, person
 
-  GROUP BY percentile_25, median, percentile_75
+    GROUP BY percentile_25, median, percentile_75
 
 Input:
 

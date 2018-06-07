@@ -4,7 +4,7 @@ Condition Queries
 C01: Find condition by concept ID
 ---
 
-| Find condition by condition ID is the lookup for obtaining condition or disease concept details associated with a concept identifier. This query is a tool for quick reference for the name, class, level and source vocabulary details associated with a concept identifier, either SNOMED-CT clinical finding or MedDRA.
+Find condition by condition ID is the lookup for obtaining condition or disease concept details associated with a concept identifier. This query is a tool for quick reference for the name, class, level and source vocabulary details associated with a concept identifier, either SNOMED-CT clinical finding or MedDRA.
 This query is equivalent to  [G01](http://vocabqueries.omop.org/general-queries/g1), but if the concept is not in the condition domain the query still returns the concept details with the Is_Disease_Concept_Flag field set to 'No'.
 
 Input:
@@ -15,7 +15,10 @@ Input:
 |  As of date |  Sysdate |  No | Valid record as of specific date. Current date – sysdate is a default |
 
 Sample query run:
-The following is a sample run of the query to run a search for specific disease concept ID. The input parameters are highlighted in  blue.
+
+The following is a sample run of the query to run a search for specific disease concept ID. 
+
+The input parameters are highlighted in  blue.
 
 	SELECT 
 	  C.concept_id Condition_concept_id, 
@@ -65,7 +68,8 @@ Sample output record:
 C02: Find a condition by keyword
 ---
 
-| This query enables search of vocabulary entities by keyword. The query does a search of standard concepts names in the CONDITION domain (SNOMED-CT clinical findings and MedDRA concepts) and their synonyms to return all related concepts.
+This query enables search of vocabulary entities by keyword. The query does a search of standard concepts names in the CONDITION domain (SNOMED-CT clinical findings and MedDRA concepts) and their synonyms to return all related concepts.
+
 It does not require prior knowledge of where in the logic of the vocabularies the entity is situated.
 
 Input:
@@ -76,6 +80,7 @@ Input:
 |  As of date |  Sysdate |  No | Valid record as of specific date. Current date – sysdate is a default |
 
 Sample query run:
+
 The following is a sample run of the query to run a search of the Condition domain for keyword 'myocardial infarction'. The input parameters are highlighted in  blue.
 
 	SELECT 
@@ -139,6 +144,7 @@ Sample output record:
 |  Entity_Vocabulary_Name |  Medical Dictionary for Regulatory Activities (MSSO) |
 
 This is a comprehensive query to find relevant terms in the vocabulary. To constrain, additional clauses can be added to the query. However, it is recommended to do a filtering after the result set is produced to avoid syntactical mistakes.
+
 The query only returns concepts that are part of the Standard Vocabulary, ie. they have concept level that is not 0. If all concepts are needed, including the non-standard ones, the clause in the query restricting the concept level and concept class can be commented out. 
 
 C03: Translate a SNOMED-CT concept into a MedDRA concept
@@ -147,6 +153,7 @@ C03: Translate a SNOMED-CT concept into a MedDRA concept
 This query accepts a SNOMED-CT concept ID as input and returns details of the equivalent MedDRA concepts.
 
 The relationships in the vocabulary associate MedDRA 'Preferred Term' to SNOMED-CT 'clinical findings'. The respective hierarchy for MedDRA and SNOMED-CT can be used to traverse up and down the hierarchy of each of these individual vocabularies.
+
 Also, not all SNOMED-CT clinical findings are mapped to a MedDRA concept in the vocabulary.
 
 Input:
@@ -157,6 +164,7 @@ Input:
 |  As of date |  Sysdate |  No | Valid record as of specific date. Current date – sysdate is a default |
 
 Sample query run:
+
 The following is a sample run of the query to list MedDRA equivalents for SNOMED-CT concept whose concept ID is entered as input. 
 
 	SELECT	D.concept_id Snomed_concept_id,
@@ -388,7 +396,9 @@ Input:
 |  Source Vocabulary ID |  2 |  Yes | 2 represents ICD9-CM |
 |  As of date |  Sysdate |  No | Valid record as of specific date. Current date – sysdate is a default |
 
-Sample query run: The following is a sample run of the query to list all source codes that map to a SNOMED-CT concept entered as input. The sample parameter substitutions are highlighted in  blue.
+Sample query run: 
+
+The following is a sample run of the query to list all source codes that map to a SNOMED-CT concept entered as input. The sample parameter substitutions are highlighted in  blue.
 
 	SELECT DISTINCT
 	  c1.concept_code,

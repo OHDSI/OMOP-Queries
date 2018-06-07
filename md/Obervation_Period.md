@@ -6,11 +6,11 @@ OP01: Count number of people who have at least one observation period in the dat
 
 Sample query:
 
-  SELECT COUNT(DISTINCT person_ID) AS NUM_persons
+    SELECT COUNT(DISTINCT person_ID) AS NUM_persons
 
-  FROM observation_period
+    FROM observation_period
 
-  WHERE observation_period_END_DATE - observation_period_START_DATE >= 365;
+    WHERE observation_period_END_DATE - observation_period_START_DATE >= 365;
 
 Input:
 

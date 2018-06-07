@@ -4,7 +4,7 @@ Observation Queries
 O1: Find a Observation from a keyword
 ---
 
-| This query enables the search of LOINC and UCUM descriptions that are used in the observation domain of the vocabulary by keyword.
+This query enables the search of LOINC and UCUM descriptions that are used in the observation domain of the vocabulary by keyword.
 It does not require prior knowledge of where in the logic of the vocabularies the entity is situated.
 
 Input:

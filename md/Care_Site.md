@@ -1,4 +1,5 @@
 CS01: Care site place of service counts
+---
 
 This query is used to count the care sites associated with the place of service type. This query is only available from CDM V4 and above.
 
@@ -31,6 +32,7 @@ Sample output record:
 | places_of_service_count |  1 |
 
 CS02: Patient count per care site place of service.
+---
 
 This query is used to count patients per care site place of service. This query is only available from CDM V4 and above.
 
