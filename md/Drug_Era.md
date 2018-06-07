@@ -1,3 +1,6 @@
+Drug Era Queries
+---
+
 DER01: Which drug_exposure records belong to a drug_era?
 ---
 
@@ -39,8 +42,6 @@ Sample query:
 
 Input:
 
-|   |
-| --- |
 |  Parameter |  Example |  Mandatory |  Notes |
 | drug_era_id | 20 | Yes |   |
 
@@ -472,8 +473,6 @@ Sample query:
 
 Input:
 
-|   |
-| --- |
 | Parameter |  Example |  Mandatory |  Notes |
 | list of drug_concept_id | 1304643, 1549080 | Yes |   |
 
@@ -538,8 +537,6 @@ None
 
 Output:
 
-|   |
-| --- |
 |  Field |  Description |
 | Min_date | Minimum drug era end date across all drug era records |
 | Max_date | Maximum drug era end date across all drug era records |
@@ -594,8 +591,6 @@ None
 
 Output:
 
-|   |
-| --- |
 |  Field |  Description |
 | Min_date | Minimum drug era start date across all drug era records |
 | Max_date | Maximum drug era start date across all drug era records |
@@ -746,8 +741,6 @@ Sample query:
 
 Input:
 
-|   |
-| --- |
 |  Parameter |  Example |  Mandatory |  Notes |
 | list of drug_type_concept_id | 3, 4 | Yes |   |
 
@@ -855,8 +848,6 @@ Sample query:
 
 Input:
 
-|   |
-| --- |
 |  Parameter |  Example |  Mandatory |  Notes |
 | list of drug_type_concept_id | 3, 4 | Yes |   |
 
@@ -903,8 +894,6 @@ Sample query:
 
 Input:
 
-|   |
-| --- |
 | Parameter |  Example |  Mandatory |  Notes |
 | list of month numbers | 3, 5 | Yes |   |
 
@@ -967,8 +956,6 @@ Sample query:
 
 Input:
 
-|   |
-| --- |
 |  Parameter |  Example |  Mandatory |  Notes |
 | list of concept_id | 1300978, 1304643, 1549080 | Yes |   |
 
@@ -995,8 +982,6 @@ Sample output record:
 | percentile_25_date | 59 |
 | median_date | 70 |
 | percentile_75_date | 80 |
-
-
 
 DER20: Counts of drugs, stratified by drug type and drug exposure count
 ---
@@ -1161,8 +1146,6 @@ Sample query:
 
 Input:
 
-|   |
-| --- |
 | Parameter |  Example |  Mandatory |  Notes |
 | list of concept_id | 1300978, 1304643, 1549080 | Yes |   |
 | list of year_of_era | 2007, 2008 | Yes |   |
@@ -1246,8 +1229,6 @@ Sample query:
 
 Input:
 
-|   |
-| --- |
 | Parameter |  Example |  Mandatory |  Notes |
 | drug_concept_id | 1300978, 1304643, 1549080 | Yes |   |
 
@@ -1306,16 +1287,12 @@ Sample query:
 
 Input:
 
-|   |
-| --- |
 | Parameter |  Example |  Mandatory |  Notes |
 | list of gender_concept_id | 8507, 8532 | Yes | Male, Female |
 | list of drug_concept_id | 1300978, 1304643, 1549080 | Yes |   |
 
 Output:
 
-|   |
-| --- |
 |  Field |  Description |
 | gender_concept_id |   |
 | stat_valu |   |

@@ -1,12 +1,16 @@
+Observation Period Queries
+---
+
 OP01: Count number of people who have at least one observation period in the database that is longer than 365 days.
+---
 
 Sample query:
 
-SELECT COUNT(DISTINCT person_ID) AS NUM_persons
+  SELECT COUNT(DISTINCT person_ID) AS NUM_persons
 
-FROM observation_period
+  FROM observation_period
 
-WHERE observation_period_END_DATE - observation_period_START_DATE >= 365;
+  WHERE observation_period_END_DATE - observation_period_START_DATE >= 365;
 
 Input:
 
@@ -25,42 +29,42 @@ Sample output record:
 | Num_Persons | 105119818 |
 
 
-
 OP02 : Distribution of length of observation, in months, among first observation periods across the population
+---
 
 Count distribution of length of observation, in months, among first observation periods across the population.
 
 Sample query:
 
-SELECT        DATEDIFF(month, observation_period_start_date, observation_period_end_date) as num_months,
+    SELECT        DATEDIFF(month, observation_period_start_date, observation_period_end_date) as num_months,
 
-                COUNT(distinct person_id) AS num_persons
+                    COUNT(distinct person_id) AS num_persons
 
-FROM
+    FROM
 
-        (
+            (
 
-        SELECT        person_ID,
+            SELECT        person_ID,
 
-                        observation_period_START_DATE,
+                            observation_period_START_DATE,
 
-                        observation_period_END_DATE,
+                            observation_period_END_DATE,
 
-                        rank() OVER (PARTITION BY person_ID ORDER BY observation_period_START_DATE ASC) AS OP_NUMBER
+                            rank() OVER (PARTITION BY person_ID ORDER BY observation_period_START_DATE ASC) AS OP_NUMBER
 
-        FROM
+            FROM
 
-                observation_period
+                    observation_period
 
-        ) AS OP1
+            ) AS OP1
 
-WHERE
+    WHERE
 
-        op_number = 1
+            op_number = 1
 
-GROUP BY        DATEDIFF(month,observation_period_START_DATE, observation_period_END_DATE)
+    GROUP BY        DATEDIFF(month,observation_period_START_DATE, observation_period_END_DATE)
 
-ORDER BY        DATEDIFF(month,observation_period_START_DATE, observation_period_END_DATE) ASC
+    ORDER BY        DATEDIFF(month,observation_period_START_DATE, observation_period_END_DATE) ASC
 
 Input:
 
@@ -82,19 +86,20 @@ Sample output record:
 
 
 
-### OP03:Number of people continuously observed throughout a year.
+OP03:Number of people continuously observed throughout a year.
+---
 
 Count number of people continuously observed throughout a specified year.
 
 Sample query:
 
-SELECT COUNT(DISTINCT person_ID) AS NUM_persons
+    SELECT COUNT(DISTINCT person_ID) AS NUM_persons
 
-FROM observation_period
+    FROM observation_period
 
-WHERE observation_period_start_date <= '01-jan-2011'
+    WHERE observation_period_start_date <= '01-jan-2011'
 
-AND observation_period_end_date >= '31-dec-2011';
+    AND observation_period_end_date >= '31-dec-2011';
 
 Input:
 
@@ -114,21 +119,22 @@ Sample output record:
 
 
 
-### OP04:Number of people who have gap in observation (two or more observations)
+OP04:Number of people who have gap in observation (two or more observations)
+---
 
 Count number of people who have two or more observations.
 
 Sample query:
 
-SELECT count( person_id ) AS num_persons
+    SELECT count( person_id ) AS num_persons
 
-FROM -- more than one observatio period
+    FROM -- more than one observatio period
 
-( SELECT person_id
+    ( SELECT person_id
 
-FROM observation_period GROUP BY person_id
+    FROM observation_period GROUP BY person_id
 
-HAVING COUNT( person_id ) > 1 );
+    HAVING COUNT( person_id ) > 1 );
 
 Input:
 
@@ -148,17 +154,18 @@ Sample output record:
 
 
 
-### OP05: Average length of observation, in month.
+OP05: Average length of observation, in month.
+---
 
 Count average length of observation period in month.
 
 Sample query:
 
-SELECT avg(
+    SELECT avg(
 
-datediff(month, observation_period_start_date , observation_period_end_date ) ) AS num_months
+    datediff(month, observation_period_start_date , observation_period_end_date ) ) AS num_months
 
-FROM observation_period;
+    FROM observation_period;
 
 Input:
 
@@ -178,15 +185,16 @@ Sample output record:
 
 
 
-### OP06: Average length of observation, in days.
+OP06: Average length of observation, in days.
+---
 
-### Count average number of observation days.
+Count average number of observation days.
 
 Sample query:
 
-SELECT avg( observation_period_end_date - observation_period_start_date ) AS num_days
+    SELECT avg( observation_period_end_date - observation_period_start_date ) AS num_days
 
-FROM observation_period;
+    FROM observation_period;
 
 Input:
 
@@ -204,59 +212,56 @@ Sample output record:
 | --- | --- |
 | num_days |  966 |
 
-
-
-### OP07:Distribution of age across all observation period records
+OP07:Distribution of age across all observation period records
+---
 
 Count distribution of age across all observation period records:  the mean, the standard deviation, the minimum, the 25th percentile, the median, the 75th percentile, the maximum and the number of missing values. No input is required for this query.
 
 Sample query:
 
-WITH t AS (
+    WITH t AS (
 
-SELECT DISTINCT
+    SELECT DISTINCT
 
-              person_id, EXTRACT( YEAR FROM first_observation_date ) - year_of_birth AS age
+                  person_id, EXTRACT( YEAR FROM first_observation_date ) - year_of_birth AS age
 
-         FROM -- person, first observation date
+             FROM -- person, first observation date
 
-            ( SELECT person_id
+                ( SELECT person_id
 
-                   , min( observation_period_start_date ) AS first_observation_date
+                       , min( observation_period_start_date ) AS first_observation_date
 
-                FROM observation_period
+                    FROM observation_period
 
-               GROUP BY person_id
+                   GROUP BY person_id
 
-            )
+                )
 
-         JOIN person USING( person_id )
+             JOIN person USING( person_id )
 
-        WHERE year_of_birth IS NOT NULL
+            WHERE year_of_birth IS NOT NULL
 
-) SELECT count(\*) AS num_people
+    ) SELECT count(\*) AS num_people
 
-     , min( age ) AS min_age
+         , min( age ) AS min_age
 
-     , max( age ) AS max_age
+         , max( age ) AS max_age
 
-     , round( avg( age ), 2 ) AS avg_age
+         , round( avg( age ), 2 ) AS avg_age
 
-     , round( stdDev( age ), 1 ) AS stdDev_age
+         , round( stdDev( age ), 1 ) AS stdDev_age
 
-     , (SELECT DISTINCT PERCENTILE_DISC(0.25) WITHIN GROUP (ORDER BY age ) over () FROM t) AS percentile_25
+         , (SELECT DISTINCT PERCENTILE_DISC(0.25) WITHIN GROUP (ORDER BY age ) over () FROM t) AS percentile_25
 
-     , (SELECT DISTINCT PERCENTILE_DISC(0.5)  WITHIN GROUP (ORDER BY age ) over () FROM t) AS median_age
+         , (SELECT DISTINCT PERCENTILE_DISC(0.5)  WITHIN GROUP (ORDER BY age ) over () FROM t) AS median_age
 
-     , (SELECT DISTINCT PERCENTILE_DISC(0.75) WITHIN GROUP (ORDER BY age ) over () FROM t) AS percentile_75
+         , (SELECT DISTINCT PERCENTILE_DISC(0.75) WITHIN GROUP (ORDER BY age ) over () FROM t) AS percentile_75
 
-        FROM t;
+            FROM t;
 
 Input:
 
 None
-
-
 
 Output:
 
@@ -284,55 +289,50 @@ Sample output record:
 | median_age |  31 |
 | percentile_75 |  47 |
 
-
-
-### OP08: Distribution of observation period records per person
+OP08: Distribution of observation period records per person
+---
 
 Counts the number of observation period records (observation_period_id) for all persons: the mean, the standard deviation, the minimum, the 25th percentile, the median, the 75th percentile, the maximum and the number of missing values. There is no input required for this query.
 
 Sample query:
 
-WITH obser_person AS
+    WITH obser_person AS
 
-(
+    (
 
-        SELECT        person_id,
+            SELECT        person_id,
 
-                        count(\*) as observation_periods
+                            count(\*) as observation_periods
 
-        FROM        observation_period
+            FROM        observation_period
 
-                                JOIN        person USING( person_id )
+                                    JOIN        person USING( person_id )
 
-        GROUP BY        person_id
+            GROUP BY        person_id
 
-)
+    )
 
-SELECT        min( observation_periods ) AS min_periods ,
+    SELECT        min( observation_periods ) AS min_periods ,
 
-                max( observation_periods ) AS max_periods ,
+                    max( observation_periods ) AS max_periods ,
 
-                round( avg( observation_periods ), 2 ) AS avg_periods ,
+                    round( avg( observation_periods ), 2 ) AS avg_periods ,
 
-                round( stdDev( observation_periods ), 1 ) AS stdDev_periods ,
+                    round( stdDev( observation_periods ), 1 ) AS stdDev_periods ,
 
-                (SELECT DISTINCT PERCENTILE_DISC(0.25) WITHIN GROUP( ORDER BY observation_periods ) OVER() FROM obser_person) AS percentile_25 ,
+                    (SELECT DISTINCT PERCENTILE_DISC(0.25) WITHIN GROUP( ORDER BY observation_periods ) OVER() FROM obser_person) AS percentile_25 ,
 
-                (SELECT DISTINCT PERCENTILE_DISC(0.5) WITHIN GROUP (ORDER BY observation_periods ) OVER() FROM obser_person) AS median ,
+                    (SELECT DISTINCT PERCENTILE_DISC(0.5) WITHIN GROUP (ORDER BY observation_periods ) OVER() FROM obser_person) AS median ,
 
-                (SELECT DISTINCT PERCENTILE_DISC(0.75) WITHIN GROUP (ORDER BY observation_periods ) OVER() FROM obser_person) AS percentile_75
+                    (SELECT DISTINCT PERCENTILE_DISC(0.75) WITHIN GROUP (ORDER BY observation_periods ) OVER() FROM obser_person) AS percentile_75
 
-FROM
+    FROM
 
-        obser_person
+            obser_person
 
 Input:
 
 None
-
-
-
-
 
 Output:
 
@@ -359,20 +359,20 @@ Sample output record:
 |  percentile_75 |  1  |
 
 
-
-### OP09:Observation period records per person
+OP09:Observation period records per person
+---
 
 List all people (person_id) who has specific number of observations. The input to the query is a value (or a comma-separated list of values) for a record count.
 
 Sample query:
 
-SELECT p.person_id, count(1) observation_period_count
+    SELECT p.person_id, count(1) observation_period_count
 
-FROM observation_period p
+    FROM observation_period p
 
-GROUP BY p.person_id
+    GROUP BY p.person_id
 
-having count(1) = 3;
+    having count(1) = 3;
 
 Input:
 
@@ -393,94 +393,18 @@ Sample output record:
 | observation_period_count |  3 |
 
 
+OP10: Observation period records stratified by observation month
+---
 
-### OP10: Observation period records stratified by observation month
-
-### Counts the observation period records stratified by observation month. All possible values are summarized.
+Counts the observation period records stratified by observation month. All possible values are summarized.
 
 Sample query:
 
-SELECT
-
-  month,
-
-  sum( observations ) AS num_observations
-
-FROM (
-
-  SELECT
-
-    person_id,
-
-    start_date,
-
-    end_date ,
-
-    month ,
-
-    min_count,
-
-    remainder ,
-
-    start_month,
-
-    DECODE( SIGN(start_month + remainder - 12), -1, start_month + remainder, 12) end1 ,
-
-    1,
-
-    start_month + remainder - 12 end2 ,
-
-    min_count + CASE
-
-      WHEN MONTH >= start_month AND MONTH <= DECODE( SIGN(start_month + remainder - 12), -1, start_month + remainder, 12) THEN 1
-
-      WHEN MONTH >= 1 AND MONTH <= start_month + remainder - 12 THEN 1
-
-      ELSE 0
-
-    END AS observations
-
-  FROM (
-
-    SELECT 1 AS month
-
-    UNION SELECT 2
-
-    UNION SELECT 3
-
-    UNION SELECT 4
-
-    UNION SELECT 5
-
-    UNION SELECT 6
-
-    UNION SELECT 7
-
-    UNION SELECT 8
-
-    UNION SELECT 9
-
-    UNION SELECT 10
-
-    UNION SELECT 11
-
-    UNION SELECT 12  )
-
-  CROSS JOIN (
-
     SELECT
 
-      person_id,
+      month,
 
-      start_date,
-
-      end_date ,
-
-      min_count,
-
-      start_month,
-
-      remainder
+      sum( observations ) AS num_observations
 
     FROM (
 
@@ -488,27 +412,103 @@ FROM (
 
         person_id,
 
-        observation_period_start_date start_date ,
+        start_date,
 
-        observation_period_end_date as end_date ,
+        end_date ,
 
-        round(months_between( observation_period_end_date, observation_period_start_date ) ) AS months /\* number of complete years \*/ ,
+        month ,
 
-        floor( round(months_between( observation_period_end_date, observation_period_start_date ) ) / 12 ) AS min_count ,
+        min_count,
 
-        extract( month from observation_period_start_date ) start_month ,
+        remainder ,
 
-        mod( cast(round(months_between( observation_period_end_date, observation_period_start_date ) ) AS integer), 12 ) AS remainder
+        start_month,
 
-      FROM
+        DECODE( SIGN(start_month + remainder - 12), -1, start_month + remainder, 12) end1 ,
 
-        observation_period
+        1,
 
-    )
+        start_month + remainder - 12 end2 ,
 
-  )
+        min_count + CASE
 
-) GROUP BY month order by month;
+          WHEN MONTH >= start_month AND MONTH <= DECODE( SIGN(start_month + remainder - 12), -1, start_month + remainder, 12) THEN 1
+
+          WHEN MONTH >= 1 AND MONTH <= start_month + remainder - 12 THEN 1
+
+          ELSE 0
+
+        END AS observations
+
+      FROM (
+
+        SELECT 1 AS month
+
+        UNION SELECT 2
+
+        UNION SELECT 3
+
+        UNION SELECT 4
+
+        UNION SELECT 5
+
+        UNION SELECT 6
+
+        UNION SELECT 7
+
+        UNION SELECT 8
+
+        UNION SELECT 9
+
+        UNION SELECT 10
+
+        UNION SELECT 11
+
+        UNION SELECT 12  )
+
+      CROSS JOIN (
+
+        SELECT
+
+          person_id,
+
+          start_date,
+
+          end_date ,
+
+          min_count,
+
+          start_month,
+
+          remainder
+
+        FROM (
+
+          SELECT
+
+            person_id,
+
+            observation_period_start_date start_date ,
+
+            observation_period_end_date as end_date ,
+
+            round(months_between( observation_period_end_date, observation_period_start_date ) ) AS months /\* number of complete years \*/ ,
+
+            floor( round(months_between( observation_period_end_date, observation_period_start_date ) ) / 12 ) AS min_count ,
+
+            extract( month from observation_period_start_date ) start_month ,
+
+            mod( cast(round(months_between( observation_period_end_date, observation_period_start_date ) ) AS integer), 12 ) AS remainder
+
+          FROM
+
+            observation_period
+
+        )
+
+      )
+
+    ) GROUP BY month order by month;
 
 Input:
 
@@ -531,32 +531,33 @@ Sample output record:
 
 
 OP11: Distribution of observation period end dates
+---
 
 This query is used to to provide summary statistics for observation period end dates (observation_period_end_date) across all observation period records: the mean, the standard deviation, the minimum, the 25th percentile, the median, the 75th percentile, the maximum and the number of missing values. No input is required for this query.
 
 Sample query:
 
-WITH op AS
+    WITH op AS
 
-( SELECT to_number( to_char( observation_period_end_date, 'J' ), 9999999 )::INT AS end_date
+    ( SELECT to_number( to_char( observation_period_end_date, 'J' ), 9999999 )::INT AS end_date
 
-         FROM observation_period)
+             FROM observation_period)
 
-SELECT to_date( min( end_date ), 'J' ) AS min_end_date
+    SELECT to_date( min( end_date ), 'J' ) AS min_end_date
 
-     , to_date( max( end_date ), 'J' ) AS max_end_date
+         , to_date( max( end_date ), 'J' ) AS max_end_date
 
-     , to_date( round( avg( end_date ) ), 'J' ) AS avg_end_date
+         , to_date( round( avg( end_date ) ), 'J' ) AS avg_end_date
 
-     , round( stdDev( end_date ) ) AS stdDev_end_days
+         , round( stdDev( end_date ) ) AS stdDev_end_days
 
-     , to_date( (SELECT DISTINCT PERCENTILE_DISC(0.25) WITHIN GROUP( ORDER BY end_date ) OVER () FROM op), 'J' ) AS percentile_25
+         , to_date( (SELECT DISTINCT PERCENTILE_DISC(0.25) WITHIN GROUP( ORDER BY end_date ) OVER () FROM op), 'J' ) AS percentile_25
 
-     , to_date( (SELECT DISTINCT PERCENTILE_DISC(0.5)  WITHIN GROUP (ORDER BY end_date ) OVER () FROM op), 'J' ) AS median
+         , to_date( (SELECT DISTINCT PERCENTILE_DISC(0.5)  WITHIN GROUP (ORDER BY end_date ) OVER () FROM op), 'J' ) AS median
 
-     , to_date( (SELECT DISTINCT PERCENTILE_DISC(0.75) WITHIN GROUP (ORDER BY end_date ) OVER () FROM op), 'J' ) AS percentile_75
+         , to_date( (SELECT DISTINCT PERCENTILE_DISC(0.75) WITHIN GROUP (ORDER BY end_date ) OVER () FROM op), 'J' ) AS percentile_75
 
-  FROM op; /\* end_date \*/
+      FROM op; /\* end_date \*/
 
 Input:
 
@@ -589,40 +590,41 @@ Sample output record:
 
 
 OP12: Distribution of observation period length
+---
 
 This query is used to provide summary statistics for the observation period length across all observation period records: the mean, the standard deviation, the minimum, the 25th percentile, the median, the 75th percentile, the maximum and the number of missing values. The length of an is defined as the difference between the start date and the end date. No input is required for this query.
 
 Sample query:
 
-SELECT
+    SELECT
 
-        min( period_length ) OVER() AS min_period,
+            min( period_length ) OVER() AS min_period,
 
-        max( period_length ) OVER() AS max_period,
+            max( period_length ) OVER() AS max_period,
 
-        round( avg( period_length ) OVER(), 2 ) AS avg_period,
+            round( avg( period_length ) OVER(), 2 ) AS avg_period,
 
-        round( stdDev( period_length ) OVER(), 1 ) AS stdDev_period,
+            round( stdDev( period_length ) OVER(), 1 ) AS stdDev_period,
 
-        PERCENTILE_DISC(0.25) WITHIN GROUP( ORDER BY period_length ) OVER() AS percentile_25,
+            PERCENTILE_DISC(0.25) WITHIN GROUP( ORDER BY period_length ) OVER() AS percentile_25,
 
-        PERCENTILE_DISC(0.5) WITHIN GROUP (ORDER BY period_length ) OVER() AS median,
+            PERCENTILE_DISC(0.5) WITHIN GROUP (ORDER BY period_length ) OVER() AS median,
 
-        PERCENTILE_DISC(0.75) WITHIN GROUP (ORDER BY period_length ) OVER() AS percentile_75
+            PERCENTILE_DISC(0.75) WITHIN GROUP (ORDER BY period_length ) OVER() AS percentile_75
 
-FROM /\* period_length \*/
+    FROM /\* period_length \*/
 
-        (
+            (
 
-                SELECT
+                    SELECT
 
-                        observation_period_end_date - observation_period_start_date + 1 AS period_length
+                            observation_period_end_date - observation_period_start_date + 1 AS period_length
 
-                FROM
+                    FROM
 
-                        observation_period
+                            observation_period
 
-        )
+            )
 
 Input:
 
@@ -655,36 +657,37 @@ Sample output record:
 
 
 OP13: Distribution of observation period start dates
+---
 
 This query is used to to provide summary statistics for observation period start dates (observation_period_start_date) across all observation period records: the mean, the standard deviation, the minimum, the 25th percentile, the median, the 75th percentile, the maximum and the number of missing values. No input is required for this query.
 
 Sample query:
 
-WITH op AS
+    WITH op AS
 
-        ( SELECT to_number( to_char( observation_period_start_date, 'J' ), 9999999)::INT AS start_date FROM observation_period )
+            ( SELECT to_number( to_char( observation_period_start_date, 'J' ), 9999999)::INT AS start_date FROM observation_period )
 
-SELECT
+    SELECT
 
-        to_date( min( start_date ), 'J' ) AS min_start_date ,
+            to_date( min( start_date ), 'J' ) AS min_start_date ,
 
-        to_date( max( start_date ), 'J' ) AS max_start_date ,
+            to_date( max( start_date ), 'J' ) AS max_start_date ,
 
-        to_date( round( avg( start_date ) ), 'J' ) AS avg_start_date ,
+            to_date( round( avg( start_date ) ), 'J' ) AS avg_start_date ,
 
-        round( stdDev( start_date ) ) AS stdDev_days,
+            round( stdDev( start_date ) ) AS stdDev_days,
 
-        to_date( (SELECT DISTINCT PERCENTILE_DISC(0.25) WITHIN GROUP( ORDER BY start_date )  OVER() FROM op), 'J' ) AS percentile_25 ,
+            to_date( (SELECT DISTINCT PERCENTILE_DISC(0.25) WITHIN GROUP( ORDER BY start_date )  OVER() FROM op), 'J' ) AS percentile_25 ,
 
-        to_date( (SELECT DISTINCT PERCENTILE_DISC(0.5) WITHIN GROUP (ORDER BY start_date )  OVER() FROM op), 'J' ) AS median ,
+            to_date( (SELECT DISTINCT PERCENTILE_DISC(0.5) WITHIN GROUP (ORDER BY start_date )  OVER() FROM op), 'J' ) AS median ,
 
-        to_date( (SELECT DISTINCT PERCENTILE_DISC(0.75) WITHIN GROUP (ORDER BY start_date )  OVER() FROM op), 'J' ) AS percentile_75
+            to_date( (SELECT DISTINCT PERCENTILE_DISC(0.75) WITHIN GROUP (ORDER BY start_date )  OVER() FROM op), 'J' ) AS percentile_75
 
-FROM
+    FROM
 
-                op
+                    op
 
-;
+    ;
 
 Input:
 
@@ -717,64 +720,65 @@ Sample output record:
 
 
 OP14 :Distribution of age, stratified by gender
+---
 
-### This query is used to provide summary statistics for the age across all observation records stratified by gender (gender_concept_id): the mean, the standard deviation, the minimum, the 25th percentile, the median, the 75th percentile, the maximum and the number of missing values. The age value is defined by the earliest observation date. Age is summarized for all existing gender_concept_id values.
+This query is used to provide summary statistics for the age across all observation records stratified by gender (gender_concept_id): the mean, the standard deviation, the minimum, the 25th percentile, the median, the 75th percentile, the maximum and the number of missing values. The age value is defined by the earliest observation date. Age is summarized for all existing gender_concept_id values.
 
 Sample query:
 
-WITH t AS /\* person, gender, age \*/
+    WITH t AS /\* person, gender, age \*/
 
-     ( SELECT person_id, NVL( concept_name, 'MISSING' ) AS gender
+         ( SELECT person_id, NVL( concept_name, 'MISSING' ) AS gender
 
-            , extract( year FROM first_observation_date ) - year_of_birth AS age
+                , extract( year FROM first_observation_date ) - year_of_birth AS age
 
-         FROM -- person, first observation period date
+             FROM -- person, first observation period date
 
-            ( SELECT person_id
+                ( SELECT person_id
 
-                   , min( observation_period_start_date ) AS first_observation_date
+                       , min( observation_period_start_date ) AS first_observation_date
 
-                FROM observation_period
+                    FROM observation_period
 
-               GROUP BY person_id
+                   GROUP BY person_id
 
-            )
+                )
 
-         JOIN person USING( person_id )
+             JOIN person USING( person_id )
 
-         LEFT OUTER JOIN concept ON concept_id = gender_concept_id
+             LEFT OUTER JOIN concept ON concept_id = gender_concept_id
 
-        WHERE year_of_birth IS NOT NULL
+            WHERE year_of_birth IS NOT NULL
 
-     )
+         )
 
-SELECT gender
+    SELECT gender
 
-     , count(\*) AS num_people
+         , count(\*) AS num_people
 
-     , min( age ) AS min_age
+         , min( age ) AS min_age
 
-     , max( age ) AS max_age
+         , max( age ) AS max_age
 
-     , round( avg( age ), 2 ) AS avg_age
+         , round( avg( age ), 2 ) AS avg_age
 
-     , round( stdDev( age ), 1 ) AS stdDev_age
+         , round( stdDev( age ), 1 ) AS stdDev_age
 
-     , (SELECT DISTINCT PERCENTILE_DISC(0.25) WITHIN GROUP( ORDER BY age ) over ()
+         , (SELECT DISTINCT PERCENTILE_DISC(0.25) WITHIN GROUP( ORDER BY age ) over ()
 
-                                     AS percentile_25 FROM t)
+                                         AS percentile_25 FROM t)
 
-     , (SELECT DISTINCT PERCENTILE_DISC(0.5)  WITHIN GROUP (ORDER BY age ) over ()
+         , (SELECT DISTINCT PERCENTILE_DISC(0.5)  WITHIN GROUP (ORDER BY age ) over ()
 
-                                     AS median FROM t)
+                                         AS median FROM t)
 
-     , (SELECT DISTINCT PERCENTILE_DISC(0.75) WITHIN GROUP (ORDER BY age ) over ()
+         , (SELECT DISTINCT PERCENTILE_DISC(0.75) WITHIN GROUP (ORDER BY age ) over ()
 
-                                     AS percential_75 FROM t)
+                                         AS percential_75 FROM t)
 
-  FROM t
+      FROM t
 
-GROUP BY gender
+    GROUP BY gender
 
 Input:
 
@@ -811,66 +815,67 @@ Sample output record:
 
 
 OP15: Counts of age, stratified by gender
+---
 
-### This query is used to count the age across all observation records stratified by gender (gender_concept_id). The age value is defined by the earliest observation date. Age is summarized for all existing gender_concept_id values.
+This query is used to count the age across all observation records stratified by gender (gender_concept_id). The age value is defined by the earliest observation date. Age is summarized for all existing gender_concept_id values.
 
 Sample query:
 
-SELECT        age,
+    SELECT        age,
 
-                gender,
+                    gender,
 
-                count(\*) AS num_people
+                    count(\*) AS num_people
 
-FROM
+    FROM
 
-        (
+            (
 
-        SELECT        person_id,
+            SELECT        person_id,
 
-                        NVL( concept_name, 'MISSING' ) AS gender,
+                            NVL( concept_name, 'MISSING' ) AS gender,
 
-                        extract( YEAR FROM first_observation_date ) - year_of_birth AS age
+                            extract( YEAR FROM first_observation_date ) - year_of_birth AS age
 
-        FROM
+            FROM
 
-                (
+                    (
 
-                SELECT        person_id,
+                    SELECT        person_id,
 
-                                min( observation_period_start_date ) AS first_observation_date
+                                    min( observation_period_start_date ) AS first_observation_date
 
-                FROM
+                    FROM
 
-                        observation_period
+                            observation_period
 
-                GROUP BY person_id
+                    GROUP BY person_id
 
-                )
+                    )
 
-                        JOIN
+                            JOIN
 
-                                person USING( person_id )
+                                    person USING( person_id )
 
-                        LEFT OUTER JOIN
+                            LEFT OUTER JOIN
 
-                                concept
+                                    concept
 
-                                        ON        concept_id = gender_concept_id
+                                            ON        concept_id = gender_concept_id
 
-        WHERE
+            WHERE
 
-                extract( YEAR FROM first_observation_date ) - year_of_birth >= 0
+                    extract( YEAR FROM first_observation_date ) - year_of_birth >= 0
 
-        )
+            )
 
-GROUP BY        age,
+    GROUP BY        age,
 
-                        gender
+                            gender
 
-ORDER BY        age,
+    ORDER BY        age,
 
-                        gender
+                            gender
 
 Input:
 
@@ -895,108 +900,109 @@ Sample output record:
 
 
 OP16: Count of genders, stratified by year and age group
+---
 
 This query is used to count the genders (gender_concept_id) across all observation period records stratified by year and age group. The age groups are calculated as 10 year age bands from the age of a person at the observation period start date. All possible value combinations are summarized.
 
 Sample query:
 
-SELECT
-
-  observation_year,
-
-  age_group,
-
-  gender,
-
-  count(\*) AS num_people
-
-FROM (
-
-  SELECT DISTINCT
-
-    person_id ,
-
-    EXTRACT( YEAR from observation_period_start_date ) AS observation_year
-
-  FROM observation_period
-
-)
-
-JOIN (
-
-  SELECT
-
-    person_id,
-
-    gender ,
-
-    CAST(FLOOR( age / 10 ) \* 10 AS VARCHAR)||' to '||CAST(( FLOOR( age / 10 ) \* 10 ) + 9 AS VARCHAR) AS age_group
-
-  FROM (
-
     SELECT
 
-      person_id,
+      observation_year,
 
-      NVL( concept_name, 'MISSING' ) AS gender,
+      age_group,
 
-      year_of_birth ,
+      gender,
 
-      extract( YEAR FROM first_observation_date ) - year_of_birth AS age
+      count(\*) AS num_people
 
     FROM (
+
+      SELECT DISTINCT
+
+        person_id ,
+
+        EXTRACT( YEAR from observation_period_start_date ) AS observation_year
+
+      FROM observation_period
+
+    )
+
+    JOIN (
 
       SELECT
 
         person_id,
 
-        gender_concept_id,
+        gender ,
 
-        year_of_birth ,
+        CAST(FLOOR( age / 10 ) \* 10 AS VARCHAR)||' to '||CAST(( FLOOR( age / 10 ) \* 10 ) + 9 AS VARCHAR) AS age_group
 
-        min( observation_period_start_date ) AS first_observation_date
+      FROM (
 
-      FROM
+        SELECT
 
-        observation_period
+          person_id,
 
-      JOIN person USING( person_id )
+          NVL( concept_name, 'MISSING' ) AS gender,
 
-      GROUP BY
+          year_of_birth ,
 
-        person_id,
+          extract( YEAR FROM first_observation_date ) - year_of_birth AS age
 
-        gender_concept_id,
+        FROM (
 
-        year_of_birth
+          SELECT
 
-    )
+            person_id,
 
-    LEFT OUTER JOIN concept ON concept_id = gender_concept_id
+            gender_concept_id,
 
-    WHERE year_of_birth IS NOT NULL
+            year_of_birth ,
 
-  )
+            min( observation_period_start_date ) AS first_observation_date
 
-  WHERE age >= 0
+          FROM
 
-) USING( person_id )
+            observation_period
 
-GROUP BY
+          JOIN person USING( person_id )
 
-  observation_year,
+          GROUP BY
 
-  age_group,
+            person_id,
 
-  gender
+            gender_concept_id,
 
-ORDER BY
+            year_of_birth
 
-  observation_year,
+        )
 
-  age_group,
+        LEFT OUTER JOIN concept ON concept_id = gender_concept_id
 
-  gender;
+        WHERE year_of_birth IS NOT NULL
+
+      )
+
+      WHERE age >= 0
+
+    ) USING( person_id )
+
+    GROUP BY
+
+      observation_year,
+
+      age_group,
+
+      gender
+
+    ORDER BY
+
+      observation_year,
+
+      age_group,
+
+      gender;
 
 Input:
 
@@ -1025,20 +1031,21 @@ Sample output record:
 
 
 OP17: Counts of observation period records stratified by observation end date month.
+---
 
 This query is used to count the observation period records stratified by observation month and person end. person end is an indicator whether a person has completed the last observation period in a given observation month. All possible values are summarized.
 
 Sample query:
 
-SELECT EXTRACT( month
+    SELECT EXTRACT( month
 
-FROM observation_period_end_date ) observation_month , count(\*) AS num_observations
+    FROM observation_period_end_date ) observation_month , count(\*) AS num_observations
 
-FROM observation_period
+    FROM observation_period
 
-GROUP BY observation_month
+    GROUP BY observation_month
 
-ORDER BY 1;
+    ORDER BY 1;
 
 Input:
 
@@ -1061,20 +1068,21 @@ Sample output record:
 
 
 OP18 :Counts of observation period records stratified by start of observation month
+---
 
 This query is used to count the observation period records stratified by observation month and person end. person end is an indicator whether a person has initiated the first observation period in a given observation month. All possible values are summarized.
 
 Sample query:
 
-SELECT EXTRACT( month
+    SELECT EXTRACT( month
 
-FROM observation_period_start_date ) observation_month , count(\*) AS num_observations
+    FROM observation_period_start_date ) observation_month , count(\*) AS num_observations
 
-FROM observation_period
+    FROM observation_period
 
-GROUP BY observation_month
+    GROUP BY observation_month
 
-ORDER BY 1;
+    ORDER BY 1;
 
 Input:
 
@@ -1097,98 +1105,99 @@ Sample output record:
 
 
 OP19 :Distribution of observation period length, stratified by age.
+---
 
 This query is used to provide summary statistics for the observation period length across all observation period records stratified by age: the mean, the standard deviation, the minimum, the 25th percentile, the median, the 75th percentile, the maximum and the number of missing values. The length of an is defined as the difference between the start date and the end date. The age value is defined at the time of the observation date. All existing age values are summarized.
 
 Sample query:
 
-SELECT
-
-  age,
-
-  count(\*) AS observation_periods_cnt ,
-
-  min( period_length ) AS min_period ,
-
-  max( period_length ) AS max_period ,
-
-  round( avg( period_length ), 2 ) AS avg_period ,
-
-  round( stdDev( period_length ), 1 ) AS stdDev_period ,
-
-  percentile_25,
-
-  median,
-
-  percentile_75
-
-FROM (
-
-  SELECT
-
-    person_id,
-
-    age,
-
-    period_length,
-
-    PERCENTILE_DISC(0.25) WITHIN GROUP( ORDER BY period_length ) over(partition by age) AS percentile_25 ,
-
-    PERCENTILE_DISC(0.5) WITHIN GROUP (ORDER BY period_length ) over(partition by age) AS median ,
-
-    PERCENTILE_DISC(0.75) WITHIN GROUP (ORDER BY period_length ) over(partition by age) AS percentile_75
-
-  FROM /\* person, age \*/ (
-
     SELECT
 
-      person_id ,
+      age,
 
-      extract( YEAR FROM first_observation_date ) - year_of_birth AS age
+      count(\*) AS observation_periods_cnt ,
+
+      min( period_length ) AS min_period ,
+
+      max( period_length ) AS max_period ,
+
+      round( avg( period_length ), 2 ) AS avg_period ,
+
+      round( stdDev( period_length ), 1 ) AS stdDev_period ,
+
+      percentile_25,
+
+      median,
+
+      percentile_75
 
     FROM (
 
       SELECT
 
-        person_id ,
+        person_id,
 
-        min( observation_period_start_date ) AS first_observation_date
+        age,
 
-      FROM observation_period
+        period_length,
 
-      GROUP BY person_id
+        PERCENTILE_DISC(0.25) WITHIN GROUP( ORDER BY period_length ) over(partition by age) AS percentile_25 ,
+
+        PERCENTILE_DISC(0.5) WITHIN GROUP (ORDER BY period_length ) over(partition by age) AS median ,
+
+        PERCENTILE_DISC(0.75) WITHIN GROUP (ORDER BY period_length ) over(partition by age) AS percentile_75
+
+      FROM /\* person, age \*/ (
+
+        SELECT
+
+          person_id ,
+
+          extract( YEAR FROM first_observation_date ) - year_of_birth AS age
+
+        FROM (
+
+          SELECT
+
+            person_id ,
+
+            min( observation_period_start_date ) AS first_observation_date
+
+          FROM observation_period
+
+          GROUP BY person_id
+
+        )
+
+        JOIN person USING( person_id )
+
+        WHERE year_of_birth IS NOT NULL
+
+      )
+
+      JOIN  (
+
+        SELECT
+
+          person_id ,
+
+          observation_period_end_date - observation_period_start_date + 1 AS period_length
+
+        FROM observation_period
+
+      ) USING( person_id )
 
     )
 
-    JOIN person USING( person_id )
+    GROUP BY
 
-    WHERE year_of_birth IS NOT NULL
+      age,
 
-  )
+      percentile_25 ,
 
-  JOIN  (
+      median ,
 
-    SELECT
-
-      person_id ,
-
-      observation_period_end_date - observation_period_start_date + 1 AS period_length
-
-    FROM observation_period
-
-  ) USING( person_id )
-
-)
-
-GROUP BY
-
-  age,
-
-  percentile_25 ,
-
-  median ,
-
-  percentile_75;
+      percentile_75;
 
 Input:
 
@@ -1225,100 +1234,101 @@ Sample output record:
 
 
 OP20: Distribution of observation period length, stratified by gender.
+---
 
 This query is used to provide summary statistics for the observation period length across all observation period records stratified by gender (gender_concept_id): the mean, the standard deviation, the minimum, the 25th percentile, the median, the 75th percentile, the maximum and the number of missing values. The length of an is defined as the difference between the start date and the end date. All existing gender_concept_id values are summarized.
 
 Sample query:
 
-SELECT
-
-  gender,
-
-  count(\*) AS observation_periods_cnt ,
-
-  min( period_length ) AS min_period ,
-
-  max( period_length ) AS max_period ,
-
-  round( avg( period_length ), 2 ) AS avg_period ,
-
-  round( stdDev( period_length ), 1 ) AS stdDev_period ,
-
-  percentile_25,
-
-  median,
-
-  percentile_75
-
-FROM (
-
-  SELECT
-
-    person_id,
-
-    gender,
-
-    period_length,
-
-    PERCENTILE_DISC(0.25) WITHIN GROUP( ORDER BY period_length ) over(partition by gender) AS percentile_25 ,
-
-    PERCENTILE_DISC(0.5) WITHIN GROUP (ORDER BY period_length ) over(partition by gender) AS median ,
-
-    PERCENTILE_DISC(0.75) WITHIN GROUP (ORDER BY period_length ) over(partition by gender) AS percentile_75
-
-  FROM /\* person, age \*/ (
-
     SELECT
 
-      person_id ,
+      gender,
 
-      concept_name as gender
+      count(\*) AS observation_periods_cnt ,
+
+      min( period_length ) AS min_period ,
+
+      max( period_length ) AS max_period ,
+
+      round( avg( period_length ), 2 ) AS avg_period ,
+
+      round( stdDev( period_length ), 1 ) AS stdDev_period ,
+
+      percentile_25,
+
+      median,
+
+      percentile_75
 
     FROM (
 
       SELECT
 
-        person_id ,
+        person_id,
 
-        min( observation_period_start_date ) AS first_observation_date
+        gender,
 
-      FROM observation_period
+        period_length,
 
-      GROUP BY person_id
+        PERCENTILE_DISC(0.25) WITHIN GROUP( ORDER BY period_length ) over(partition by gender) AS percentile_25 ,
+
+        PERCENTILE_DISC(0.5) WITHIN GROUP (ORDER BY period_length ) over(partition by gender) AS median ,
+
+        PERCENTILE_DISC(0.75) WITHIN GROUP (ORDER BY period_length ) over(partition by gender) AS percentile_75
+
+      FROM /\* person, age \*/ (
+
+        SELECT
+
+          person_id ,
+
+          concept_name as gender
+
+        FROM (
+
+          SELECT
+
+            person_id ,
+
+            min( observation_period_start_date ) AS first_observation_date
+
+          FROM observation_period
+
+          GROUP BY person_id
+
+        )
+
+        JOIN person USING( person_id )
+
+        JOIN concept ON concept_id = gender_concept_id
+
+        WHERE year_of_birth IS NOT NULL
+
+      )
+
+      JOIN  (
+
+        SELECT
+
+          person_id ,
+
+          observation_period_end_date - observation_period_start_date + 1 AS period_length
+
+        FROM observation_period
+
+      ) USING( person_id )
 
     )
 
-    JOIN person USING( person_id )
+    GROUP BY
 
-    JOIN concept ON concept_id = gender_concept_id
+      gender,
 
-    WHERE year_of_birth IS NOT NULL
+      percentile_25 ,
 
-  )
+      median ,
 
-  JOIN  (
-
-    SELECT
-
-      person_id ,
-
-      observation_period_end_date - observation_period_start_date + 1 AS period_length
-
-    FROM observation_period
-
-  ) USING( person_id )
-
-)
-
-GROUP BY
-
-  gender,
-
-  percentile_25 ,
-
-  median ,
-
-  percentile_75;
+      percentile_75;
 
 Input:
 

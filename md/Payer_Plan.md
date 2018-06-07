@@ -1,16 +1,20 @@
+Payer Plan Queries
+---
+
 PP01: Continuous years with patient counts
+---
 
 List number of patients who have continuous payer plan of at least one year
 
 Sample query:
 
-SELECT floor((p.payer_plan_period_end_date - p.payer_plan_period_start_date)/365) AS year_int, count(1) AS num_patients
+	SELECT floor((p.payer_plan_period_end_date - p.payer_plan_period_start_date)/365) AS year_int, count(1) AS num_patients
 
-FROM payer_plan_period p
+	FROM payer_plan_period p
 
-GROUP BY floor((p.payer_plan_period_end_date - p.payer_plan_period_start_date)/365)
+	GROUP BY floor((p.payer_plan_period_end_date - p.payer_plan_period_start_date)/365)
 
-ORDER BY 1;
+	ORDER BY 1;
 
 Input:
 
@@ -31,29 +35,30 @@ Sample output record:
 | num_patients |  42458099 |
 
 
-P P02:Patient distribution by plan type
+PP02:Patient distribution by plan type
+---
 
 Sample query:
 
-select
+	select
 
-  t.plan_source_value,
+	  t.plan_source_value,
 
-  t.pat_cnt as num_patients,
+	  t.pat_cnt as num_patients,
 
-  100.00\*t.pat_cnt/ (sum(t.pat_cnt) over()) perc_of_total_count
+	  100.00\*t.pat_cnt/ (sum(t.pat_cnt) over()) perc_of_total_count
 
-from (
+	from (
 
-  select p.plan_source_value, count(1) as pat_cnt
+	  select p.plan_source_value, count(1) as pat_cnt
 
-  from payer_plan_period p
+	  from payer_plan_period p
 
-  group by p.plan_source_value
+	  group by p.plan_source_value
 
-) t
+	) t
 
-order by t.plan_source_value;
+	order by t.plan_source_value;
 
 Input:
 

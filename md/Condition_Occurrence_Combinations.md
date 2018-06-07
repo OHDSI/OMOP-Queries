@@ -1,19 +1,18 @@
-
+Condition Occurrence Combinations Queries
+---
 
 COC01: Determines first line of therapy for a condition
+---
 
-|
 Input:
 
 |  Parameter |  Example |  Mandatory |  Notes |
 | --- | --- | --- | --- |
 | list of condition_concept_id | 432791, 4080130, 4081073, 4083996, 4083997, 4083998, 4084171, 4084172, 4084173, 4084174, 4086741, 4086742, 4086744, 4120778, 4125819, 4140613, 4161207, 4224624, 4224625, 4270861, 4270862, 4270865, 4292365, 4292366, 4292524, 4299298, 4299302, 4301157, 4307793 | Yes | Angioedema 1 |
-| --- | --- | --- | --- |
 | ancestor_concept_id | 21003378 | Yes | Angioedema |
-| --- | --- | --- | --- |
-
 
 Sample query run:
+
 The following is a sample run of the query. The input parameters are highlighted in  blue  
 
 	SELECT 
@@ -68,44 +67,29 @@ Output field list:
 |  Field |  Description |
 | --- | --- |
 | ingredient_name |   |
-| --- | --- |
 | ingredient_concept_id |   |
-| --- | --- |
 | count |   |
-| --- | --- |
-
 
 Sample output record:
 
 |  Field |  Description |
 | --- | --- |
 | ingredient_name |   |
-| --- | --- |
 | ingredient_concept_id |   |
-| --- | --- |
 | count |   |
-| --- | --- |
-
-  |
-| --- |
-
-
-
 
 COC02: Determines length of course of therapy for a condition
+---
 
-|
 Input:
 
 |  Parameter |  Example |  Mandatory |  Notes |
 | --- | --- | --- | --- |
 | condition_concept_id | 500000201 | Yes | SNOMed codes for OMOP Aplastic Anemia 1 |
-| --- | --- | --- | --- |
-
 
 Sample query run:
-The following is a sample run of the query. The input parameters are highlighted in  blue  
 
+The following is a sample run of the query. The input parameters are highlighted in  blue  
 
 	SELECT	ingredient_name,
 			ingredient_concept_id,
@@ -159,50 +143,35 @@ The following is a sample run of the query. The input parameters are highlighted
 	ORDER BY	num_patients DESC;
 
 
-
- Output:
+Output:
 
 Output field list:
 
 |  Field |  Description |
 | --- | --- |
 | ingredient_name |   |
-| --- | --- |
 | ingredient_concept_id |   |
-| --- | --- |
 | count |   |
-| --- | --- |
-
 
 Sample output record:
 
 |  Field |  Description |
 | --- | --- |
 | ingredient_name |   |
-| --- | --- |
 | ingredient_concept_id |   |
-| --- | --- |
 | count |   |
-| --- | --- |
-
-  |
-| --- |
-
-
-
 
 COC05: Mortality rate after initial diagnosis
+---
 
-|
 Input:
 
 |  Parameter |  Example |  Mandatory |  Notes |
 | --- | --- | --- | --- |
 | concept_name | OMOP Acute Myocardial Infarction 1 | Yes |   |
-| --- | --- | --- | --- |
-
 
 Sample query run:
+
 The following is a sample run of the query. The input parameters are highlighted in  blue  
 
 	SELECT 
@@ -243,46 +212,33 @@ The following is a sample run of the query. The input parameters are highlighted
 	  death.death_date <= condition_era_start_date + 360; 
 
 
-
- Output:
+Output:
 
 Output field list:
 
 |  Field |  Description |
 | --- | --- |
 | all_infarctions |   |
-| --- | --- |
 | death_from_infarction |   |
-| --- | --- |
-
 
 Sample output record:
 
 |  Field |  Description |
 | --- | --- |
 | all_infarctions |   |
-| --- | --- |
 | death_from_infarction |   |
-| --- | --- |
-
-  |
-| --- |
-
-
-
 
 COC06: Time until death after initial diagnosis
+---
 
-|
 Input:
 
 |  Parameter |  Example |  Mandatory |  Notes |
 | --- | --- | --- | --- |
 | concept_name | OMOP Acute Myocardial Infarction 1 | Yes |   |
-| --- | --- | --- | --- |
-
 
 Sample query run:
+
 The following is a sample run of the query. The input parameters are highlighted in  blue  
 
 	SELECT COUNT( DISTINCT diagnosed.person_id ) AS all_infarction_deaths
@@ -318,57 +274,39 @@ The following is a sample run of the query. The input parameters are highlighted
 	  JOIN death 
 	    ON death.person_id = diagnosed.person_id
 
-
-
- Output:
+Output:
 
 Output field list:
 
 |  Field |  Description |
 | --- | --- |
 | all_infarction_deaths |   |
-| --- | --- |
 | min_years |   |
-| --- | --- |
 | max_years |   |
-| --- | --- |
 | avg_years |   |
-| --- | --- |
-
 
 Sample output record:
 
 |  Field |  Description |
 | --- | --- |
 | all_infarction_deaths |   |
-| --- | --- |
 | min_years |   |
-| --- | --- |
 | max_years |   |
-| --- | --- |
 | avg_years |   |
-| --- | --- |
-
-  |
-| --- |
-
-
-
 
 COC07: Patients with condition in conjunction with a procedure some number of days prior to or after initial condition.
+---
 
-| Aplastic Anemia AND Occurrence of at least one diagnostic procedure code for bone marrow aspiration or biopsy within 60 days prior to the diagnostic code.
+Aplastic Anemia AND Occurrence of at least one diagnostic procedure code for bone marrow aspiration or biopsy within 60 days prior to the diagnostic code.
 Input:
 
 |  Parameter |  Example |  Mandatory |  Notes |
 | --- | --- | --- | --- |
 | concept_name | OMOP Aplastic Anemia 1 | Yes |   |
-| --- | --- | --- | --- |
 | list of procedure_concept_id | 2002382, 2002403, 2108452, 2108453, 2212660, 2212662, 3045142 , 3048879, 36359239, 37586183 |   | Bone marrow aspiration or biopsy |
-| --- | --- | --- | --- |
-
 
 Sample query run:
+
 The following is a sample run of the query. The input parameters are highlighted in  blue  
 
 
@@ -397,58 +335,38 @@ The following is a sample run of the query. The input parameters are highlighted
 		proc.procedure_concept_id IN ( 2002382, 2002403, 2108452, 2108453, 2212660, 2212662, 3045142, 3048879, 36359239, 37586183 )
 	AND procedure_date BETWEEN condition_era_start_date - 60 AND condition_era_start_date;
 
-
-
- Output:
+Output:
 
 Output field list:
 
 |  Field |  Description |
 | --- | --- |
 | condition_concept_id | A foreign key that refers to a standard condition concept identifier in the vocabulary. |
-| --- | --- |
 | person_id |   |
-| --- | --- |
 | procedure_date |   |
-| --- | --- |
 | condition_era_start_date |   |
-| --- | --- |
-
 
 Sample output record:
 
 |  Field |  Description |
 | --- | --- |
 | person_id |   |
-| --- | --- |
 | procedure_date |   |
-| --- | --- |
 | condition_era_start_date |   |
-| --- | --- |
-
-  |
-| --- |
-
-
-
 
 COC08: Patients with condition and some observation criteria some number of days prior to or after initial condition
+---
 
-|
 Input:
 
 |  Parameter |  Example |  Mandatory |  Notes |
 | --- | --- | --- | --- |
 | concept_name | OMOP Aplastic Anemia 1 | Yes |   |
-| --- | --- | --- | --- |
 | list of observation_concept_id | 3000905, 3003282, 3010813 |   | Leukocytes #/volume in blood |
-| --- | --- | --- | --- |
-
 
 Sample query run:
 
 The following is a sample run of the query. The input parameters are highlighted in  blue  
-
 
 	SELECT DISTINCT 
 	  condition.person_id , 
@@ -476,51 +394,35 @@ The following is a sample run of the query. The input parameters are highlighted
 	  unit_concept_id = 8961 /* Thousand per cubic millimeter */ AND 
 	  value_as_number <= 3.5;
 
-
-
- Output:
+Output:
 
 Output field list:
 
 |  Field |  Description |
 | --- | --- |
 | person_id |   |
-| --- | --- |
 | observation_date |   |
-| --- | --- |
 | condition_era_start_date | The start date for the condition era constructed from the individual instances of condition occurrences. It is the start date of the very first chronologically recorded instance of the condition. |
-| --- | --- |
-
 
 Sample output record:
 
 |  Field |  Description |
 | --- | --- |
 | person_id |   |
-| --- | --- |
 | observation_date |   |
-| --- | --- |
 | condition_era_start_date | The start date for the condition era constructed from the individual instances of condition occurrences. It is the start date of the very first chronologically recorded instance of the condition. |
-| --- | --- |
-
-  |
-| --- |
-
-
-
 
 COC09: Condition that is regionally dependent
+---
 
-|
 Input:
 
 |  Parameter |  Example |  Mandatory |  Notes |
 | --- | --- | --- | --- |
 | source_code | 088.81 | Yes | lyme disease |
-| --- | --- | --- | --- |
-
 
 Sample query run:
+
 The following is a sample run of the query. The input parameters are highlighted in  blue  
 
 	SELECT	state,
@@ -552,63 +454,41 @@ The following is a sample run of the query. The input parameters are highlighted
 	GROUP BY	state
 	ORDER BY	4 DESC;
 
-
-
- Output:
+Output:
 
 Output field list:
 
 |  Field |  Description |
 | --- | --- |
 | state | The state field as it appears in the source data. |
-| --- | --- |
 | count |   |
-| --- | --- |
 | lyme_cases |   |
-| --- | --- |
 | percent |   |
-| --- | --- |
-
 
 Sample output record:
 
 |  Field |  Description |
 | --- | --- |
 | state |   |
-| --- | --- |
 | count |   |
-| --- | --- |
 | lyme_cases |   |
-| --- | --- |
 | percent |   |
-| --- | --- |
-
-  |
-| --- |
-
-
-
 
 COC10: Lenght of condition as function of treatment
+---
 
-|
 Input:
 
 |  Parameter |  Example |  Mandatory |  Notes |
 | --- | --- | --- | --- |
 | concept_code | '22851','20936','22612','22523','22630','22614','22842' , '22632', '20930','22524','27130','22525' | Yes |   |
-| --- | --- | --- | --- |
 | concept_code | 20610','20552','207096','20553','20550','20605' | Yes |   |
-| --- | --- | --- | --- |
 | drug_concept_id | 1125315, 778711, 115008, 1177480, 1112807, 1506270 | Yes |   |
-| --- | --- | --- | --- |
 | concept_code | '97001', '97140', '97002' | Yes |   |
-| --- | --- | --- | --- |
 | concept_code | G0283 | Yes |   |
-| --- | --- | --- | --- |
-
 
 Sample query run:
+
 The following is a sample run of the query. The input parameters are highlighted in  blue  
 
 	SELECT 
@@ -721,59 +601,39 @@ The following is a sample run of the query. The input parameters are highlighted
 	GROUP BY treatment 
 	ORDER BY treatment;
 
-
-
- Output:
+Output:
 
 Output field list:
 
 |  Field |  Description |
 | --- | --- |
 | treatment |   |
-| --- | --- |
 | count |   |
-| --- | --- |
 | min |   |
-| --- | --- |
 | max |   |
-| --- | --- |
 | avg_condition_days |   |
-| --- | --- |
-
 
 Sample output record:
 
 |  Field |  Description |
 | --- | --- |
 | treatment |   |
-| --- | --- |
 | count |   |
-| --- | --- |
 | min |   |
-| --- | --- |
 | max |   |
-| --- | --- |
 | avg_condition_days |   |
-| --- | --- |
-
-  |
-| --- |
-
-
-
 
 COC11: Given a condition, what treatment did patient receive
+---
 
-|
 Input:
 
 |  Parameter |  Example |  Mandatory |  Notes |
 | --- | --- | --- | --- |
 | concept_code | '22851', '20936', '22612', '22523', '22630', '22614', '22842' , '22632', '20930', '22524', '27130', '22525' | Yes |   |
-| --- | --- | --- | --- |
-
 
 Sample query run:
+
 The following is a sample run of the query. The input parameters are highlighted in  blue  
 
 	SELECT treatment, count(*) 
@@ -881,21 +741,14 @@ Output field list:
 |  Field |  Description |
 | --- | --- |
 | treatment |   |
-| --- | --- |
 | count |   |
-| --- | --- |
-
 
 Sample output record:
 
 |  Field |  Description |
 | --- | --- |
 | treatment |   |
-| --- | --- |
 | count |   |
-| --- | --- |
 
-  |
-| --- |
 
 

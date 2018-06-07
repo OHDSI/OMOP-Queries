@@ -1,4 +1,7 @@
-CO04:Count In what place of service where condition diagnoses.
+Condition Occurrence Queries
+---
+
+CO04: Count In what place of service where condition diagnoses.
 ---
 
 Returns the distribution of the visit place of service where the condition was reported.
@@ -514,10 +517,6 @@ Input:
 | Parameter |  Example |  Mandatory |  Notes |
 | --- | --- | --- | --- |
 | condition_concept_id | 31967 | Yes | Condition concept identifier for 'Nausea' |
-
-
-
-
 
 Output:
 
@@ -1226,7 +1225,7 @@ Sample output record:
 | condition_num_75percentile | 58 |
 
 
-CO19 :Counts of condition occurrence records stratified by observation month
+CO19: Counts of condition occurrence records stratified by observation month
 ---
 
 This query is used to count the condition occurrence records stratified by observation month.
@@ -1440,7 +1439,7 @@ Sample output record:
 | occurrence_types_count |  65445068 |
 
 
-CO 23 : Distribution of condition occurrence month/year, stratified by condition.
+CO23: Distribution of condition occurrence month/year, stratified by condition.
 ---
 
 This query is used to summary statistics of the condition month/year start dates across all condition occurrence records, stratified by condition (condition_concept_id).  The input to the query is a value  of a condition_concept_id.
@@ -1484,10 +1483,6 @@ Sample query:
 	                        m1
 
 	ORDER BY        m1
-
-
-
-
 
 Input:
 
