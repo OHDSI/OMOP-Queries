@@ -1,129 +1,139 @@
-**G01:** Find concept by concept ID
+G01: Find concept by concept ID
+---
 
 This is the most generic look-up for obtaining concept details associated with a concept identifier. The query is intended as a tool for quick reference for the name, class, level and source vocabulary details associated with a concept identifier.
 
-**Sample query:**
+Sample query:
 
-SELECT C.concept\_id, C.concept\_name, C.concept\_code, C.concept\_class\_id, C.standard\_concept, C.vocabulary\_id, V.vocabulary\_name
+    SELECT C.concept_id, C.concept_name, C.concept_code, C.concept_class_id, C.standard_concept, C.vocabulary_id, V.vocabulary_name
 
-FROM concept C, vocabulary V
+    FROM concept C, vocabulary V
 
-WHERE C.concept\_id = 192671
+    WHERE C.concept_id = 192671
 
-AND C.vocabulary\_id = V.vocabulary\_id
+    AND C.vocabulary_id = V.vocabulary_id
 
-AND sysdate BETWEEN valid\_start\_date
+    AND sysdate BETWEEN valid_start_date
 
-AND valid\_end\_date;
+    AND valid_end_date;
 
-**Input:**
+Input:
 
-| ** Parameter** | ** Example** | ** Mandatory** | ** Notes** |
+|  Parameter |  Example |  Mandatory |  Notes |
 | --- | --- | --- | --- |
 |  Concept ID |  192671 |  Yes | Concept Identifier for "GI - Gastrointestinal hemorrhage" |
 |  As of date |  Sysdate |  No | Valid record as of specific date. Current date – sysdate is a default |
 
-**Output:**
+Output:
 
-| ** Field** | ** Description** |
+|  Field |  Description |
 | --- | --- |
-|  Concept\_ID |  Concept Identifier entered as input |
-|  Concept\_Name |  Name of the standard concept |
-|  Concept\_Code |  Concept code of the standard concept in the source vocabulary |
-|  Concept\_Class |  Concept class of standard vocabulary concept |
-|  Concept\_Level |  Level of the concept if defined as part of a hierarchy |
-|  Vocabulary\_ID |  Vocabulary the standard concept is derived from as vocabulary code |
-|  Vocabulary\_Name |  Name of the vocabulary the standard concept is derived from |
+|  Concept_ID |  Concept Identifier entered as input |
+|  Concept_Name |  Name of the standard concept |
+|  Concept_Code |  Concept code of the standard concept in the source vocabulary |
+|  Concept_Class |  Concept class of standard vocabulary concept |
+|  Concept_Level |  Level of the concept if defined as part of a hierarchy |
+|  Vocabulary_ID |  Vocabulary the standard concept is derived from as vocabulary code |
+|  Vocabulary_Name |  Name of the vocabulary the standard concept is derived from |
 
-**Sample output record:**
+Sample output record:
 
-| ** Field** | ** Value** |
+|  Field |  Value |
 | --- | --- |
-|  Concept\_ID |  192671 |
-|  Concept\_Name |  GI - Gastrointestinal haemorrhage |
-|  Concept\_Code |  74474003 |
-|  Concept\_Class |  Clinical finding |
-|  Concept\_Level |  2 |
-|  Vocabulary\_ID |  1 |
-|  Vocabulary\_Name |  SNOMED-CT |
-**G04:** Find synonyms for a given concept
+|  Concept_ID |  192671 |
+|  Concept_Name |  GI - Gastrointestinal haemorrhage |
+|  Concept_Code |  74474003 |
+|  Concept_Class |  Clinical finding |
+|  Concept_Level |  2 |
+|  Vocabulary_ID |  1 |
+|  Vocabulary_Name |  SNOMED-CT |
+
+
+
+G04: Find synonyms for a given concept
+---
 
 This query extracts all synonyms in the vocabulary for a given Concept ID.
 
-**Sample query:**
+Sample query:
 
-SELECT C.concept\_id, S.concept\_synonym\_name
+    SELECT C.concept_id, S.concept_synonym_name
 
-FROM concept C, concept\_synonym S, vocabulary V
+    FROM concept C, concept_synonym S, vocabulary V
 
-WHERE C.concept\_id = 192671
+    WHERE C.concept_id = 192671
 
-AND C.concept\_id = S.concept\_id
+    AND C.concept_id = S.concept_id
 
-AND C.vocabulary\_id = V.vocabulary\_id
+    AND C.vocabulary_id = V.vocabulary_id
 
-AND sysdate BETWEEN C.valid\_start\_date AND C.valid\_end\_date;
+    AND sysdate BETWEEN C.valid_start_date AND C.valid_end_date;
 
-**Input:**
+Input:
 
-| **Parameter** | ** Example** | ** Mandatory** | ** Notes** |
+| Parameter |  Example |  Mandatory |  Notes |
 | --- | --- | --- | --- |
 |  Concept ID |  192671 |  Yes | GI - Gastrointestinal hemorrhage |
 |  As of date |  Sysdate |  No | Valid record as of specific date. Current date – sysdate is a default |
 
-**Output:**
+Output:
 
-| ** Field** | ** Description** |
+|  Field |  Description |
 | --- | --- |
-|  Concept\_ID |  Unique identifier of the concept related to the input concept |
-|  Concept\_Synonym\_Name |  Synonym of the concept |
+|  Concept_ID |  Unique identifier of the concept related to the input concept |
+|  Concept_Synonym_Name |  Synonym of the concept |
 
-**Sample output record:**
+Sample output record:
 
-| ** Field** | ** Value** |
+|  Field |  Value |
 | --- | --- |
-|  Concept\_ID |  192671 |
-|  Concept\_Synonym\_Name |  GI bleeding |
-**G05:** Translate a code from a source to a standard vocabulary.
+|  Concept_ID |  192671 |
+|  Concept_Synonym_Name |  GI bleeding |
+
+
+
+G05: Translate a code from a source to a standard vocabulary.
+---
 
 This query enables search of all Standard Vocabulary concepts that are mapped to a code from a specified source vocabulary. It will return all possible concepts that are mapped to it, as well as the target vocabulary. The source code could be obtained using queries G02 or G03.
+---
 Note that to unambiguously identify a source code, the vocabulary id has to be provided, as source codes are not unique identifiers across different vocabularies.
 
-**Sample query:**
+Sample query:
 
-SELECT DISTINCT
+    SELECT DISTINCT
 
-        c1.domain\_id,
+            c1.domain_id,
 
-        c2.concept\_id         as Concept\_Id,
+            c2.concept_id         as Concept_Id,
 
-        c2.concept\_name       as Concept\_Name,
+            c2.concept_name       as Concept_Name,
 
-        c2.concept\_code       as Concept\_Code,
+            c2.concept_code       as Concept_Code,
 
-        c2.concept\_class\_id      as Concept\_Class,
+            c2.concept_class_id      as Concept_Class,
 
-        c2.vocabulary\_id      as Concept\_Vocabulary\_ID,
+            c2.vocabulary_id      as Concept_Vocabulary_ID,
 
-                  c2.domain\_id                  as Target\_concept\_Domain
+                      c2.domain_id                  as Target_concept_Domain
 
-FROM concept\_relationship cr
+    FROM concept_relationship cr
 
-JOIN concept c1 ON c1.concept\_id = cr.concept\_id\_1
+    JOIN concept c1 ON c1.concept_id = cr.concept_id_1
 
-JOIN concept c2 ON c2.concept\_id = cr.concept\_id\_2
+    JOIN concept c2 ON c2.concept_id = cr.concept_id_2
 
-WHERE cr.relationship\_id = 'Maps to'
+    WHERE cr.relationship_id = 'Maps to'
 
-AND c1.concept\_code IN ('070.0')
+    AND c1.concept_code IN ('070.0')
 
-AND c1.vocabulary\_id = 'ICD9CM'
+    AND c1.vocabulary_id = 'ICD9CM'
 
-AND sysdate BETWEEN cr.valid\_start\_date AND cr.valid\_end\_date;
+    AND sysdate BETWEEN cr.valid_start_date AND cr.valid_end_date;
 
-**Input:**
+Input:
 
-| **Parameter** | ** Example** | ** Mandatory** | ** Notes** |
+| Parameter |  Example |  Mandatory |  Notes |
 | --- | --- | --- | --- |
 |  Source Code List |  '070.0' |  Yes |  Source codes are alphanumeric |
 |  Source Vocabulary ID |  2 |  Yes | The source vocabulary ID is mandatory, because the source code is not unique across different vocabularies.
@@ -131,33 +141,37 @@ AND sysdate BETWEEN cr.valid\_start\_date AND cr.valid\_end\_date;
 The list of vocabulary codes is listed in the VOCABULARY table. Vocabulary ID of 2 represents ICD9-CM |
 |  As of date |  Sysdate |  No | Valid record as of specific date. Current date – sysdate is a default |
 
-**Output:**
+Output:
 
-| ** Field** | ** Description** |
+|  Field |  Description |
 | --- | --- |
-|  Mapping\_Type |  Type of mapping from source code to target concept |
-|  Target\_Concept\_Id |  Concept ID of mapped concept |
-|  Target\_Concept\_Name |  Name of mapped concept |
-|  Target\_Concept\_Code |  Concept code of mapped concept |
-|  Target\_Concept\_Class |  Class of the mapped concept |
-|  Target\_Concept\_Vocab\_ID |  Vocabulary ID of the target vocabulary |
-|  Target\_Concept\_Vocab\_Name |  Name of the vocabulary the target concept is part of |
-|  Target\_Concept\_Domain |  Vocabulary domain that includes the entity. The domains include:
+|  Mapping_Type |  Type of mapping from source code to target concept |
+|  Target_Concept_Id |  Concept ID of mapped concept |
+|  Target_Concept_Name |  Name of mapped concept |
+|  Target_Concept_Code |  Concept code of mapped concept |
+|  Target_Concept_Class |  Class of the mapped concept |
+|  Target_Concept_Vocab_ID |  Vocabulary ID of the target vocabulary |
+|  Target_Concept_Vocab_Name |  Name of the vocabulary the target concept is part of |
+|  Target_Concept_Domain |  Vocabulary domain that includes the entity. The domains include:
 DRUG, CONDITION, PROCEDURE, OBSERVATION, OBSERVATION UNIT, VISIT, DEMOGRAPHIC, DEATH, COST, PROVIDER |
 
-**Sample output record:**
+Sample output record:
 
-| **Field** | ** Value** |
+| Field |  Value |
 | --- | --- |
-|  Mapping\_Type |  CONDITION-MEDDRA |
-|  Target\_Concept\_Id |  35909589 |
-|  Target\_Concept\_Name |  Hepatitis viral |
-|  Target\_Concept\_Code |  10019799 |
-|  Target\_Concept\_Class |  Preferred Term |
-|  Target\_Concept\_Vocab\_ID |  15 |
-|  Target\_Concept\_Vocab\_Name |  MedDRA |
-|  Target\_Concept\_Domain |  CONDITION |
-**G06:** Find concepts and their descendants that are covered by a given source code
+|  Mapping_Type |  CONDITION-MEDDRA |
+|  Target_Concept_Id |  35909589 |
+|  Target_Concept_Name |  Hepatitis viral |
+|  Target_Concept_Code |  10019799 |
+|  Target_Concept_Class |  Preferred Term |
+|  Target_Concept_Vocab_ID |  15 |
+|  Target_Concept_Vocab_Name |  MedDRA |
+|  Target_Concept_Domain |  CONDITION |
+
+
+
+G06: Find concepts and their descendants that are covered by a given source code
+---
 
 This query returns all concepts that are direct maps and the descendants of these directly mapped concepts. This is useful if the target standard vocabulary is organized in a tall hierarchy, while the source vocabulary organization is flat.
 
@@ -165,71 +179,71 @@ Additional constraints can be added at the end of the query if only a specific t
 
 In the query only FDB indications and contraindications are returned, but not NDF-RT indications or contraindications. That is because no direct mapping between ICD-9-CM and NDF-RT exists. In order to query for drug indications please see queries D12 through D18.
 
-**Sample query:**
+Sample query:
 
-WITH dm AS ( -- collect direct maps
+    WITH dm AS ( -- collect direct maps
 
-SELECT  c1.concept\_code as source\_code,
+    SELECT  c1.concept_code as source_code,
 
-        c1.vocabulary\_id,
+            c1.vocabulary_id,
 
-        c1.domain\_id,
+            c1.domain_id,
 
-        c2.concept\_id        as target\_concept\_id,
+            c2.concept_id        as target_concept_id,
 
-        c2.concept\_name      as target\_concept\_name,
+            c2.concept_name      as target_concept_name,
 
-        c2.concept\_code      as target\_concept\_code,
+            c2.concept_code      as target_concept_code,
 
-        c2.concept\_class\_id     as target\_concept\_class,
+            c2.concept_class_id     as target_concept_class,
 
-        c2.vocabulary\_id     as target\_concept\_vocab\_id,
+            c2.vocabulary_id     as target_concept_vocab_id,
 
-        'Direct map'        as target\_Type
+            'Direct map'        as target_Type
 
-FROM    concept\_relationship cr
+    FROM    concept_relationship cr
 
-                JOIN concept c1 ON cr.concept\_id\_1 = c1.concept\_id
+                    JOIN concept c1 ON cr.concept_id_1 = c1.concept_id
 
-                JOIN concept c2 ON cr.concept\_id\_2 = c2.concept\_id
+                    JOIN concept c2 ON cr.concept_id_2 = c2.concept_id
 
-WHERE   cr.relationship\_id = 'Maps to'
+    WHERE   cr.relationship_id = 'Maps to'
 
-AND                c1.concept\_code IN ('410.0')
+    AND                c1.concept_code IN ('410.0')
 
-AND     c1.vocabulary\_id = 'ICD9CM'
+    AND     c1.vocabulary_id = 'ICD9CM'
 
-AND     sysdate BETWEEN cr.valid\_start\_date AND cr.valid\_end\_date )
+    AND     sysdate BETWEEN cr.valid_start_date AND cr.valid_end_date )
 
-SELECT dm.source\_code,
+    SELECT dm.source_code,
 
-        dm.vocabulary\_id,
+            dm.vocabulary_id,
 
-        dm.domain\_id,
+            dm.domain_id,
 
-        dc.concept\_id        AS        target\_concept\_id,
+            dc.concept_id        AS        target_concept_id,
 
-        dc.concept\_name        AS target\_concept\_name,
+            dc.concept_name        AS target_concept_name,
 
-        dc.concept\_code AS target\_concept\_code,
+            dc.concept_code AS target_concept_code,
 
-        dc.concept\_class\_id AS target\_concept\_class,
+            dc.concept_class_id AS target_concept_class,
 
-        dc.vocabulary\_id AS target\_concept\_vocab\_id,
+            dc.vocabulary_id AS target_concept_vocab_id,
 
-    'Descendant of direct map' as target\_Type
+        'Descendant of direct map' as target_Type
 
-FROM concept\_ancestor ca -- collect descendants which includes ancestor itself
+    FROM concept_ancestor ca -- collect descendants which includes ancestor itself
 
-JOIN dm ON ca.ancestor\_concept\_id = dm.target\_concept\_id
+    JOIN dm ON ca.ancestor_concept_id = dm.target_concept_id
 
-JOIN concept dc ON ca.descendant\_concept\_id = dc.concept\_id
+    JOIN concept dc ON ca.descendant_concept_id = dc.concept_id
 
-WHERE dc.standard\_concept = 'S';
+    WHERE dc.standard_concept = 'S';
 
-**Input:**
+Input:
 
-| **Parameter** | ** Example** | ** Mandatory** | ** Notes** |
+| Parameter |  Example |  Mandatory |  Notes |
 | --- | --- | --- | --- |
 |  Source Code List |  '410.0' |  Yes | Source codes are alphanumeric. |
 |  Source Vocabulary ID |  2 |  Yes | 2 represents ICD9-CM.
@@ -237,35 +251,39 @@ WHERE dc.standard\_concept = 'S';
 The list of vocabulary codes can be found in the VOCABULARY table. |
 |  As of date |  Sysdate |  No | Valid record as of specific date. Current date – sysdate is a default |
 
-**Output:**
+Output:
 
-| **Field** | ** Description** |
+| Field |  Description |
 | --- | --- |
-|  Mapping\_Type |  Type of mapping from source code to target concept |
-|  Target\_Concept\_ID |  Concept ID of mapped concept |
-|  Target\_Concept\_Name |  Concept name of mapped concept |
-|  Target\_Concept\_Code |  Concept Code of mapped concept |
-|  Target\_Concept\_Class |  Concept class of mapped concept |
-|  Target\_Concept\_Vocab\_ID |  ID of the target vocabulary |
-|  Target\_Concept\_Vocab\_Name |  Name of the vocabulary the target concept is part of |
-|  Target\_Type |   Type of result, indicates how the target concepts was extracted. Includes:
+|  Mapping_Type |  Type of mapping from source code to target concept |
+|  Target_Concept_ID |  Concept ID of mapped concept |
+|  Target_Concept_Name |  Concept name of mapped concept |
+|  Target_Concept_Code |  Concept Code of mapped concept |
+|  Target_Concept_Class |  Concept class of mapped concept |
+|  Target_Concept_Vocab_ID |  ID of the target vocabulary |
+|  Target_Concept_Vocab_Name |  Name of the vocabulary the target concept is part of |
+|  Target_Type |   Type of result, indicates how the target concepts was extracted. Includes:
 - Concepts that are direct maps
 - Concepts that are descendants of direct maps
  |
 
-**Sample output record:**
+Sample output record:
 
-| ** Field** | ** Value** |
+|  Field |  Value |
 | --- | --- |
-|  Mapping\_Type |  CONDITION |
-|  Target\_Concept\_ID |  312327 |
-|  Target\_Concept\_Name |  Acute myocardial infarction |
-|  Target\_Concept\_Code |  57054005 |
-|  Target\_Concept\_Class |  Clinical finding |
-|  Target\_Concept\_Vocab\_ID |  1 |
-|  Target\_Concept\_Vocab\_Name |  SNOMED-CT |
-|  Target\_Type |  Direct map |
-**G07:** Find concepts that have a relationship with a given concept
+|  Mapping_Type |  CONDITION |
+|  Target_Concept_ID |  312327 |
+|  Target_Concept_Name |  Acute myocardial infarction |
+|  Target_Concept_Code |  57054005 |
+|  Target_Concept_Class |  Clinical finding |
+|  Target_Concept_Vocab_ID |  1 |
+|  Target_Concept_Vocab_Name |  SNOMED-CT |
+|  Target_Type |  Direct map |
+
+
+
+G07: Find concepts that have a relationship with a given concept
+---
 
 For a concept identifier entered as the input parameter, the query lists all existing relationships with other concepts. The resulting output includes:
 
@@ -273,2088 +291,812 @@ For a concept identifier entered as the input parameter, the query lists all exi
 - Details of the other concept to which the relationship has been defined
 - Polarity of the relationship
 
-o    Polarity of "Relates to" implies the input concept is the first concept or CONCEPT\_ID\_1 of the relationship
+o    Polarity of "Relates to" implies the input concept is the first concept or CONCEPT_ID_1 of the relationship
 
-o    Polarity of "Is Related by" implies the input concept is the second concept or CONCEPT\_ID\_2 of the relationship
+o    Polarity of "Is Related by" implies the input concept is the second concept or CONCEPT_ID_2 of the relationship
 
-In vocabulary Version 4.0 and above all relationships are bi-directional, ie. all relationships are repeated as a mirrored version, where CONCEPT\_ID\_1 and CONCEPT\_ID\_2 are swapped and the inverse relationship ID is provided.
+In vocabulary Version 4.0 and above all relationships are bi-directional, ie. all relationships are repeated as a mirrored version, where CONCEPT_ID_1 and CONCEPT_ID_2 are swapped and the inverse relationship ID is provided.
 
-**Sample query:**
+Sample query:
 
-SELECT 'Relates to' relationship\_polarity, CR.relationship\_ID, RT.relationship\_name, D.concept\_Id concept\_id, D.concept\_Name concept\_name, D.concept\_Code concept\_code, D.concept\_class\_id concept\_class\_id, D.vocabulary\_id concept\_vocab\_ID, VS.vocabulary\_name concept\_vocab\_name
+    SELECT 'Relates to' relationship_polarity, CR.relationship_ID, RT.relationship_name, D.concept_Id concept_id, D.concept_Name concept_name, D.concept_Code concept_code, D.concept_class_id concept_class_id, D.vocabulary_id concept_vocab_ID, VS.vocabulary_name concept_vocab_name
 
-FROM concept\_relationship CR, concept A, concept D, vocabulary VA, vocabulary VS, relationship RT
+    FROM concept_relationship CR, concept A, concept D, vocabulary VA, vocabulary VS, relationship RT
 
-WHERE CR.concept\_id\_1 = A.concept\_id
+    WHERE CR.concept_id_1 = A.concept_id
 
-AND A.vocabulary\_id = VA.vocabulary\_id
+    AND A.vocabulary_id = VA.vocabulary_id
 
-AND CR.concept\_id\_2 = D.concept\_id
+    AND CR.concept_id_2 = D.concept_id
 
-AND D.vocabulary\_id = VS.vocabulary\_id
+    AND D.vocabulary_id = VS.vocabulary_id
 
-AND CR.relationship\_id = RT.relationship\_ID
+    AND CR.relationship_id = RT.relationship_ID
 
-AND A.concept\_id = 192671
+    AND A.concept_id = 192671
 
-AND sysdate BETWEEN CR.valid\_start\_date
+    AND sysdate BETWEEN CR.valid_start_date
 
-AND CR.valid\_end\_date
+    AND CR.valid_end_date
 
-UNION ALL SELECT 'Is related by' relationship\_polarity, CR.relationship\_ID, RT.relationship\_name, A.concept\_Id concept\_id, A.concept\_name concept\_name, A.concept\_code concept\_code, A.concept\_class\_id concept\_class\_id, A.vocabulary\_id concept\_vocab\_ID, VA.Vocabulary\_Name concept\_vocab\_name
+    UNION ALL SELECT 'Is related by' relationship_polarity, CR.relationship_ID, RT.relationship_name, A.concept_Id concept_id, A.concept_name concept_name, A.concept_code concept_code, A.concept_class_id concept_class_id, A.vocabulary_id concept_vocab_ID, VA.Vocabulary_Name concept_vocab_name
 
-FROM concept\_relationship CR, concept A, concept D, vocabulary VA, vocabulary VS, relationship RT
+    FROM concept_relationship CR, concept A, concept D, vocabulary VA, vocabulary VS, relationship RT
 
-WHERE CR.concept\_id\_1 = A.concept\_id
+    WHERE CR.concept_id_1 = A.concept_id
 
-AND A.vocabulary\_id = VA.vocabulary\_id
+    AND A.vocabulary_id = VA.vocabulary_id
 
-AND CR.concept\_id\_2 = D.concept\_id
+    AND CR.concept_id_2 = D.concept_id
 
-AND D.vocabulary\_id = VS.vocabulary\_id
+    AND D.vocabulary_id = VS.vocabulary_id
 
-AND CR.relationship\_id = RT.relationship\_ID
+    AND CR.relationship_id = RT.relationship_ID
 
-AND D.concept\_id = 192671
+    AND D.concept_id = 192671
 
-AND sysdate BETWEEN CR.valid\_start\_date
+    AND sysdate BETWEEN CR.valid_start_date
 
-AND CR.valid\_end\_date;
+    AND CR.valid_end_date;
 
-**Input:**
+Input:
 
-| ** Parameter** | ** Example** | ** Mandatory** | ** Notes** |
+|  Parameter |  Example |  Mandatory |  Notes |
 | --- | --- | --- | --- |
 |  Concept ID |  192671 |  Yes | GI - Gastrointestinal hemorrhage |
 |  As of date |  Sysdate |  No | Valid record as of specific date. Current date – sysdate is a default |
 
-**Output:**
+Output:
 
-| ** Field** | ** Description** |
+|  Field |  Description |
 | --- | --- |
-|  Relationship\_Polarity |  Polarity of the relationship with the input concept as a reference:
-- "Relates to": Indicates input concept is CONCEPT\_ID\_1 or the first concept of the relationship
+|  Relationship_Polarity |  Polarity of the relationship with the input concept as a reference:
+- "Relates to": Indicates input concept is CONCEPT_ID_1 or the first concept of the relationship
 - "Is Related by": Indicates input concept
  |
-|  Relationship\_ID |  Identifier for the type of relationship |
-|  Relationship\_Name |  Name of the type of relationship |
-|  Concept\_ID |  Unique identifier of the concept related to the input concept |
-|  Concept\_Name |  Name of the concept related to the input concept |
-|  Concept\_Code |  Concept code of concept related to the input concept |
-|  Concept\_Class |  Concept Class of concept related to the input concept |
-|  Concept\_Vocab\_ID |  ID of the vocabulary the related concept is derived from |
-|  Concept\_Vocab\_Name |  Name of the vocabulary the related concept is derived from |
+|  Relationship_ID |  Identifier for the type of relationship |
+|  Relationship_Name |  Name of the type of relationship |
+|  Concept_ID |  Unique identifier of the concept related to the input concept |
+|  Concept_Name |  Name of the concept related to the input concept |
+|  Concept_Code |  Concept code of concept related to the input concept |
+|  Concept_Class |  Concept Class of concept related to the input concept |
+|  Concept_Vocab_ID |  ID of the vocabulary the related concept is derived from |
+|  Concept_Vocab_Name |  Name of the vocabulary the related concept is derived from |
 
-**Sample output record:**
+Sample output record:
 
-| ** Field** | ** Value** |
+|  Field |  Value |
 | --- | --- |
-|  Relationship\_Polarity |  Is Related to |
-|  Relationship\_ID |  125 |
-|  Relationship\_Name |  MedDRA to SNOMED-CT equivalent (OMOP) |
-|  Concept\_ID |  35707864 |
-|  Concept\_Name |  Gastrointestinal haemorrhage |
-|  Concept\_Code |  10017955 |
-|  Concept\_Class |  Preferred Term |
-|  Concept\_Vocab\_ID |  15 |
-|  Concept\_Vocab\_Name |  MedDRA |
-**G08:** Find ancestors for a given concept
+|  Relationship_Polarity |  Is Related to |
+|  Relationship_ID |  125 |
+|  Relationship_Name |  MedDRA to SNOMED-CT equivalent (OMOP) |
+|  Concept_ID |  35707864 |
+|  Concept_Name |  Gastrointestinal haemorrhage |
+|  Concept_Code |  10017955 |
+|  Concept_Class |  Preferred Term |
+|  Concept_Vocab_ID |  15 |
+|  Concept_Vocab_Name |  MedDRA |
+
+
+
+G08: Find ancestors for a given concept
+---
 
 For a concept identifier entered as the input parameter, this query lists all ancestors in the hierarchy of the domain. Ancestors are concepts that have a relationship to the given concept and is defined as hierarchical in the relationship table, and any secondary, tertiary etc. concepts going up in the hierarchy. The resulting output provides the ancestor concept details and the minimum and maximum level of separation.
 
-**Sample query:**
+Sample query:
 
-SELECT C.concept\_id as ancestor\_concept\_id, C.concept\_name as ancestor\_concept\_name, C.concept\_code as ancestor\_concept\_code, C.concept\_class\_id as ancestor\_concept\_class\_id, C.vocabulary\_id, VA.vocabulary\_name, A.min\_levels\_of\_separation, A.max\_levels\_of\_separation
+    SELECT C.concept_id as ancestor_concept_id, C.concept_name as ancestor_concept_name, C.concept_code as ancestor_concept_code, C.concept_class_id as ancestor_concept_class_id, C.vocabulary_id, VA.vocabulary_name, A.min_levels_of_separation, A.max_levels_of_separation
 
-FROM concept\_ancestor A, concept C, vocabulary VA
+    FROM concept_ancestor A, concept C, vocabulary VA
 
-WHERE A.ancestor\_concept\_id = C.concept\_id
+    WHERE A.ancestor_concept_id = C.concept_id
 
-AND C.vocabulary\_id = VA.vocabulary\_id
+    AND C.vocabulary_id = VA.vocabulary_id
 
-AND A.ancestor\_concept\_id<>A.descendant\_concept\_id
+    AND A.ancestor_concept_id<>A.descendant_concept_id
 
-AND A.descendant\_concept\_id = 192671
+    AND A.descendant_concept_id = 192671
 
-AND sysdate BETWEEN valid\_start\_date
+    AND sysdate BETWEEN valid_start_date
 
-AND valid\_end\_date
+    AND valid_end_date
 
-ORDER BY 5,7;
+    ORDER BY 5,7;
 
-**Input:**
+Input:
 
-| ** Parameter** | ** Example** | ** Mandatory** | ** Notes** |
+|  Parameter |  Example |  Mandatory |  Notes |
 | --- | --- | --- | --- |
 |  Concept ID |  192671 |  Yes | GI - Gastrointestinal hemorrhage |
 |  As of date |  Sysdate |  No | Valid record as of specific date. Current date – sysdate is a default |
 
-**Output:**
+Output:
 
-| ** Field** | ** Description** |
+|  Field |  Description |
 | --- | --- |
-|  Ancestor\_Concept\_ID |  Unique identifier of the concept related to the ancestor concept |
-|  Ancestor\_Concept\_Name |  Name of the concept related to the ancestor concept |
-|  Ancestor\_Concept\_Code |  Concept code of concept related to the ancestor concept |
-|  Ancestor\_Concept\_>Class |  Concept Class of concept related to the ancestor concept |
-|  Vocabulary\_ID |  ID of the vocabulary the ancestor concept is derived from |
-|  Vocabulary\_Name |  Name of the vocabulary the ancestor concept is derived from |
-|  Min\_Levels\_of\_Separation |  The length of the shortest path between the concept and the ancestor |
-|  Max\_Levels\_of\_Separation |  The length of the longest path between the concept and the ancestor |
+|  Ancestor_Concept_ID |  Unique identifier of the concept related to the ancestor concept |
+|  Ancestor_Concept_Name |  Name of the concept related to the ancestor concept |
+|  Ancestor_Concept_Code |  Concept code of concept related to the ancestor concept |
+|  Ancestor_Concept_>Class |  Concept Class of concept related to the ancestor concept |
+|  Vocabulary_ID |  ID of the vocabulary the ancestor concept is derived from |
+|  Vocabulary_Name |  Name of the vocabulary the ancestor concept is derived from |
+|  Min_Levels_of_Separation |  The length of the shortest path between the concept and the ancestor |
+|  Max_Levels_of_Separation |  The length of the longest path between the concept and the ancestor |
 
-**Sample output record:**
+Sample output record:
 
-| ** Field** | ** Value** |
+|  Field |  Value |
 | --- | --- |
-|  Ancestor\_Concept\_ID |  4000610 |
-|  Ancestor\_Concept\_Name |  Disease of gastrointestinal tract |
-|  Ancestor\_Concept\_Code |  119292006 |
-|  Ancestor\_Concept\_Class |  Clinical finding |
-|  Vocabulary\_ID |  1 |
-|  Vocabulary\_Name |  SNOMED-CT |
-|  Min\_Levels\_of\_Separation |  1 |
-|  Max\_Levels\_of\_Separation |  1 |
-**G09:** Find descendants for a given concept
+|  Ancestor_Concept_ID |  4000610 |
+|  Ancestor_Concept_Name |  Disease of gastrointestinal tract |
+|  Ancestor_Concept_Code |  119292006 |
+|  Ancestor_Concept_Class |  Clinical finding |
+|  Vocabulary_ID |  1 |
+|  Vocabulary_Name |  SNOMED-CT |
+|  Min_Levels_of_Separation |  1 |
+|  Max_Levels_of_Separation |  1 |
+
+
+
+G09: Find descendants for a given concept
+---
 
 For a concept identifier entered as the input parameter, this query lists all descendants in the hierarchy of the domain. Descendant are concepts have a relationship to the given concept that is defined as hierarchical in the relationship table, and any secondary, tertiary etc. concepts going down in the hierarchy. The resulting output provides the descendant concept details and the minimum and maximum level of separation.
 
-**Sample query:**
+Sample query:
 
-SELECT C.concept\_id as descendant\_concept\_id, C.concept\_name as descendant\_concept\_name, C.concept\_code as descendant\_concept\_code, C.concept\_class\_id as descendant\_concept\_class\_id, C.vocabulary\_id, VA.vocabulary\_name, A.min\_levels\_of\_separation, A.max\_levels\_of\_separation
+    SELECT C.concept_id as descendant_concept_id, C.concept_name as descendant_concept_name, C.concept_code as descendant_concept_code, C.concept_class_id as descendant_concept_class_id, C.vocabulary_id, VA.vocabulary_name, A.min_levels_of_separation, A.max_levels_of_separation
 
-FROM concept\_ancestor A, concept C, vocabulary VA
+    FROM concept_ancestor A, concept C, vocabulary VA
 
-WHERE A.descendant\_concept\_id = C.concept\_id
+    WHERE A.descendant_concept_id = C.concept_id
 
-AND C.vocabulary\_id = VA.vocabulary\_id
+    AND C.vocabulary_id = VA.vocabulary_id
 
-AND A.ancestor\_concept\_id <> A.descendant\_concept\_id
+    AND A.ancestor_concept_id <> A.descendant_concept_id
 
-AND A.ancestor\_concept\_id = 192671
+    AND A.ancestor_concept_id = 192671
 
-AND sysdate BETWEEN valid\_start\_date
+    AND sysdate BETWEEN valid_start_date
 
-AND valid\_end\_date
+    AND valid_end_date
 
-ORDER BY 5,7;
+    ORDER BY 5,7;
 
-**Input:**
+Input:
 
-| **Parameter** | ** Example** | ** Mandatory** | ** Notes** |
+| Parameter |  Example |  Mandatory |  Notes |
 | --- | --- | --- | --- |
 |  Concept ID |  192671 |  Yes | GI - Gastrointestinal hemorrhage |
 |  As of date |  Sysdate |  No | Valid record as of specific date. Current date – sysdate is a default |
 
-**Output:**
+Output:
 
-| **Field** | ** Description** |
+| Field |  Description |
 | --- | --- |
-|  Descendant\_Concept\_ID |  Unique identifier of the concept related to the descendant concept |
-|  Descendant\_Concept\_Name |  Name of the concept related to the descendant concept |
-|  Descendant\_Concept\_Code |  Concept code of concept related to the descendant concept |
-|  Descendant\_Concept\_Class |  Concept Class of concept related to the descendant concept |
-|  Vocabulary\_ID |  ID of the vocabulary the descendant concept is derived from |
-|  Vocabulary\_Name; |  Name of the vocabulary the descendant concept is derived from |
-|  Min\_Levels\_of\_Separation |  The length of the shortest path between the concept and the descendant |
-|  Max\_Levels\_of\_Separation |  The length of the longest path between the concept and the descendant |
+|  Descendant_Concept_ID |  Unique identifier of the concept related to the descendant concept |
+|  Descendant_Concept_Name |  Name of the concept related to the descendant concept |
+|  Descendant_Concept_Code |  Concept code of concept related to the descendant concept |
+|  Descendant_Concept_Class |  Concept Class of concept related to the descendant concept |
+|  Vocabulary_ID |  ID of the vocabulary the descendant concept is derived from |
+|  Vocabulary_Name; |  Name of the vocabulary the descendant concept is derived from |
+|  Min_Levels_of_Separation |  The length of the shortest path between the concept and the descendant |
+|  Max_Levels_of_Separation |  The length of the longest path between the concept and the descendant |
 
-**Sample output record:**
+Sample output record:
 
-| ** Field** | ** Value** |
+|  Field |  Value |
 | --- | --- |
-|  Descendant\_Concept\_ID |  4318535 |
-|  Descendant\_Concept\_Name |  Duodenal haemorrhage |
-|  Descendant\_Concept\_Code |  95533003 |
-|  Descendant\_Concept\_Class |  Clinical finding |
-|  Vocabulary\_ID |  1 |
-|  Vocabulary\_Name |  SNOMED-CT |
-|  Min\_Levels\_of\_Separation |  1 |
-|  Max\_Levels\_of\_Separation |  1 |
-**G10:** Find parents for a given concept
+|  Descendant_Concept_ID |  4318535 |
+|  Descendant_Concept_Name |  Duodenal haemorrhage |
+|  Descendant_Concept_Code |  95533003 |
+|  Descendant_Concept_Class |  Clinical finding |
+|  Vocabulary_ID |  1 |
+|  Vocabulary_Name |  SNOMED-CT |
+|  Min_Levels_of_Separation |  1 |
+|  Max_Levels_of_Separation |  1 |
 
-### This query accepts a concept ID as the input and returns all concepts that are its immediate parents of that concept. Parents are concepts that have a hierarchical relationship to the given concepts. Hierarchical relationships are defined in the relationship table.
+
+
+G10: Find parents for a given concept
+---
+
+ This query accepts a concept ID as the input and returns all concepts that are its immediate parents of that concept. Parents are concepts that have a hierarchical relationship to the given concepts. Hierarchical relationships are defined in the relationship table.
 The query returns only the immediate parent concepts that are directly linked to the input concept and not all ancestors.
 
-**Sample query:**
+Sample query:
 
-SELECT A.concept\_id Parent\_concept\_id, A.concept\_name Parent\_concept\_name, A.concept\_code Parent\_concept\_code, A.concept\_class\_id Parent\_concept\_class\_id, A.vocabulary\_id Parent\_concept\_vocab\_ID, VA.vocabulary\_name Parent\_concept\_vocab\_name
+    SELECT A.concept_id Parent_concept_id, A.concept_name Parent_concept_name, A.concept_code Parent_concept_code, A.concept_class_id Parent_concept_class_id, A.vocabulary_id Parent_concept_vocab_ID, VA.vocabulary_name Parent_concept_vocab_name
 
-FROM concept\_ancestor CA, concept A, concept D, vocabulary VA
+    FROM concept_ancestor CA, concept A, concept D, vocabulary VA
 
-WHERE CA.descendant\_concept\_id = 192671
+    WHERE CA.descendant_concept_id = 192671
 
-AND CA.min\_levels\_of\_separation = 1
+    AND CA.min_levels_of_separation = 1
 
-AND CA.ancestor\_concept\_id = A.concept\_id
+    AND CA.ancestor_concept_id = A.concept_id
 
-AND A.vocabulary\_id = VA.vocabulary\_id
+    AND A.vocabulary_id = VA.vocabulary_id
 
-AND CA.descendant\_concept\_id = D.concept\_id
+    AND CA.descendant_concept_id = D.concept_id
 
-AND sysdate BETWEEN A.valid\_start\_date
+    AND sysdate BETWEEN A.valid_start_date
 
-AND A.valid\_end\_date;
+    AND A.valid_end_date;
 
-**Input:**
+Input:
 
-| ** Parameter** | ** Example** | ** Mandatory** | ** Notes** |
+|  Parameter |  Example |  Mandatory |  Notes |
 | --- | --- | --- | --- |
 |  Concept ID |  192671 |  Yes | GI - Gastrointestinal hemorrhage |
 |  As of date |  Sysdate |  No | Valid record as of specific date. Current date – sysdate is a default |
 
-**Output:**
+Output:
 
-| ** Field** | ** Description** |
+|  Field |  Description |
 | --- | --- |
-|  Parent\_Concept\_ID |  Concept ID of parent concept |
-|  Parent\_Concept\_Name |  Name of parent concept |
-|  Parent\_Concept\_Code |  Concept Code of parent concept |
-|  Parent\_Concept\_Class |  Concept Class of parent concept |
-|  Parent\_Concept\_Vocab\_ID |  Vocabulary parent concept is derived from as vocabulary code |
-|  Parent\_Concept\_Vocab\_Name |  Name of the vocabulary the child concept is derived from |
+|  Parent_Concept_ID |  Concept ID of parent concept |
+|  Parent_Concept_Name |  Name of parent concept |
+|  Parent_Concept_Code |  Concept Code of parent concept |
+|  Parent_Concept_Class |  Concept Class of parent concept |
+|  Parent_Concept_Vocab_ID |  Vocabulary parent concept is derived from as vocabulary code |
+|  Parent_Concept_Vocab_Name |  Name of the vocabulary the child concept is derived from |
 
-**Sample output record:**
+Sample output record:
 
-| ** Field** | ** Value** |
+|  Field |  Value |
 | --- | --- |
-|  Parent\_Concept\_ID |  4000610 |
-|  Parent\_Concept\_Name |  Disease of gastrointestinal tract |
-|  Parent\_Concept\_Code |  119292006 |
-|  Parent\_Concept\_Class |  Clinical finding |
-|  Parent\_Concept\_Vocab\_ID |  1 |
-|  Parent\_Concept\_Vocab\_Name |  SNOMED-CT |
-**G11:** Find children for a given concept
+|  Parent_Concept_ID |  4000610 |
+|  Parent_Concept_Name |  Disease of gastrointestinal tract |
+|  Parent_Concept_Code |  119292006 |
+|  Parent_Concept_Class |  Clinical finding |
+|  Parent_Concept_Vocab_ID |  1 |
+|  Parent_Concept_Vocab_Name |  SNOMED-CT |
+
+
+
+G11: Find children for a given concept
+---
 
 This query lists all standard vocabulary concepts that are child concepts of a given concept entered as input. The query accepts a concept ID as the input and returns all concepts that are its immediate child concepts.
 
 The query returns only the immediate child concepts that are directly linked to the input concept and not all descendants.
 
-**Sample query:**
+Sample query:
 
-SELECT D.concept\_id Child\_concept\_id, D.concept\_name Child\_concept\_name, D.concept\_code Child\_concept\_code, D.concept\_class\_id Child\_concept\_class\_id, D.vocabulary\_id Child\_concept\_vocab\_ID, VS.vocabulary\_name Child\_concept\_vocab\_name
+    SELECT D.concept_id Child_concept_id, D.concept_name Child_concept_name, D.concept_code Child_concept_code, D.concept_class_id Child_concept_class_id, D.vocabulary_id Child_concept_vocab_ID, VS.vocabulary_name Child_concept_vocab_name
 
-FROM concept\_ancestor CA, concept D, vocabulary VS
+    FROM concept_ancestor CA, concept D, vocabulary VS
 
-WHERE CA.ancestor\_concept\_id = 192671
+    WHERE CA.ancestor_concept_id = 192671
 
-AND CA.min\_levels\_of\_separation = 1
+    AND CA.min_levels_of_separation = 1
 
-AND CA.descendant\_concept\_id = D.concept\_id
+    AND CA.descendant_concept_id = D.concept_id
 
-AND D.vocabulary\_id = VS.vocabulary\_id
+    AND D.vocabulary_id = VS.vocabulary_id
 
-AND sysdate BETWEEN D.valid\_start\_date
+    AND sysdate BETWEEN D.valid_start_date
 
-AND D.valid\_end\_date;
+    AND D.valid_end_date;
 
-**Input:**
+Input:
 
-| **Parameter** | ** Example** | ** Mandatory** | ** Notes** |
+| Parameter |  Example |  Mandatory |  Notes |
 | --- | --- | --- | --- |
 |  Concept ID |  192671 |  Yes | GI - Gastrointestinal hemorrhage |
 |  As of date |  Sysdate |  No | Valid record as of specific date. Current date – sysdate is a default |
 
-**Output:**
+Output:
 
-| ** Field** | ** Description** |
+|  Field |  Description |
 | --- | --- |
-|  Child\_Concept\_ID |  Concept ID of child concept entered as input |
-|  Child\_Concept\_Name |  Name of child concept entered as input |
-|  Child\_Concept\_Code |  Concept Code of child concept entered as input |
-|  Child\_Concept\_Class |  Concept Class of child concept entered as input |
-|  Child\_Concept\_Vocab\_ID |  ID of the vocabulary the child concept is derived from |
-|  Child\_Concept\_Vocab\_Name |  Name of the vocabulary the child concept is derived from |
+|  Child_Concept_ID |  Concept ID of child concept entered as input |
+|  Child_Concept_Name |  Name of child concept entered as input |
+|  Child_Concept_Code |  Concept Code of child concept entered as input |
+|  Child_Concept_Class |  Concept Class of child concept entered as input |
+|  Child_Concept_Vocab_ID |  ID of the vocabulary the child concept is derived from |
+|  Child_Concept_Vocab_Name |  Name of the vocabulary the child concept is derived from |
 
-**Sample output record:**
+Sample output record:
 
-| ** Field** | ** Value** |
+|  Field |  Value |
 | --- | --- |
-|  Child\_Concept\_ID |  4128705 |
-|  Child\_Concept\_Name |  Haemorrhagic enteritis |
-|  Child\_Concept\_Code |  235224000 |
-|  Child\_Concept\_Class |  Clinical finding |
-|  Child\_Concept\_Vocab\_ID |  1 |
-|  Child\_Concept\_Vocab\_Name |  SNOMED-CT |
-**G12:** List current vocabulary release number
+|  Child_Concept_ID |  4128705 |
+|  Child_Concept_Name |  Haemorrhagic enteritis |
+|  Child_Concept_Code |  235224000 |
+|  Child_Concept_Class |  Clinical finding |
+|  Child_Concept_Vocab_ID |  1 |
+|  Child_Concept_Vocab_Name |  SNOMED-CT |
+
+
+
+G12: List current vocabulary release number
+---
 
 This query returns current vocabulary release number.
 
-**Sample query:**
+Sample query:
 
-SELECT vocabulary\_name, vocabulary\_version FROM vocabulary;
+    SELECT vocabulary_name, vocabulary_version FROM vocabulary;
 
-**Input:**
+Input:
 
 None
 
-**Output:**
+Output:
 
-| **Field** | ** Description** |
+| Field |  Description |
 | --- | --- |
-|  vocabulary\_name |  Version number of current OMOP vocabulary release |
+|  vocabulary_name |  Version number of current OMOP vocabulary release |
 
-**Sample output record:**
+Sample output record:
 
-| **Field** | ** Value** |
+| Field |  Value |
 | --- | --- |
-|  vocabulary\_name |  OMOP Vocabulary v4.3 Q2-2013 |
-**G13:** List available vocabularies
+|  vocabulary_name |  OMOP Vocabulary v4.3 Q2-2013 |
+
+
+
+G13: List available vocabularies
+---
 
 This query returns list of available vocabularies.
 
-**Sample query:**
+Sample query:
 
-SELECT vocabulary\_id, vocabulary\_name FROM vocabulary WHERE vocabulary\_id IS NOT NULL;
+    SELECT vocabulary_id, vocabulary_name FROM vocabulary WHERE vocabulary_id IS NOT NULL;
 
-**Input:**
+Input:
 
 None
 
-**Output:**
+Output:
 
-| **Field** | ** Description** |
+| Field |  Description |
 | --- | --- |
-|  vocabulary\_id |  OMOP Vocabulary ID |
-|  vocabulary\_name |  Vocabulary name |
+|  vocabulary_id |  OMOP Vocabulary ID |
+|  vocabulary_name |  Vocabulary name |
 
-**Sample output record:**
+Sample output record:
 
-| **Field** | ** Value** |
+| Field |  Value |
 | --- | --- |
-|  vocabulary\_id |  1 |
-|  vocabulary\_name |  SNOMED-CT |
-**G14:** Statistics about relationships between concepts
+|  vocabulary_id |  1 |
+|  vocabulary_name |  SNOMED-CT |
+
+
+
+G14: Statistics about relationships between concepts
+---
 
 This query produces list and frequency of all relationships between concepts (Standard and non-standard) and their class
 
-**Sample query:**
+Sample query:
 
-SELECT
+    SELECT
 
-  R.relationship\_id,
+      R.relationship_id,
 
-  R.relationship\_name,
+      R.relationship_name,
 
-  C1.vocabulary\_id from\_vocabulary\_id,
+      C1.vocabulary_id from_vocabulary_id,
 
-  V1.vocabulary\_name from\_vocabulary\_name,
+      V1.vocabulary_name from_vocabulary_name,
 
-  C1.concept\_class\_id from\_concept\_class,
+      C1.concept_class_id from_concept_class,
 
-  C2.vocabulary\_id to\_vocabulary\_id,
+      C2.vocabulary_id to_vocabulary_id,
 
-  V2.vocabulary\_name to\_vocabulary\_name,
+      V2.vocabulary_name to_vocabulary_name,
 
-  C2.concept\_class\_id to\_concept\_class,
+      C2.concept_class_id to_concept_class,
 
-  count(\*) num\_records
+      count(\*) num_records
 
-FROM
+    FROM
 
-  concept\_relationship CR,
+      concept_relationship CR,
 
-  concept C1,
+      concept C1,
 
-  concept C2,
+      concept C2,
 
-  relationship R,
+      relationship R,
 
-  vocabulary V1,
+      vocabulary V1,
 
-  vocabulary V2
+      vocabulary V2
 
-WHERE
+    WHERE
 
-  CR.concept\_id\_1 = C1.concept\_id AND
+      CR.concept_id_1 = C1.concept_id AND
 
-  CR.concept\_id\_2 = C2.concept\_id AND
+      CR.concept_id_2 = C2.concept_id AND
 
-  R.relationship\_id = CR.relationship\_id AND
+      R.relationship_id = CR.relationship_id AND
 
-  C1.vocabulary\_id = V1.vocabulary\_id AND
+      C1.vocabulary_id = V1.vocabulary_id AND
 
-  C2.vocabulary\_id = V2.vocabulary\_id
+      C2.vocabulary_id = V2.vocabulary_id
 
-GROUP BY
+    GROUP BY
 
-  R.relationship\_id,
+      R.relationship_id,
 
-  relationship\_name,
+      relationship_name,
 
-  C1.vocabulary\_id,
+      C1.vocabulary_id,
 
-  V1.vocabulary\_name,
+      V1.vocabulary_name,
 
-  C1.concept\_class\_id,
+      C1.concept_class_id,
 
-  C2.vocabulary\_id,
+      C2.vocabulary_id,
 
-  V2.vocabulary\_name,
+      V2.vocabulary_name,
 
-  C2.concept\_class\_id
+      C2.concept_class_id
 
-ORDER BY
+    ORDER BY
 
-  R.relationship\_id,
+      R.relationship_id,
 
-  C1.concept\_class\_id;
+      C1.concept_class_id;
 
-**Input:**
-
-None
-
-**Output:**
-
-| ** Field** | ** Description** |
-| --- | --- |
-|  relationship\_id |  Identifier for the type of relationship |
-|  relationship\_name |  Name of the type of relationship |
-|  from\_vocabulary\_id |  ID of the vocabulary of the input concepts |
-|  from\_vocabulary\_name |  Name of the vocabulary of the input concepts |
-|  from\_concept\_class |  Concept class of the input concepts |
-|  to\_vocabulary\_id |  ID of the vocabulary the related concept is derived from |
-|  to\_vocabulary\_name |  Name of the vocabulary the related concept is derived from |
-|  to\_concept\_class |  Concept class the related concept is derived from |
-|  num\_records |  Number of records  |
-
-**Sample output record:**
-
-| ** Field** | ** Value** |
-| --- | --- |
-|  relationship\_id |  1 |
-|  relationship\_name |  Concept replaced by (LOINC) |
-|  from\_vocabulary\_id |  6 |
-|  from\_vocabulary\_name |  LOINC |
-|  from\_concept\_class |  LOINC Code |
-|  to\_vocabulary\_id |  6 |
-|  to\_vocabulary\_name |  LOINC |
-|  to\_concept\_class |  LOINC Code |
-|  num\_records |  2022 |
-**G15:** Statistic about Concepts, Vocabularies, Classes and Levels
-
-### This query generates the list of all vocabularies in the CONCEPT table (Standard and non-standard), their class, level and frequency.
-
-**Sample query:**
-
-SELECT
-
-  voc.vocabulary\_id,
-
-  r.vocabulary\_name,
-
-  voc.concept\_class\_id,
-
-  voc.standard\_concept,
-
-  voc.cnt
-
-FROM (
-
-  SELECT
-
-    vocabulary\_id,
-
-    concept\_class\_id,
-
-    standard\_concept,
-
-    COUNT(concept\_id) cnt
-
-  FROM concept
-
-  GROUP BY
-
-    vocabulary\_id,
-
-    concept\_class\_id,
-
-    standard\_concept ) voc
-
-JOIN vocabulary r ON voc.vocabulary\_id=r.vocabulary\_ID
-
-ORDER BY 1,2,4,3;
-
-**Input:**
+Input:
 
 None
 
-**Output:**
+Output:
 
-| **Field** | ** Description** |
+|  Field |  Description |
 | --- | --- |
-|  vocabulary\_id |  OMOP Vocabulary ID |
-|  vocabulary\_name |  Vocabulary name |
-|  concept\_class |  Concept Class |
-|  concept\_level |  Concept Level Number |
+|  relationship_id |  Identifier for the type of relationship |
+|  relationship_name |  Name of the type of relationship |
+|  from_vocabulary_id |  ID of the vocabulary of the input concepts |
+|  from_vocabulary_name |  Name of the vocabulary of the input concepts |
+|  from_concept_class |  Concept class of the input concepts |
+|  to_vocabulary_id |  ID of the vocabulary the related concept is derived from |
+|  to_vocabulary_name |  Name of the vocabulary the related concept is derived from |
+|  to_concept_class |  Concept class the related concept is derived from |
+|  num_records |  Number of records  |
+
+Sample output record:
+
+|  Field |  Value |
+| --- | --- |
+|  relationship_id |  1 |
+|  relationship_name |  Concept replaced by (LOINC) |
+|  from_vocabulary_id |  6 |
+|  from_vocabulary_name |  LOINC |
+|  from_concept_class |  LOINC Code |
+|  to_vocabulary_id |  6 |
+|  to_vocabulary_name |  LOINC |
+|  to_concept_class |  LOINC Code |
+|  num_records |  2022 |
+
+
+
+G15: Statistic about Concepts, Vocabularies, Classes and Levels
+---
+
+ This query generates the list of all vocabularies in the CONCEPT table (Standard and non-standard), their class, level and frequency.
+
+Sample query:
+
+    SELECT
+
+      voc.vocabulary_id,
+
+      r.vocabulary_name,
+
+      voc.concept_class_id,
+
+      voc.standard_concept,
+
+      voc.cnt
+
+    FROM (
+
+      SELECT
+
+        vocabulary_id,
+
+        concept_class_id,
+
+        standard_concept,
+
+        COUNT(concept_id) cnt
+
+      FROM concept
+
+      GROUP BY
+
+        vocabulary_id,
+
+        concept_class_id,
+
+        standard_concept ) voc
+
+    JOIN vocabulary r ON voc.vocabulary_id=r.vocabulary_ID
+
+    ORDER BY 1,2,4,3;
+
+Input:
+
+None
+
+Output:
+
+| Field |  Description |
+| --- | --- |
+|  vocabulary_id |  OMOP Vocabulary ID |
+|  vocabulary_name |  Vocabulary name |
+|  concept_class |  Concept Class |
+|  concept_level |  Concept Level Number |
 |  cnt |  Number of concepts |
 
-**Sample output record:**
+Sample output record:
 
-| ** Field** | ** Value** |
+|  Field |  Value |
 | --- | --- |
-|  vocabulary\_id |  1 |
-|  vocabulary\_name |  SNOMED-CT |
-|  concept\_class |  Procedure |
-|  concept\_level |  2 |
+|  vocabulary_id |  1 |
+|  vocabulary_name |  SNOMED-CT |
+|  concept_class |  Procedure |
+|  concept_level |  2 |
 |  cnt |  20286 |
-**G16:** Statistics about Condition Mapping of Source Vocabularies
 
-### The following query contains the coverage for mapped source vocabularies in the Condition domains to SNOMED-CT.
 
-**Sample query:**
 
-SELECT
+G16: Statistics about Condition Mapping of Source Vocabularies
+---
 
-  mapped.vocabulary\_id,
+ The following query contains the coverage for mapped source vocabularies in the Condition domains to SNOMED-CT.
 
-  mapped.vocabulary\_name,
+Sample query:
 
-  CASE mapped.standard\_concept
+    SELECT
 
-    WHEN null THEN 'Not mapped'
+      mapped.vocabulary_id,
 
-        ELSE mapped.standard\_concept
+      mapped.vocabulary_name,
 
-  END AS standard\_concept,
+      CASE mapped.standard_concept
 
-  mapped.mapped\_codes,
+        WHEN null THEN 'Not mapped'
 
-  sum(mapped.mapped\_codes) over (partition by vocabulary\_id) as total\_mapped\_codes,
+            ELSE mapped.standard_concept
 
-  to\_char(mapped.mapped\_codes\*100/sum(mapped.mapped\_codes) over (partition by vocabulary\_id), '990.9') AS pct\_mapped\_codes,
+      END AS standard_concept,
 
-  mapped.mapped\_concepts,
+      mapped.mapped_codes,
 
-  (SELECT count(1)
+      sum(mapped.mapped_codes) over (partition by vocabulary_id) as total_mapped_codes,
 
-   FROM concept
+      to_char(mapped.mapped_codes\*100/sum(mapped.mapped_codes) over (partition by vocabulary_id), '990.9') AS pct_mapped_codes,
 
-   WHERE
+      mapped.mapped_concepts,
 
-     vocabulary\_id='SNOMED' AND
+      (SELECT count(1)
 
-        standard\_concept=mapped.standard\_concept AND
+       FROM concept
 
-        lower(concept\_class\_id)='clinical finding' AND
+       WHERE
 
-        invalid\_reason is null
+         vocabulary_id='SNOMED' AND
 
-  ) AS standard\_concepts,
+            standard_concept=mapped.standard_concept AND
 
-  to\_char(mapped.mapped\_concepts\*100/
+            lower(concept_class_id)='clinical finding' AND
 
-         ( SELECT CASE count(1) WHEN 0 THEN 1e16 ELSE count(1) END
+            invalid_reason is null
 
-                  FROM concept
+      ) AS standard_concepts,
 
-                  WHERE
+      to_char(mapped.mapped_concepts\*100/
 
-                    vocabulary\_id='SNOMED' AND
+             ( SELECT CASE count(1) WHEN 0 THEN 1e16 ELSE count(1) END
 
-                        standard\_concept=mapped.standard\_concept AND
+                      FROM concept
 
-                        lower(concept\_class\_id)='clinical finding' AND
+                      WHERE
 
-                        invalid\_reason is null ), '990.9'
+                        vocabulary_id='SNOMED' AND
 
-  ) AS pct\_mapped\_concepts
+                            standard_concept=mapped.standard_concept AND
 
-FROM (
+                            lower(concept_class_id)='clinical finding' AND
 
-  SELECT
+                            invalid_reason is null ), '990.9'
 
-    c1.vocabulary\_id AS vocabulary\_id,
+      ) AS pct_mapped_concepts
 
-        v.vocabulary\_name,
+    FROM (
 
-        c2.standard\_concept,
+      SELECT
 
-        COUNT(8) AS mapped\_codes,
+        c1.vocabulary_id AS vocabulary_id,
 
-        COUNT(DISTINCT c2.concept\_id) AS mapped\_concepts
+            v.vocabulary_name,
 
-  FROM concept\_relationship m
+            c2.standard_concept,
 
-  JOIN concept c1 on m.concept\_id\_1=c1.concept\_id and
+            COUNT(8) AS mapped_codes,
 
-       m.relationship\_id='Maps to' and m.invalid\_reason is null
+            COUNT(DISTINCT c2.concept_id) AS mapped_concepts
 
-  JOIN concept c2 on c2.concept\_id=m.concept\_id\_2
+      FROM concept_relationship m
 
-  JOIN vocabulary v on v.vocabulary\_id=c1.vocabulary\_id
+      JOIN concept c1 on m.concept_id_1=c1.concept_id and
 
-  WHERE c2.vocabulary\_id='SNOMED' AND lower(c2.domain\_id)='condition'
+           m.relationship_id='Maps to' and m.invalid_reason is null
 
-  GROUP BY c1.vocabulary\_id, v.vocabulary\_name, c2.standard\_concept
+      JOIN concept c2 on c2.concept_id=m.concept_id_2
 
-) mapped;
+      JOIN vocabulary v on v.vocabulary_id=c1.vocabulary_id
 
-**Input:**
+      WHERE c2.vocabulary_id='SNOMED' AND lower(c2.domain_id)='condition'
+
+      GROUP BY c1.vocabulary_id, v.vocabulary_name, c2.standard_concept
+
+    ) mapped;
+
+Input:
 
 None
 
-**Output:**
+Output:
 
-| ** Field** | ** Description** |
+|  Field |  Description |
 | --- | --- |
-|  vocabulary\_id |  Source Vocabulary ID |
-|  vocabulary\_name |  Source Vocabulary name |
-|  concept\_level |  Concept Level Number |
-|  mapped\_codes |  Number of mapped codes |
-|  total\_mapped\_codes |  Total number of mapped codes for source vocabulary |
-|  pct\_mapped\_codes |  Percentile of mapped code  |
-|  mapped\_concepts |  Number of mapped concepts  |
-|  concepts\_in\_level |  Number of mapped concepts  |
-|  pct\_mapped\_concepts |  Percentile of of mapped concepts |
+|  vocabulary_id |  Source Vocabulary ID |
+|  vocabulary_name |  Source Vocabulary name |
+|  concept_level |  Concept Level Number |
+|  mapped_codes |  Number of mapped codes |
+|  total_mapped_codes |  Total number of mapped codes for source vocabulary |
+|  pct_mapped_codes |  Percentile of mapped code  |
+|  mapped_concepts |  Number of mapped concepts  |
+|  concepts_in_level |  Number of mapped concepts  |
+|  pct_mapped_concepts |  Percentile of of mapped concepts |
 
-**Sample output record:**
+Sample output record:
 
-| **Field** | ** Value** |
+| Field |  Value |
 | --- | --- |
-|  vocabulary\_id |  2 |
-|  vocabulary\_name |  ICD9-CT |
-|  concept\_level |  1 |
-|  mapped\_codes |  4079 |
-|  total\_mapped\_codes |  10770 |
-|  pct\_mapped\_codes |  37.0 |
-|  mapped\_concepts |  3733 |
-|  concepts\_in\_level |  69280 |
-|  pct\_mapped\_concepts |  5.0 |
-**G17:** Statistics about Drugs Mapping of Source Vocabularies
+|  vocabulary_id |  2 |
+|  vocabulary_name |  ICD9-CT |
+|  concept_level |  1 |
+|  mapped_codes |  4079 |
+|  total_mapped_codes |  10770 |
+|  pct_mapped_codes |  37.0 |
+|  mapped_concepts |  3733 |
+|  concepts_in_level |  69280 |
+|  pct_mapped_concepts |  5.0 |
+
+
+
+G17: Statistics about Drugs Mapping of Source Vocabularies
+---
 
 The following query contains the coverage for mapped source vocabularies in the Drug domains to RxNorm.
 
-**Sample query:**
+Sample query:
 
-SELECT
+    SELECT
 
-  mapped.vocabulary\_id,
+      mapped.vocabulary_id,
 
-  mapped.vocabulary\_name,
+      mapped.vocabulary_name,
 
-  CASE mapped.standard\_concept
+      CASE mapped.standard_concept
 
-    WHEN null THEN 'Not mapped'
+        WHEN null THEN 'Not mapped'
 
-        ELSE mapped.standard\_concept
+            ELSE mapped.standard_concept
 
-  END AS standard\_concept,
+      END AS standard_concept,
 
-  mapped.mapped\_codes,
+      mapped.mapped_codes,
 
-  sum(mapped.mapped\_codes) over (partition by vocabulary\_id) as total\_mapped\_codes,
+      sum(mapped.mapped_codes) over (partition by vocabulary_id) as total_mapped_codes,
 
-  to\_char(mapped.mapped\_codes\*100/sum(mapped.mapped\_codes) over (partition by vocabulary\_id), '990.9') AS pct\_mapped\_codes,
+      to_char(mapped.mapped_codes\*100/sum(mapped.mapped_codes) over (partition by vocabulary_id), '990.9') AS pct_mapped_codes,
 
-  mapped.mapped\_concepts,
+      mapped.mapped_concepts,
 
-  (SELECT count(1)
+      (SELECT count(1)
 
-   FROM concept
+       FROM concept
 
-   WHERE
+       WHERE
 
-     vocabulary\_id='RxNorm' AND
+         vocabulary_id='RxNorm' AND
 
-        standard\_concept=mapped.standard\_concept AND
+            standard_concept=mapped.standard_concept AND
 
-        invalid\_reason is null
+            invalid_reason is null
 
-  ) AS standard\_concepts,
+      ) AS standard_concepts,
 
-  to\_char(mapped.mapped\_concepts\*100/
+      to_char(mapped.mapped_concepts\*100/
 
-         ( SELECT CASE count(1) WHEN 0 THEN 1e16 ELSE count(1) END
+             ( SELECT CASE count(1) WHEN 0 THEN 1e16 ELSE count(1) END
 
-                  FROM concept
+                      FROM concept
 
-                  WHERE
+                      WHERE
 
-                    vocabulary\_id='RxNorm' AND
+                        vocabulary_id='RxNorm' AND
 
-                        standard\_concept=mapped.standard\_concept AND
+                            standard_concept=mapped.standard_concept AND
 
-                        invalid\_reason is null ), '990.9'
+                            invalid_reason is null ), '990.9'
 
-  ) AS pct\_mapped\_concepts
+      ) AS pct_mapped_concepts
 
-FROM (
+    FROM (
 
-  SELECT
+      SELECT
 
-    c1.vocabulary\_id AS vocabulary\_id,
+        c1.vocabulary_id AS vocabulary_id,
 
-        v.vocabulary\_name,
+            v.vocabulary_name,
 
-        c2.standard\_concept,
+            c2.standard_concept,
 
-        COUNT(8) AS mapped\_codes,
+            COUNT(8) AS mapped_codes,
 
-        COUNT(DISTINCT c2.concept\_id) AS mapped\_concepts
+            COUNT(DISTINCT c2.concept_id) AS mapped_concepts
 
-  FROM concept\_relationship m
+      FROM concept_relationship m
 
-  JOIN concept c1 on m.concept\_id\_1=c1.concept\_id and
+      JOIN concept c1 on m.concept_id_1=c1.concept_id and
 
-       m.relationship\_id='Maps to' and m.invalid\_reason is null
+           m.relationship_id='Maps to' and m.invalid_reason is null
 
-  JOIN concept c2 on c2.concept\_id=m.concept\_id\_2
+      JOIN concept c2 on c2.concept_id=m.concept_id_2
 
-  JOIN vocabulary v on v.vocabulary\_id=c1.vocabulary\_id
+      JOIN vocabulary v on v.vocabulary_id=c1.vocabulary_id
 
-  WHERE c2.vocabulary\_id in ('ICD9CM','RxNorm') AND lower(c2.domain\_id)='drug'
+      WHERE c2.vocabulary_id in ('ICD9CM','RxNorm') AND lower(c2.domain_id)='drug'
 
-  GROUP BY c1.vocabulary\_id, v.vocabulary\_name, c2.standard\_concept
+      GROUP BY c1.vocabulary_id, v.vocabulary_name, c2.standard_concept
 
-) mapped;
+    ) mapped;
 
-**Input:**
+Input:
 
 None
 
-**Output:**
+Output:
 
-| **Field** | ** Description** |
+| Field |  Description |
 | --- | --- |
-|  vocabulary\_id |  Source Vocabulary ID |
-|  vocabulary\_name |  Source Vocabulary name |
-|  concept\_level |  Concept Level Number |
-|  mapped\_codes |  Number of mapped codes |
-|  total\_mapped\_codes |  Total number of mapped codes for source vocabulary |
-|  pct\_mapped\_codes |  Percentile of mapped code  |
-|  mapped\_concepts |  Number of mapped concepts  |
-|  concepts\_in\_level |  Number of mapped concepts  |
-|  pct\_mapped\_concepts |  Percentile of of mapped concepts |
+|  vocabulary_id |  Source Vocabulary ID |
+|  vocabulary_name |  Source Vocabulary name |
+|  concept_level |  Concept Level Number |
+|  mapped_codes |  Number of mapped codes |
+|  total_mapped_codes |  Total number of mapped codes for source vocabulary |
+|  pct_mapped_codes |  Percentile of mapped code  |
+|  mapped_concepts |  Number of mapped concepts  |
+|  concepts_in_level |  Number of mapped concepts  |
+|  pct_mapped_concepts |  Percentile of of mapped concepts |
 
-**Sample output record:**
+Sample output record:
 
-| **Field** | ** Value** |
+| Field |  Value |
 | --- | --- |
-|  vocabulary\_id |  9 |
-|  vocabulary\_name |  NDC |
-|  concept\_level |  1 |
-|  mapped\_codes |  550959 |
-|  total\_mapped\_codes |  551757 |
-|  pct\_mapped\_codes |  99.0 |
-|  mapped\_concepts |  33206 |
-|  concepts\_in\_level |  57162 |
-|  pct\_mapped\_concepts |  58.0 |
-\*\*G01:\*\* Find concept by concept ID
+|  vocabulary_id |  9 |
+|  vocabulary_name |  NDC |
+|  concept_level |  1 |
+|  mapped_codes |  550959 |
+|  total_mapped_codes |  551757 |
+|  pct_mapped_codes |  99.0 |
+|  mapped_concepts |  33206 |
+|  concepts_in_level |  57162 |
+|  pct_mapped_concepts |  58.0 |
 
-This is the most generic look-up for obtaining concept details associated with a concept identifier. The query is intended as a tool for quick reference for the name, class, level and source vocabulary details associated with a concept identifier.
 
-\*\*Sample query:\*\*
 
-SELECT C.concept\\_id, C.concept\\_name, C.concept\\_code, C.concept\\_class\\_id, C.standard\\_concept, C.vocabulary\\_id, V.vocabulary\\_name
-
-FROM concept C, vocabulary V
-
-WHERE C.concept\\_id = 192671
-
-AND C.vocabulary\\_id = V.vocabulary\\_id
-
-AND sysdate BETWEEN valid\\_start\\_date
-
-AND valid\\_end\\_date;
-
-\*\*Input:\*\*
-
-| \*\* Parameter\*\* | \*\* Example\*\* | \*\* Mandatory\*\* | \*\* Notes\*\* |
-
-| --- | --- | --- | --- |
-
-|  Concept ID |  192671 |  Yes | Concept Identifier for "GI - Gastrointestinal hemorrhage" |
-
-|  As of date |  Sysdate |  No | Valid record as of specific date. Current date – sysdate is a default |
-
-\*\*Output:\*\*
-
-| \*\* Field\*\* | \*\* Description\*\* |
-
-| --- | --- |
-
-|  Concept\\_ID |  Concept Identifier entered as input |
-
-|  Concept\\_Name |  Name of the standard concept |
-
-|  Concept\\_Code |  Concept code of the standard concept in the source vocabulary |
-
-|  Concept\\_Class |  Concept class of standard vocabulary concept |
-
-|  Concept\\_Level |  Level of the concept if defined as part of a hierarchy |
-
-|  Vocabulary\\_ID |  Vocabulary the standard concept is derived from as vocabulary code |
-
-|  Vocabulary\\_Name |  Name of the vocabulary the standard concept is derived from |
-
-\*\*Sample output record:\*\*
-
-| \*\* Field\*\* | \*\* Value\*\* |
-
-| --- | --- |
-
-|  Concept\\_ID |  192671 |
-
-|  Concept\\_Name |  GI - Gastrointestinal haemorrhage |
-
-|  Concept\\_Code |  74474003 |
-
-|  Concept\\_Class |  Clinical finding |
-
-|  Concept\\_Level |  2 |
-
-|  Vocabulary\\_ID |  1 |
-
-|  Vocabulary\\_Name |  SNOMED-CT |
-
-\*\*G04:\*\* Find synonyms for a given concept
-
-This query extracts all synonyms in the vocabulary for a given Concept ID.
-
-\*\*Sample query:\*\*
-
-SELECT C.concept\\_id, S.concept\\_synonym\\_name
-
-FROM concept C, concept\\_synonym S, vocabulary V
-
-WHERE C.concept\\_id = 192671
-
-AND C.concept\\_id = S.concept\\_id
-
-AND C.vocabulary\\_id = V.vocabulary\\_id
-
-AND sysdate BETWEEN C.valid\\_start\\_date AND C.valid\\_end\\_date;
-
-\*\*Input:\*\*
-
-| \*\*Parameter\*\* | \*\* Example\*\* | \*\* Mandatory\*\* | \*\* Notes\*\* |
-
-| --- | --- | --- | --- |
-
-|  Concept ID |  192671 |  Yes | GI - Gastrointestinal hemorrhage |
-
-|  As of date |  Sysdate |  No | Valid record as of specific date. Current date – sysdate is a default |
-
-\*\*Output:\*\*
-
-| \*\* Field\*\* | \*\* Description\*\* |
-
-| --- | --- |
-
-|  Concept\\_ID |  Unique identifier of the concept related to the input concept |
-
-|  Concept\\_Synonym\\_Name |  Synonym of the concept |
-
-\*\*Sample output record:\*\*
-
-| \*\* Field\*\* | \*\* Value\*\* |
-
-| --- | --- |
-
-|  Concept\\_ID |  192671 |
-
-|  Concept\\_Synonym\\_Name |  GI bleeding |
-
-\*\*G05:\*\* Translate a code from a source to a standard vocabulary.
-
-This query enables search of all Standard Vocabulary concepts that are mapped to a code from a specified source vocabulary. It will return all possible concepts that are mapped to it, as well as the target vocabulary. The source code could be obtained using queries G02 or G03.
-
-Note that to unambiguously identify a source code, the vocabulary id has to be provided, as source codes are not unique identifiers across different vocabularies.
-
-\*\*Sample query:\*\*
-
-SELECT DISTINCT
-
-        c1.domain\\_id,
-
-        c2.concept\\_id         as Concept\\_Id,
-
-        c2.concept\\_name       as Concept\\_Name,
-
-        c2.concept\\_code       as Concept\\_Code,
-
-        c2.concept\\_class\\_id      as Concept\\_Class,
-
-        c2.vocabulary\\_id      as Concept\\_Vocabulary\\_ID,
-
-                  c2.domain\\_id                  as Target\\_concept\\_Domain
-
-FROM concept\\_relationship cr
-
-JOIN concept c1 ON c1.concept\\_id = cr.concept\\_id\\_1
-
-JOIN concept c2 ON c2.concept\\_id = cr.concept\\_id\\_2
-
-WHERE cr.relationship\\_id = 'Maps to'
-
-AND c1.concept\\_code IN ('070.0')
-
-AND c1.vocabulary\\_id = 'ICD9CM'
-
-AND sysdate BETWEEN cr.valid\\_start\\_date AND cr.valid\\_end\\_date;
-
-\*\*Input:\*\*
-
-| \*\*Parameter\*\* | \*\* Example\*\* | \*\* Mandatory\*\* | \*\* Notes\*\* |
-
-| --- | --- | --- | --- |
-
-|  Source Code List |  '070.0' |  Yes |  Source codes are alphanumeric |
-
-|  Source Vocabulary ID |  2 |  Yes | The source vocabulary ID is mandatory, because the source code is not unique across different vocabularies.
-
-The list of vocabulary codes is listed in the VOCABULARY table. Vocabulary ID of 2 represents ICD9-CM |
-
-|  As of date |  Sysdate |  No | Valid record as of specific date. Current date – sysdate is a default |
-
-\*\*Output:\*\*
-
-| \*\* Field\*\* | \*\* Description\*\* |
-
-| --- | --- |
-
-|  Mapping\\_Type |  Type of mapping from source code to target concept |
-
-|  Target\\_Concept\\_Id |  Concept ID of mapped concept |
-
-|  Target\\_Concept\\_Name |  Name of mapped concept |
-
-|  Target\\_Concept\\_Code |  Concept code of mapped concept |
-
-|  Target\\_Concept\\_Class |  Class of the mapped concept |
-
-|  Target\\_Concept\\_Vocab\\_ID |  Vocabulary ID of the target vocabulary |
-
-|  Target\\_Concept\\_Vocab\\_Name |  Name of the vocabulary the target concept is part of |
-
-|  Target\\_Concept\\_Domain |  Vocabulary domain that includes the entity. The domains include:
-
-DRUG, CONDITION, PROCEDURE, OBSERVATION, OBSERVATION UNIT, VISIT, DEMOGRAPHIC, DEATH, COST, PROVIDER |
-
-\*\*Sample output record:\*\*
-
-| \*\*Field\*\* | \*\* Value\*\* |
-
-| --- | --- |
-
-|  Mapping\\_Type |  CONDITION-MEDDRA |
-
-|  Target\\_Concept\\_Id |  35909589 |
-
-|  Target\\_Concept\\_Name |  Hepatitis viral |
-
-|  Target\\_Concept\\_Code |  10019799 |
-
-|  Target\\_Concept\\_Class |  Preferred Term |
-
-|  Target\\_Concept\\_Vocab\\_ID |  15 |
-
-|  Target\\_Concept\\_Vocab\\_Name |  MedDRA |
-
-|  Target\\_Concept\\_Domain |  CONDITION |
-
-\*\*G06:\*\* Find concepts and their descendants that are covered by a given source code
-
-This query returns all concepts that are direct maps and the descendants of these directly mapped concepts. This is useful if the target standard vocabulary is organized in a tall hierarchy, while the source vocabulary organization is flat.
-
-Additional constraints can be added at the end of the query if only a specific target domain or target vocabulary is desired. For example, if only SNOMED-CT as the standard vocabulary for conditions needs be returned, the target vocabulary can be set to 1.
-
-In the query only FDB indications and contraindications are returned, but not NDF-RT indications or contraindications. That is because no direct mapping between ICD-9-CM and NDF-RT exists. In order to query for drug indications please see queries D12 through D18.
-
-\*\*Sample query:\*\*
-
-WITH dm AS ( -- collect direct maps
-
-SELECT  c1.concept\\_code as source\\_code,
-
-        c1.vocabulary\\_id,
-
-        c1.domain\\_id,
-
-        c2.concept\\_id        as target\\_concept\\_id,
-
-        c2.concept\\_name      as target\\_concept\\_name,
-
-        c2.concept\\_code      as target\\_concept\\_code,
-
-        c2.concept\\_class\\_id     as target\\_concept\\_class,
-
-        c2.vocabulary\\_id     as target\\_concept\\_vocab\\_id,
-
-        'Direct map'        as target\\_Type
-
-FROM    concept\\_relationship cr
-
-                JOIN concept c1 ON cr.concept\\_id\\_1 = c1.concept\\_id
-
-                JOIN concept c2 ON cr.concept\\_id\\_2 = c2.concept\\_id
-
-WHERE   cr.relationship\\_id = 'Maps to'
-
-AND                c1.concept\\_code IN ('410.0')
-
-AND     c1.vocabulary\\_id = 'ICD9CM'
-
-AND     sysdate BETWEEN cr.valid\\_start\\_date AND cr.valid\\_end\\_date )
-
-SELECT dm.source\\_code,
-
-        dm.vocabulary\\_id,
-
-        dm.domain\\_id,
-
-        dc.concept\\_id        AS        target\\_concept\\_id,
-
-        dc.concept\\_name        AS target\\_concept\\_name,
-
-        dc.concept\\_code AS target\\_concept\\_code,
-
-        dc.concept\\_class\\_id AS target\\_concept\\_class,
-
-        dc.vocabulary\\_id AS target\\_concept\\_vocab\\_id,
-
-    'Descendant of direct map' as target\\_Type
-
-FROM concept\\_ancestor ca -- collect descendants which includes ancestor itself
-
-JOIN dm ON ca.ancestor\\_concept\\_id = dm.target\\_concept\\_id
-
-JOIN concept dc ON ca.descendant\\_concept\\_id = dc.concept\\_id
-
-WHERE dc.standard\\_concept = 'S';
-
-\*\*Input:\*\*
-
-| \*\*Parameter\*\* | \*\* Example\*\* | \*\* Mandatory\*\* | \*\* Notes\*\* |
-
-| --- | --- | --- | --- |
-
-|  Source Code List |  '410.0' |  Yes | Source codes are alphanumeric. |
-
-|  Source Vocabulary ID |  2 |  Yes | 2 represents ICD9-CM.
-
-The list of vocabulary codes can be found in the VOCABULARY table. |
-
-|  As of date |  Sysdate |  No | Valid record as of specific date. Current date – sysdate is a default |
-
-\*\*Output:\*\*
-
-| \*\*Field\*\* | \*\* Description\*\* |
-
-| --- | --- |
-
-|  Mapping\\_Type |  Type of mapping from source code to target concept |
-
-|  Target\\_Concept\\_ID |  Concept ID of mapped concept |
-
-|  Target\\_Concept\\_Name |  Concept name of mapped concept |
-
-|  Target\\_Concept\\_Code |  Concept Code of mapped concept |
-
-|  Target\\_Concept\\_Class |  Concept class of mapped concept |
-
-|  Target\\_Concept\\_Vocab\\_ID |  ID of the target vocabulary |
-
-|  Target\\_Concept\\_Vocab\\_Name |  Name of the vocabulary the target concept is part of |
-
-|  Target\\_Type |   Type of result, indicates how the target concepts was extracted. Includes:
-
-- Concepts that are direct maps
-
-- Concepts that are descendants of direct maps
-
- |
-
-\*\*Sample output record:\*\*
-
-| \*\* Field\*\* | \*\* Value\*\* |
-
-| --- | --- |
-
-|  Mapping\\_Type |  CONDITION |
-
-|  Target\\_Concept\\_ID |  312327 |
-
-|  Target\\_Concept\\_Name |  Acute myocardial infarction |
-
-|  Target\\_Concept\\_Code |  57054005 |
-
-|  Target\\_Concept\\_Class |  Clinical finding |
-
-|  Target\\_Concept\\_Vocab\\_ID |  1 |
-
-|  Target\\_Concept\\_Vocab\\_Name |  SNOMED-CT |
-
-|  Target\\_Type |  Direct map |
-
-\*\*G07:\*\* Find concepts that have a relationship with a given concept
-
-For a concept identifier entered as the input parameter, the query lists all existing relationships with other concepts. The resulting output includes:
-
-- Type of relationship (including both relationship ID and description)
-
-- Details of the other concept to which the relationship has been defined
-
-- Polarity of the relationship
-
-o    Polarity of "Relates to" implies the input concept is the first concept or CONCEPT\\_ID\\_1 of the relationship
-
-o    Polarity of "Is Related by" implies the input concept is the second concept or CONCEPT\\_ID\\_2 of the relationship
-
-In vocabulary Version 4.0 and above all relationships are bi-directional, ie. all relationships are repeated as a mirrored version, where CONCEPT\\_ID\\_1 and CONCEPT\\_ID\\_2 are swapped and the inverse relationship ID is provided.
-
-\*\*Sample query:\*\*
-
-SELECT 'Relates to' relationship\\_polarity, CR.relationship\\_ID, RT.relationship\\_name, D.concept\\_Id concept\\_id, D.concept\\_Name concept\\_name, D.concept\\_Code concept\\_code, D.concept\\_class\\_id concept\\_class\\_id, D.vocabulary\\_id concept\\_vocab\\_ID, VS.vocabulary\\_name concept\\_vocab\\_name
-
-FROM concept\\_relationship CR, concept A, concept D, vocabulary VA, vocabulary VS, relationship RT
-
-WHERE CR.concept\\_id\\_1 = A.concept\\_id
-
-AND A.vocabulary\\_id = VA.vocabulary\\_id
-
-AND CR.concept\\_id\\_2 = D.concept\\_id
-
-AND D.vocabulary\\_id = VS.vocabulary\\_id
-
-AND CR.relationship\\_id = RT.relationship\\_ID
-
-AND A.concept\\_id = 192671
-
-AND sysdate BETWEEN CR.valid\\_start\\_date
-
-AND CR.valid\\_end\\_date
-
-UNION ALL SELECT 'Is related by' relationship\\_polarity, CR.relationship\\_ID, RT.relationship\\_name, A.concept\\_Id concept\\_id, A.concept\\_name concept\\_name, A.concept\\_code concept\\_code, A.concept\\_class\\_id concept\\_class\\_id, A.vocabulary\\_id concept\\_vocab\\_ID, VA.Vocabulary\\_Name concept\\_vocab\\_name
-
-FROM concept\\_relationship CR, concept A, concept D, vocabulary VA, vocabulary VS, relationship RT
-
-WHERE CR.concept\\_id\\_1 = A.concept\\_id
-
-AND A.vocabulary\\_id = VA.vocabulary\\_id
-
-AND CR.concept\\_id\\_2 = D.concept\\_id
-
-AND D.vocabulary\\_id = VS.vocabulary\\_id
-
-AND CR.relationship\\_id = RT.relationship\\_ID
-
-AND D.concept\\_id = 192671
-
-AND sysdate BETWEEN CR.valid\\_start\\_date
-
-AND CR.valid\\_end\\_date;
-
-\*\*Input:\*\*
-
-| \*\* Parameter\*\* | \*\* Example\*\* | \*\* Mandatory\*\* | \*\* Notes\*\* |
-
-| --- | --- | --- | --- |
-
-|  Concept ID |  192671 |  Yes | GI - Gastrointestinal hemorrhage |
-
-|  As of date |  Sysdate |  No | Valid record as of specific date. Current date – sysdate is a default |
-
-\*\*Output:\*\*
-
-| \*\* Field\*\* | \*\* Description\*\* |
-
-| --- | --- |
-
-|  Relationship\\_Polarity |  Polarity of the relationship with the input concept as a reference:
-
-- "Relates to": Indicates input concept is CONCEPT\\_ID\\_1 or the first concept of the relationship
-
-- "Is Related by": Indicates input concept
-
- |
-
-|  Relationship\\_ID |  Identifier for the type of relationship |
-
-|  Relationship\\_Name |  Name of the type of relationship |
-
-|  Concept\\_ID |  Unique identifier of the concept related to the input concept |
-
-|  Concept\\_Name |  Name of the concept related to the input concept |
-
-|  Concept\\_Code |  Concept code of concept related to the input concept |
-
-|  Concept\\_Class |  Concept Class of concept related to the input concept |
-
-|  Concept\\_Vocab\\_ID |  ID of the vocabulary the related concept is derived from |
-
-|  Concept\\_Vocab\\_Name |  Name of the vocabulary the related concept is derived from |
-
-\*\*Sample output record:\*\*
-
-| \*\* Field\*\* | \*\* Value\*\* |
-
-| --- | --- |
-
-|  Relationship\\_Polarity |  Is Related to |
-
-|  Relationship\\_ID |  125 |
-
-|  Relationship\\_Name |  MedDRA to SNOMED-CT equivalent (OMOP) |
-
-|  Concept\\_ID |  35707864 |
-
-|  Concept\\_Name |  Gastrointestinal haemorrhage |
-
-|  Concept\\_Code |  10017955 |
-
-|  Concept\\_Class |  Preferred Term |
-
-|  Concept\\_Vocab\\_ID |  15 |
-
-|  Concept\\_Vocab\\_Name |  MedDRA |
-
-\*\*G08:\*\* Find ancestors for a given concept
-
-For a concept identifier entered as the input parameter, this query lists all ancestors in the hierarchy of the domain. Ancestors are concepts that have a relationship to the given concept and is defined as hierarchical in the relationship table, and any secondary, tertiary etc. concepts going up in the hierarchy. The resulting output provides the ancestor concept details and the minimum and maximum level of separation.
-
-\*\*Sample query:\*\*
-
-SELECT C.concept\\_id as ancestor\\_concept\\_id, C.concept\\_name as ancestor\\_concept\\_name, C.concept\\_code as ancestor\\_concept\\_code, C.concept\\_class\\_id as ancestor\\_concept\\_class\\_id, C.vocabulary\\_id, VA.vocabulary\\_name, A.min\\_levels\\_of\\_separation, A.max\\_levels\\_of\\_separation
-
-FROM concept\\_ancestor A, concept C, vocabulary VA
-
-WHERE A.ancestor\\_concept\\_id = C.concept\\_id
-
-AND C.vocabulary\\_id = VA.vocabulary\\_id
-
-AND A.ancestor\\_concept\\_id<>A.descendant\\_concept\\_id
-
-AND A.descendant\\_concept\\_id = 192671
-
-AND sysdate BETWEEN valid\\_start\\_date
-
-AND valid\\_end\\_date
-
-ORDER BY 5,7;
-
-\*\*Input:\*\*
-
-| \*\* Parameter\*\* | \*\* Example\*\* | \*\* Mandatory\*\* | \*\* Notes\*\* |
-
-| --- | --- | --- | --- |
-
-|  Concept ID |  192671 |  Yes | GI - Gastrointestinal hemorrhage |
-
-|  As of date |  Sysdate |  No | Valid record as of specific date. Current date – sysdate is a default |
-
-\*\*Output:\*\*
-
-| \*\* Field\*\* | \*\* Description\*\* |
-
-| --- | --- |
-
-|  Ancestor\\_Concept\\_ID |  Unique identifier of the concept related to the ancestor concept |
-
-|  Ancestor\\_Concept\\_Name |  Name of the concept related to the ancestor concept |
-
-|  Ancestor\\_Concept\\_Code |  Concept code of concept related to the ancestor concept |
-
-|  Ancestor\\_Concept\\_>Class |  Concept Class of concept related to the ancestor concept |
-
-|  Vocabulary\\_ID |  ID of the vocabulary the ancestor concept is derived from |
-
-|  Vocabulary\\_Name |  Name of the vocabulary the ancestor concept is derived from |
-
-|  Min\\_Levels\\_of\\_Separation |  The length of the shortest path between the concept and the ancestor |
-
-|  Max\\_Levels\\_of\\_Separation |  The length of the longest path between the concept and the ancestor |
-
-\*\*Sample output record:\*\*
-
-| \*\* Field\*\* | \*\* Value\*\* |
-
-| --- | --- |
-
-|  Ancestor\\_Concept\\_ID |  4000610 |
-
-|  Ancestor\\_Concept\\_Name |  Disease of gastrointestinal tract |
-
-|  Ancestor\\_Concept\\_Code |  119292006 |
-
-|  Ancestor\\_Concept\\_Class |  Clinical finding |
-
-|  Vocabulary\\_ID |  1 |
-
-|  Vocabulary\\_Name |  SNOMED-CT |
-
-|  Min\\_Levels\\_of\\_Separation |  1 |
-
-|  Max\\_Levels\\_of\\_Separation |  1 |
-
-\*\*G09:\*\* Find descendants for a given concept
-
-For a concept identifier entered as the input parameter, this query lists all descendants in the hierarchy of the domain. Descendant are concepts have a relationship to the given concept that is defined as hierarchical in the relationship table, and any secondary, tertiary etc. concepts going down in the hierarchy. The resulting output provides the descendant concept details and the minimum and maximum level of separation.
-
-\*\*Sample query:\*\*
-
-SELECT C.concept\\_id as descendant\\_concept\\_id, C.concept\\_name as descendant\\_concept\\_name, C.concept\\_code as descendant\\_concept\\_code, C.concept\\_class\\_id as descendant\\_concept\\_class\\_id, C.vocabulary\\_id, VA.vocabulary\\_name, A.min\\_levels\\_of\\_separation, A.max\\_levels\\_of\\_separation
-
-FROM concept\\_ancestor A, concept C, vocabulary VA
-
-WHERE A.descendant\\_concept\\_id = C.concept\\_id
-
-AND C.vocabulary\\_id = VA.vocabulary\\_id
-
-AND A.ancestor\\_concept\\_id <> A.descendant\\_concept\\_id
-
-AND A.ancestor\\_concept\\_id = 192671
-
-AND sysdate BETWEEN valid\\_start\\_date
-
-AND valid\\_end\\_date
-
-ORDER BY 5,7;
-
-\*\*Input:\*\*
-
-| \*\*Parameter\*\* | \*\* Example\*\* | \*\* Mandatory\*\* | \*\* Notes\*\* |
-
-| --- | --- | --- | --- |
-
-|  Concept ID |  192671 |  Yes | GI - Gastrointestinal hemorrhage |
-
-|  As of date |  Sysdate |  No | Valid record as of specific date. Current date – sysdate is a default |
-
-\*\*Output:\*\*
-
-| \*\*Field\*\* | \*\* Description\*\* |
-
-| --- | --- |
-
-|  Descendant\\_Concept\\_ID |  Unique identifier of the concept related to the descendant concept |
-
-|  Descendant\\_Concept\\_Name |  Name of the concept related to the descendant concept |
-
-|  Descendant\\_Concept\\_Code |  Concept code of concept related to the descendant concept |
-
-|  Descendant\\_Concept\\_Class |  Concept Class of concept related to the descendant concept |
-
-|  Vocabulary\\_ID |  ID of the vocabulary the descendant concept is derived from |
-
-|  Vocabulary\\_Name; |  Name of the vocabulary the descendant concept is derived from |
-
-|  Min\\_Levels\\_of\\_Separation |  The length of the shortest path between the concept and the descendant |
-
-|  Max\\_Levels\\_of\\_Separation |  The length of the longest path between the concept and the descendant |
-
-\*\*Sample output record:\*\*
-
-| \*\* Field\*\* | \*\* Value\*\* |
-
-| --- | --- |
-
-|  Descendant\\_Concept\\_ID |  4318535 |
-
-|  Descendant\\_Concept\\_Name |  Duodenal haemorrhage |
-
-|  Descendant\\_Concept\\_Code |  95533003 |
-
-|  Descendant\\_Concept\\_Class |  Clinical finding |
-
-|  Vocabulary\\_ID |  1 |
-
-|  Vocabulary\\_Name |  SNOMED-CT |
-
-|  Min\\_Levels\\_of\\_Separation |  1 |
-
-|  Max\\_Levels\\_of\\_Separation |  1 |
-
-\*\*G10:\*\* Find parents for a given concept
-
-### This query accepts a concept ID as the input and returns all concepts that are its immediate parents of that concept. Parents are concepts that have a hierarchical relationship to the given concepts. Hierarchical relationships are defined in the relationship table.
-
-The query returns only the immediate parent concepts that are directly linked to the input concept and not all ancestors.
-
-\*\*Sample query:\*\*
-
-SELECT A.concept\\_id Parent\\_concept\\_id, A.concept\\_name Parent\\_concept\\_name, A.concept\\_code Parent\\_concept\\_code, A.concept\\_class\\_id Parent\\_concept\\_class\\_id, A.vocabulary\\_id Parent\\_concept\\_vocab\\_ID, VA.vocabulary\\_name Parent\\_concept\\_vocab\\_name
-
-FROM concept\\_ancestor CA, concept A, concept D, vocabulary VA
-
-WHERE CA.descendant\\_concept\\_id = 192671
-
-AND CA.min\\_levels\\_of\\_separation = 1
-
-AND CA.ancestor\\_concept\\_id = A.concept\\_id
-
-AND A.vocabulary\\_id = VA.vocabulary\\_id
-
-AND CA.descendant\\_concept\\_id = D.concept\\_id
-
-AND sysdate BETWEEN A.valid\\_start\\_date
-
-AND A.valid\\_end\\_date;
-
-\*\*Input:\*\*
-
-| \*\* Parameter\*\* | \*\* Example\*\* | \*\* Mandatory\*\* | \*\* Notes\*\* |
-
-| --- | --- | --- | --- |
-
-|  Concept ID |  192671 |  Yes | GI - Gastrointestinal hemorrhage |
-
-|  As of date |  Sysdate |  No | Valid record as of specific date. Current date – sysdate is a default |
-
-\*\*Output:\*\*
-
-| \*\* Field\*\* | \*\* Description\*\* |
-
-| --- | --- |
-
-|  Parent\\_Concept\\_ID |  Concept ID of parent concept |
-
-|  Parent\\_Concept\\_Name |  Name of parent concept |
-
-|  Parent\\_Concept\\_Code |  Concept Code of parent concept |
-
-|  Parent\\_Concept\\_Class |  Concept Class of parent concept |
-
-|  Parent\\_Concept\\_Vocab\\_ID |  Vocabulary parent concept is derived from as vocabulary code |
-
-|  Parent\\_Concept\\_Vocab\\_Name |  Name of the vocabulary the child concept is derived from |
-
-\*\*Sample output record:\*\*
-
-| \*\* Field\*\* | \*\* Value\*\* |
-
-| --- | --- |
-
-|  Parent\\_Concept\\_ID |  4000610 |
-
-|  Parent\\_Concept\\_Name |  Disease of gastrointestinal tract |
-
-|  Parent\\_Concept\\_Code |  119292006 |
-
-|  Parent\\_Concept\\_Class |  Clinical finding |
-
-|  Parent\\_Concept\\_Vocab\\_ID |  1 |
-
-|  Parent\\_Concept\\_Vocab\\_Name |  SNOMED-CT |
-
-\*\*G11:\*\* Find children for a given concept
-
-This query lists all standard vocabulary concepts that are child concepts of a given concept entered as input. The query accepts a concept ID as the input and returns all concepts that are its immediate child concepts.
-
-The query returns only the immediate child concepts that are directly linked to the input concept and not all descendants.
-
-\*\*Sample query:\*\*
-
-SELECT D.concept\\_id Child\\_concept\\_id, D.concept\\_name Child\\_concept\\_name, D.concept\\_code Child\\_concept\\_code, D.concept\\_class\\_id Child\\_concept\\_class\\_id, D.vocabulary\\_id Child\\_concept\\_vocab\\_ID, VS.vocabulary\\_name Child\\_concept\\_vocab\\_name
-
-FROM concept\\_ancestor CA, concept D, vocabulary VS
-
-WHERE CA.ancestor\\_concept\\_id = 192671
-
-AND CA.min\\_levels\\_of\\_separation = 1
-
-AND CA.descendant\\_concept\\_id = D.concept\\_id
-
-AND D.vocabulary\\_id = VS.vocabulary\\_id
-
-AND sysdate BETWEEN D.valid\\_start\\_date
-
-AND D.valid\\_end\\_date;
-
-\*\*Input:\*\*
-
-| \*\*Parameter\*\* | \*\* Example\*\* | \*\* Mandatory\*\* | \*\* Notes\*\* |
-
-| --- | --- | --- | --- |
-
-|  Concept ID |  192671 |  Yes | GI - Gastrointestinal hemorrhage |
-
-|  As of date |  Sysdate |  No | Valid record as of specific date. Current date – sysdate is a default |
-
-\*\*Output:\*\*
-
-| \*\* Field\*\* | \*\* Description\*\* |
-
-| --- | --- |
-
-|  Child\\_Concept\\_ID |  Concept ID of child concept entered as input |
-
-|  Child\\_Concept\\_Name |  Name of child concept entered as input |
-
-|  Child\\_Concept\\_Code |  Concept Code of child concept entered as input |
-
-|  Child\\_Concept\\_Class |  Concept Class of child concept entered as input |
-
-|  Child\\_Concept\\_Vocab\\_ID |  ID of the vocabulary the child concept is derived from |
-
-|  Child\\_Concept\\_Vocab\\_Name |  Name of the vocabulary the child concept is derived from |
-
-\*\*Sample output record:\*\*
-
-| \*\* Field\*\* | \*\* Value\*\* |
-
-| --- | --- |
-
-|  Child\\_Concept\\_ID |  4128705 |
-
-|  Child\\_Concept\\_Name |  Haemorrhagic enteritis |
-
-|  Child\\_Concept\\_Code |  235224000 |
-
-|  Child\\_Concept\\_Class |  Clinical finding |
-
-|  Child\\_Concept\\_Vocab\\_ID |  1 |
-
-|  Child\\_Concept\\_Vocab\\_Name |  SNOMED-CT |
-
-\*\*G12:\*\* List current vocabulary release number
-
-This query returns current vocabulary release number.
-
-\*\*Sample query:\*\*
-
-SELECT vocabulary\\_name, vocabulary\\_version FROM vocabulary;
-
-\*\*Input:\*\*
-
-None
-
-\*\*Output:\*\*
-
-| \*\*Field\*\* | \*\* Description\*\* |
-
-| --- | --- |
-
-|  vocabulary\\_name |  Version number of current OMOP vocabulary release |
-
-\*\*Sample output record:\*\*
-
-| \*\*Field\*\* | \*\* Value\*\* |
-
-| --- | --- |
-
-|  vocabulary\\_name |  OMOP Vocabulary v4.3 Q2-2013 |
-
-\*\*G13:\*\* List available vocabularies
-
-This query returns list of available vocabularies.
-
-\*\*Sample query:\*\*
-
-SELECT vocabulary\\_id, vocabulary\\_name FROM vocabulary WHERE vocabulary\\_id IS NOT NULL;
-
-\*\*Input:\*\*
-
-None
-
-\*\*Output:\*\*
-
-| \*\*Field\*\* | \*\* Description\*\* |
-
-| --- | --- |
-
-|  vocabulary\\_id |  OMOP Vocabulary ID |
-
-|  vocabulary\\_name |  Vocabulary name |
-
-\*\*Sample output record:\*\*
-
-| \*\*Field\*\* | \*\* Value\*\* |
-
-| --- | --- |
-
-|  vocabulary\\_id |  1 |
-
-|  vocabulary\\_name |  SNOMED-CT |
-
-\*\*G14:\*\* Statistics about relationships between concepts
-
-This query produces list and frequency of all relationships between concepts (Standard and non-standard) and their class
-
-\*\*Sample query:\*\*
-
-SELECT
-
-  R.relationship\\_id,
-
-  R.relationship\\_name,
-
-  C1.vocabulary\\_id from\\_vocabulary\\_id,
-
-  V1.vocabulary\\_name from\\_vocabulary\\_name,
-
-  C1.concept\\_class\\_id from\\_concept\\_class,
-
-  C2.vocabulary\\_id to\\_vocabulary\\_id,
-
-  V2.vocabulary\\_name to\\_vocabulary\\_name,
-
-  C2.concept\\_class\\_id to\\_concept\\_class,
-
-  count(\\*) num\\_records
-
-FROM
-
-  concept\\_relationship CR,
-
-  concept C1,
-
-  concept C2,
-
-  relationship R,
-
-  vocabulary V1,
-
-  vocabulary V2
-
-WHERE
-
-  CR.concept\\_id\\_1 = C1.concept\\_id AND
-
-  CR.concept\\_id\\_2 = C2.concept\\_id AND
-
-  R.relationship\\_id = CR.relationship\\_id AND
-
-  C1.vocabulary\\_id = V1.vocabulary\\_id AND
-
-  C2.vocabulary\\_id = V2.vocabulary\\_id
-
-GROUP BY
-
-  R.relationship\\_id,
-
-  relationship\\_name,
-
-  C1.vocabulary\\_id,
-
-  V1.vocabulary\\_name,
-
-  C1.concept\\_class\\_id,
-
-  C2.vocabulary\\_id,
-
-  V2.vocabulary\\_name,
-
-  C2.concept\\_class\\_id
-
-ORDER BY
-
-  R.relationship\\_id,
-
-  C1.concept\\_class\\_id;
-
-\*\*Input:\*\*
-
-None
-
-\*\*Output:\*\*
-
-| \*\* Field\*\* | \*\* Description\*\* |
-
-| --- | --- |
-
-|  relationship\\_id |  Identifier for the type of relationship |
-
-|  relationship\\_name |  Name of the type of relationship |
-
-|  from\\_vocabulary\\_id |  ID of the vocabulary of the input concepts |
-
-|  from\\_vocabulary\\_name |  Name of the vocabulary of the input concepts |
-
-|  from\\_concept\\_class |  Concept class of the input concepts |
-
-|  to\\_vocabulary\\_id |  ID of the vocabulary the related concept is derived from |
-
-|  to\\_vocabulary\\_name |  Name of the vocabulary the related concept is derived from |
-
-|  to\\_concept\\_class |  Concept class the related concept is derived from |
-
-|  num\\_records |  Number of records  |
-
-\*\*Sample output record:\*\*
-
-| \*\* Field\*\* | \*\* Value\*\* |
-
-| --- | --- |
-
-|  relationship\\_id |  1 |
-
-|  relationship\\_name |  Concept replaced by (LOINC) |
-
-|  from\\_vocabulary\\_id |  6 |
-
-|  from\\_vocabulary\\_name |  LOINC |
-
-|  from\\_concept\\_class |  LOINC Code |
-
-|  to\\_vocabulary\\_id |  6 |
-
-|  to\\_vocabulary\\_name |  LOINC |
-
-|  to\\_concept\\_class |  LOINC Code |
-
-|  num\\_records |  2022 |
-
-\*\*G15:\*\* Statistic about Concepts, Vocabularies, Classes and Levels
-
-### This query generates the list of all vocabularies in the CONCEPT table (Standard and non-standard), their class, level and frequency.
-
-\*\*Sample query:\*\*
-
-SELECT
-
-  voc.vocabulary\\_id,
-
-  r.vocabulary\\_name,
-
-  voc.concept\\_class\\_id,
-
-  voc.standard\\_concept,
-
-  voc.cnt
-
-FROM (
-
-  SELECT
-
-    vocabulary\\_id,
-
-    concept\\_class\\_id,
-
-    standard\\_concept,
-
-    COUNT(concept\\_id) cnt
-
-  FROM concept
-
-  GROUP BY
-
-    vocabulary\\_id,
-
-    concept\\_class\\_id,
-
-    standard\\_concept ) voc
-
-JOIN vocabulary r ON voc.vocabulary\\_id=r.vocabulary\\_ID
-
-ORDER BY 1,2,4,3;
-
-\*\*Input:\*\*
-
-None
-
-\*\*Output:\*\*
-
-| \*\*Field\*\* | \*\* Description\*\* |
-
-| --- | --- |
-
-|  vocabulary\\_id |  OMOP Vocabulary ID |
-
-|  vocabulary\\_name |  Vocabulary name |
-
-|  concept\\_class |  Concept Class |
-
-|  concept\\_level |  Concept Level Number |
-
-|  cnt |  Number of concepts |
-
-\*\*Sample output record:\*\*
-
-| \*\* Field\*\* | \*\* Value\*\* |
-
-| --- | --- |
-
-|  vocabulary\\_id |  1 |
-
-|  vocabulary\\_name |  SNOMED-CT |
-
-|  concept\\_class |  Procedure |
-
-|  concept\\_level |  2 |
-
-|  cnt |  20286 |
-
-\*\*G16:\*\* Statistics about Condition Mapping of Source Vocabularies
-
-### The following query contains the coverage for mapped source vocabularies in the Condition domains to SNOMED-CT.
-
-\*\*Sample query:\*\*
-
-SELECT
-
-  mapped.vocabulary\\_id,
-
-  mapped.vocabulary\\_name,
-
-  CASE mapped.standard\\_concept
-
-    WHEN null THEN 'Not mapped'
-
-        ELSE mapped.standard\\_concept
-
-  END AS standard\\_concept,
-
-  mapped.mapped\\_codes,
-
-  sum(mapped.mapped\\_codes) over (partition by vocabulary\\_id) as total\\_mapped\\_codes,
-
-  to\\_char(mapped.mapped\\_codes\\*100/sum(mapped.mapped\\_codes) over (partition by vocabulary\\_id), '990.9') AS pct\\_mapped\\_codes,
-
-  mapped.mapped\\_concepts,
-
-  (SELECT count(1)
-
-   FROM concept
-
-   WHERE
-
-     vocabulary\\_id='SNOMED' AND
-
-        standard\\_concept=mapped.standard\\_concept AND
-
-        lower(concept\\_class\\_id)='clinical finding' AND
-
-        invalid\\_reason is null
-
-  ) AS standard\\_concepts,
-
-  to\\_char(mapped.mapped\\_concepts\\*100/
-
-         ( SELECT CASE count(1) WHEN 0 THEN 1e16 ELSE count(1) END
-
-                  FROM concept
-
-                  WHERE
-
-                    vocabulary\\_id='SNOMED' AND
-
-                        standard\\_concept=mapped.standard\\_concept AND
-
-                        lower(concept\\_class\\_id)='clinical finding' AND
-
-                        invalid\\_reason is null ), '990.9'
-
-  ) AS pct\\_mapped\\_concepts
-
-FROM (
-
-  SELECT
-
-    c1.vocabulary\\_id AS vocabulary\\_id,
-
-        v.vocabulary\\_name,
-
-        c2.standard\\_concept,
-
-        COUNT(8) AS mapped\\_codes,
-
-        COUNT(DISTINCT c2.concept\\_id) AS mapped\\_concepts
-
-  FROM concept\\_relationship m
-
-  JOIN concept c1 on m.concept\\_id\\_1=c1.concept\\_id and
-
-       m.relationship\\_id='Maps to' and m.invalid\\_reason is null
-
-  JOIN concept c2 on c2.concept\\_id=m.concept\\_id\\_2
-
-  JOIN vocabulary v on v.vocabulary\\_id=c1.vocabulary\\_id
-
-  WHERE c2.vocabulary\\_id='SNOMED' AND lower(c2.domain\\_id)='condition'
-
-  GROUP BY c1.vocabulary\\_id, v.vocabulary\\_name, c2.standard\\_concept
-
-) mapped;
-
-\*\*Input:\*\*
-
-None
-
-\*\*Output:\*\*
-
-| \*\* Field\*\* | \*\* Description\*\* |
-
-| --- | --- |
-
-|  vocabulary\\_id |  Source Vocabulary ID |
-
-|  vocabulary\\_name |  Source Vocabulary name |
-
-|  concept\\_level |  Concept Level Number |
-
-|  mapped\\_codes |  Number of mapped codes |
-
-|  total\\_mapped\\_codes |  Total number of mapped codes for source vocabulary |
-
-|  pct\\_mapped\\_codes |  Percentile of mapped code  |
-
-|  mapped\\_concepts |  Number of mapped concepts  |
-
-|  concepts\\_in\\_level |  Number of mapped concepts  |
-
-|  pct\\_mapped\\_concepts |  Percentile of of mapped concepts |
-
-\*\*Sample output record:\*\*
-
-| \*\*Field\*\* | \*\* Value\*\* |
-
-| --- | --- |
-
-|  vocabulary\\_id |  2 |
-
-|  vocabulary\\_name |  ICD9-CT |
-
-|  concept\\_level |  1 |
-
-|  mapped\\_codes |  4079 |
-
-|  total\\_mapped\\_codes |  10770 |
-
-|  pct\\_mapped\\_codes |  37.0 |
-
-|  mapped\\_concepts |  3733 |
-
-|  concepts\\_in\\_level |  69280 |
-
-|  pct\\_mapped\\_concepts |  5.0 |
-
-\*\*G17:\*\* Statistics about Drugs Mapping of Source Vocabularies
-
-The following query contains the coverage for mapped source vocabularies in the Drug domains to RxNorm.
-
-\*\*Sample query:\*\*
-
-SELECT
-
-  mapped.vocabulary\\_id,
-
-  mapped.vocabulary\\_name,
-
-  CASE mapped.standard\\_concept
-
-    WHEN null THEN 'Not mapped'
-
-        ELSE mapped.standard\\_concept
-
-  END AS standard\\_concept,
-
-  mapped.mapped\\_codes,
-
-  sum(mapped.mapped\\_codes) over (partition by vocabulary\\_id) as total\\_mapped\\_codes,
-
-  to\\_char(mapped.mapped\\_codes\\*100/sum(mapped.mapped\\_codes) over (partition by vocabulary\\_id), '990.9') AS pct\\_mapped\\_codes,
-
-  mapped.mapped\\_concepts,
-
-  (SELECT count(1)
-
-   FROM concept
-
-   WHERE
-
-     vocabulary\\_id='RxNorm' AND
-
-        standard\\_concept=mapped.standard\\_concept AND
-
-        invalid\\_reason is null
-
-  ) AS standard\\_concepts,
-
-  to\\_char(mapped.mapped\\_concepts\\*100/
-
-         ( SELECT CASE count(1) WHEN 0 THEN 1e16 ELSE count(1) END
-
-                  FROM concept
-
-                  WHERE
-
-                    vocabulary\\_id='RxNorm' AND
-
-                        standard\\_concept=mapped.standard\\_concept AND
-
-                        invalid\\_reason is null ), '990.9'
-
-  ) AS pct\\_mapped\\_concepts
-
-FROM (
-
-  SELECT
-
-    c1.vocabulary\\_id AS vocabulary\\_id,
-
-        v.vocabulary\\_name,
-
-        c2.standard\\_concept,
-
-        COUNT(8) AS mapped\\_codes,
-
-        COUNT(DISTINCT c2.concept\\_id) AS mapped\\_concepts
-
-  FROM concept\\_relationship m
-
-  JOIN concept c1 on m.concept\\_id\\_1=c1.concept\\_id and
-
-       m.relationship\\_id='Maps to' and m.invalid\\_reason is null
-
-  JOIN concept c2 on c2.concept\\_id=m.concept\\_id\\_2
-
-  JOIN vocabulary v on v.vocabulary\\_id=c1.vocabulary\\_id
-
-  WHERE c2.vocabulary\\_id in ('ICD9CM','RxNorm') AND lower(c2.domain\\_id)='drug'
-
-  GROUP BY c1.vocabulary\\_id, v.vocabulary\\_name, c2.standard\\_concept
-
-) mapped;
-
-\*\*Input:\*\*
-
-None
-
-\*\*Output:\*\*
-
-| \*\*Field\*\* | \*\* Description\*\* |
-
-| --- | --- |
-
-|  vocabulary\\_id |  Source Vocabulary ID |
-
-|  vocabulary\\_name |  Source Vocabulary name |
-
-|  concept\\_level |  Concept Level Number |
-
-|  mapped\\_codes |  Number of mapped codes |
-
-|  total\\_mapped\\_codes |  Total number of mapped codes for source vocabulary |
-
-|  pct\\_mapped\\_codes |  Percentile of mapped code  |
-
-|  mapped\\_concepts |  Number of mapped concepts  |
-
-|  concepts\\_in\\_level |  Number of mapped concepts  |
-
-|  pct\\_mapped\\_concepts |  Percentile of of mapped concepts |
-
-\*\*Sample output record:\*\*
-
-| \*\*Field\*\* | \*\* Value\*\* |
-
-| --- | --- |
-
-|  vocabulary\\_id |  9 |
-
-|  vocabulary\\_name |  NDC |
-
-|  concept\\_level |  1 |
-
-|  mapped\\_codes |  550959 |
-
-|  total\\_mapped\\_codes |  551757 |
-
-|  pct\\_mapped\\_codes |  99.0 |
-
-|  mapped\\_concepts |  33206 |
-
-|  concepts\\_in\\_level |  57162 |
-
-|  pct\\_mapped\\_concepts |  58.0 |

@@ -1,76 +1,78 @@
-**PP01:** Continuous years with patient counts
+PP01: Continuous years with patient counts
 
 List number of patients who have continuous payer plan of at least one year
 
-**Sample query:**
+Sample query:
 
-SELECT floor((p.payer\_plan\_period\_end\_date - p.payer\_plan\_period\_start\_date)/365) AS year\_int, count(1) AS num\_patients
+SELECT floor((p.payer_plan_period_end_date - p.payer_plan_period_start_date)/365) AS year_int, count(1) AS num_patients
 
-FROM payer\_plan\_period p
+FROM payer_plan_period p
 
-GROUP BY floor((p.payer\_plan\_period\_end\_date - p.payer\_plan\_period\_start\_date)/365)
+GROUP BY floor((p.payer_plan_period_end_date - p.payer_plan_period_start_date)/365)
 
 ORDER BY 1;
 
-**Input:**
+Input:
 
 None
 
-**Output:**
+Output:
 
-| ** Field** | ** Description** |
+|  Field |  Description |
 | --- | --- |
-| year\_int | Years between payer plan end date and start date |
-| num\_patients | Number of patients |
+| year_int | Years between payer plan end date and start date |
+| num_patients | Number of patients |
 
-**Sample output record:**
+Sample output record:
 
-| **Field** | ** Description** |
+| Field |  Description |
 | --- | --- |
-| year\_int |  1 |
-| num\_patients |  42458099 |
-*-*-*-*-*
-**P**** P02:**Patient distribution by plan type
+| year_int |  1 |
+| num_patients |  42458099 |
 
-**Sample query:**
+
+P P02:Patient distribution by plan type
+
+Sample query:
 
 select
 
-  t.plan\_source\_value,
+  t.plan_source_value,
 
-  t.pat\_cnt as num\_patients,
+  t.pat_cnt as num_patients,
 
-  100.00\*t.pat\_cnt/ (sum(t.pat\_cnt) over()) perc\_of\_total\_count
+  100.00\*t.pat_cnt/ (sum(t.pat_cnt) over()) perc_of_total_count
 
 from (
 
-  select p.plan\_source\_value, count(1) as pat\_cnt
+  select p.plan_source_value, count(1) as pat_cnt
 
-  from payer\_plan\_period p
+  from payer_plan_period p
 
-  group by p.plan\_source\_value
+  group by p.plan_source_value
 
 ) t
 
-order by t.plan\_source\_value;
+order by t.plan_source_value;
 
-**Input:**
+Input:
 
 None
 
-**Output:**
+Output:
 
-| ** Field** | ** Description** |
+|  Field |  Description |
 | --- | --- |
-| plan\_source\_value | The source code for the person's coverage plan as it appears in the source data. |
-| num\_patients | Number of patients |
-| perc\_of\_total\_count | Total count |
+| plan_source_value | The source code for the person's coverage plan as it appears in the source data. |
+| num_patients | Number of patients |
+| perc_of_total_count | Total count |
 
-**Sample output record:**
+Sample output record:
 
-| ** Field** | ** Value** |
+|  Field |  Value |
 | --- | --- |
-| plan\_source\_value | Preferred Provider Organization |
-| num\_patients | 148348803 |
-| perc\_of\_total\_count | 68.632428630338134 |
-*-*-*-*-*
+| plan_source_value | Preferred Provider Organization |
+| num_patients | 148348803 |
+| perc_of_total_count | 68.632428630338134 |
+
+

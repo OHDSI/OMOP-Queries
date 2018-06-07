@@ -1,154 +1,162 @@
-**DRC01:** What is the average/max/min cost per pill (total cost / quantity) per drug concept?
+DRC01: What is the average/max/min cost per pill (total cost / quantity) per drug concept?
+---
 
-**Sample query:**
+Sample query:
 
-SELECT avg(t.cost\_per\_pill) avg\_val\_num, max(t.cost\_per\_pill) max\_val\_num, min(t.cost\_per\_pill) min\_val\_num, t.drug\_concept\_id
+  SELECT avg(t.cost_per_pill) avg_val_num, max(t.cost_per_pill) max_val_num, min(t.cost_per_pill) min_val_num, t.drug_concept_id
 
-from (
+  from (
 
-select c.total\_paid/d.quantity as cost\_per\_pill, d.drug\_concept\_id
+  select c.total_paid/d.quantity as cost_per_pill, d.drug_concept_id
 
-FROM cost c
+  FROM cost c
 
-JOIN drug\_exposure d
+  JOIN drug_exposure d
 
-ON d.drug\_exposure\_id = c.cost\_event\_id
+  ON d.drug_exposure_id = c.cost_event_id
 
-WHERE d.quantity > 0
+  WHERE d.quantity > 0
 
-AND d.drug\_concept\_id
+  AND d.drug_concept_id
 
-IN (906805, 1517070, 19010522) ) t
+  IN (906805, 1517070, 19010522) ) t
 
-GROUP BY t.drug\_concept\_id
+  GROUP BY t.drug_concept_id
 
-ORDER BY t.drug\_concept\_id;
+  ORDER BY t.drug_concept_id;
 
-**Input:**
+Input:
 
-| ** Parameter** | ** Example** | ** Mandatory** | ** Notes** |
+|  Parameter |  Example |  Mandatory |  Notes |
 | --- | --- | --- | --- |
-| list of drug\_concept\_id | 906805, 1517070, 19010522 | Yes |
+| list of drug_concept_id | 906805, 1517070, 19010522 | Yes |
  |
 
-**Output:**
+Output:
 
-| ** Field** | ** Description** |
+|  Field |  Description |
 | --- | --- |
-| drug\_concept\_id | Drug concept id |
-| avg\_val\_num | Average cost per pill |
-| max\_val\_num | Max cost per pill |
-| min\_val\_num | Min cost per pill |
+| drug_concept_id | Drug concept id |
+| avg_val_num | Average cost per pill |
+| max_val_num | Max cost per pill |
+| min_val_num | Min cost per pill |
 
 
 
-**Sample output record:**
+Sample output record:
 
-| ** Field** | ** Description** |
+|  Field |  Description |
 | --- | --- |
-| drug\_concept\_id | 19010522 |
-| avg\_val\_num | 2.6983903185925794872997154 |
-| max\_val\_num | 3197.50 |
-| min\_val\_num | 0 |
-*-*-*-*-*
-**DRC03:** What is out-of-pocket cost for a given drug?
+| drug_concept_id | 19010522 |
+| avg_val_num | 2.6983903185925794872997154 |
+| max_val_num | 3197.50 |
+| min_val_num | 0 |
 
-**Sample query:**
 
-SELECT avg(c.paid\_by\_patient - c.paid\_patient\_copay) AS avg\_out\_pocket\_cost, d.drug\_concept\_id
 
-FROM cost c, drug\_exposure d
+DRC03: What is out-of-pocket cost for a given drug?
 
-WHERE d.drug\_exposure\_id = c.cost\_event\_id
+Sample query:
 
-AND (c.paid\_by\_patient - c.paid\_patient\_copay) > 0
+  SELECT avg(c.paid_by_patient - c.paid_patient_copay) AS avg_out_pocket_cost, d.drug_concept_id
 
-AND d.drug\_concept\_id
+  FROM cost c, drug_exposure d
 
-IN (906805, 1517070, 19010522)
+  WHERE d.drug_exposure_id = c.cost_event_id
 
-GROUP BY d.drug\_concept\_id;
+  AND (c.paid_by_patient - c.paid_patient_copay) > 0
 
-**Input:**
+  AND d.drug_concept_id
+
+  IN (906805, 1517070, 19010522)
+
+  GROUP BY d.drug_concept_id;
+
+Input:
 
 |   |
 | --- |
-| ** Parameter** | ** Example** | ** Mandatory** | ** Notes** |
-| list of drug\_concept\_id | 906805, 1517070, 19010522 | Yes |   |
+|  Parameter |  Example |  Mandatory |  Notes |
+| list of drug_concept_id | 906805, 1517070, 19010522 | Yes |   |
 
-**Output:**
+Output:
 
-| ** Field** | ** Description** |
+|  Field |  Description |
 | --- | --- |
-| drug\_concept\_id | A foreign key that refers to a standard concept identifier in the vocabulary for the drug concept. |
-| total\_out\_of\_pocket | The total amount paid by the person as a share of the expenses, excluding the copay. |
-| avg\_out\_pocket\_cost | The average amount paid by the person as a share of the expenses, excluding the copay. |
+| drug_concept_id | A foreign key that refers to a standard concept identifier in the vocabulary for the drug concept. |
+| total_out_of_pocket | The total amount paid by the person as a share of the expenses, excluding the copay. |
+| avg_out_pocket_cost | The average amount paid by the person as a share of the expenses, excluding the copay. |
 
-**Sample output record:**
+Sample output record:
 
 |   |
 | --- |
-| **Field** | ** Description** |
-| avg\_out\_pocket\_cost |   |
-| drug\_concept\_id |   |
-| total\_out\_of\_pocket |   |
-*-*-*-*-*
-### DRC07:Distribution of costs paid by payer.
+| Field |  Description |
+| avg_out_pocket_cost |   |
+| drug_concept_id |   |
+| total_out_of_pocket |   |
 
-This query is used to to provide summary statistics for costs paid by coinsurance (paid\_coinsurance) across all drug cost records: the mean, the standard deviation, the minimum, the 25th percentile, the median, the 75th percentile, the maximum and the number of missing values. No input is required for this query.
 
-**Sample query:**
 
-with tt as (
+ DRC07:Distribution of costs paid by payer.
+ ---
 
-  SELECT t.paid\_patient\_coinsurance AS stat\_value
+This query is used to to provide summary statistics for costs paid by coinsurance (paid_coinsurance) across all drug cost records: the mean, the standard deviation, the minimum, the 25th percentile, the median, the 75th percentile, the maximum and the number of missing values. No input is required for this query.
 
-  FROM cost t
+Sample query:
 
-  where t.paid\_patient\_coinsurance > 0
+  with tt as (
 
-)
+    SELECT t.paid_patient_coinsurance AS stat_value
 
-SELECT
+    FROM cost t
 
-  min(tt.stat\_value) AS min\_value,
+    where t.paid_patient_coinsurance > 0
 
-  max(tt.stat\_value) AS max\_value,
+  )
 
-  avg(tt.stat\_value) AS avg\_value,
+  SELECT
 
-  (round(stdDev(tt.stat\_value)) ) AS stdDev\_value ,
+    min(tt.stat_value) AS min_value,
 
-  (select distinct PERCENTILE\_DISC(0.25) WITHIN GROUP(ORDER BY tt.stat\_value) OVER() from tt) AS percentile\_25,
+    max(tt.stat_value) AS max_value,
 
-  (select distinct PERCENTILE\_DISC(0.5) WITHIN GROUP (ORDER BY tt.stat\_value) OVER() from tt) AS median\_value,
+    avg(tt.stat_value) AS avg_value,
 
-  (select distinct PERCENTILE\_DISC(0.75) WITHIN GROUP (ORDER BY tt.stat\_value) OVER() from tt) AS percential\_75
+    (round(stdDev(tt.stat_value)) ) AS stdDev_value ,
 
-FROM
+    (select distinct PERCENTILE_DISC(0.25) WITHIN GROUP(ORDER BY tt.stat_value) OVER() from tt) AS percentile_25,
 
- tt;
+    (select distinct PERCENTILE_DISC(0.5) WITHIN GROUP (ORDER BY tt.stat_value) OVER() from tt) AS median_value,
 
-**Input:**
+    (select distinct PERCENTILE_DISC(0.75) WITHIN GROUP (ORDER BY tt.stat_value) OVER() from tt) AS percential_75
+
+  FROM
+
+   tt;
+
+Input:
 
 None
 
-**Output:**
+Output:
 
 |   |
 | --- |
-| ** Field** | ** Description** |
-| min\_value | The portion of the drug expenses due to the cost charged by the manufacturer for the drug, typically a percentage of the Average Wholesale Price. |
-| max\_value |   |
-| avg\_value |   |
-| stdDev\_value |   |
+|  Field |  Description |
+| min_value | The portion of the drug expenses due to the cost charged by the manufacturer for the drug, typically a percentage of the Average Wholesale Price. |
+| max_value |   |
+| avg_value |   |
+| stdDev_value |   |
 
-**Sample output record:**
+Sample output record:
 
-| ** Field** | ** Description** |
+|  Field |  Description |
 | --- | --- |
-| min\_value |   |
-| max\_value |   |
-| avg\_value |   |
-| stdDev\_value |   |
-*-*-*-*-*
+| min_value |   |
+| max_value |   |
+| avg_value |   |
+| stdDev_value |   |
+
+
+
