@@ -35,7 +35,7 @@ Sample output record:
 | num_patients |  42458099 |
 
 
-PP02:Patient distribution by plan type
+PP02: Patient distribution by plan type
 ---
 
 Sample query:

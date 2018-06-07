@@ -183,8 +183,6 @@ Sample output record:
 | --- | --- |
 | num_months |  30 |
 
-
-
 OP06: Average length of observation, in days.
 ---
 
@@ -654,8 +652,6 @@ Sample output record:
 |  median |  487 |
 |  percentile_75 |  731 |
 
-
-
 OP13: Distribution of observation period start dates
 ---
 
@@ -716,8 +712,6 @@ Sample output record:
 |  percentile_25 |  1/1/2006 |
 |  median |  1/1/2009 |
 |  percentile_75 |  1/1/2010 |
-
-
 
 OP14 :Distribution of age, stratified by gender
 ---

@@ -57,6 +57,7 @@ Output field list:
 Sample output record:
 
 |  Field |  Value |
+| --- | --- | 
 |  Condition_Concept_ID |  192671 |
 |  Condition_Concept_Name |  GI - Gastrointestinal hemorrhage |
 |  Condition_Concept_Code |  74474003 |

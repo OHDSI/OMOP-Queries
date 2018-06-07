@@ -33,7 +33,7 @@ Input:
 |  Parameter |  Example |  Mandatory |  Notes |
 | --- | --- | --- | --- |
 | list of drug_concept_id | 906805, 1517070, 19010522 | Yes |
- |
+
 
 Output:
 
@@ -77,9 +77,8 @@ Sample query:
 
 Input:
 
-|   |
-| --- |
 |  Parameter |  Example |  Mandatory |  Notes |
+| --- | --- | --- | --- |
 | list of drug_concept_id | 906805, 1517070, 19010522 | Yes |   |
 
 Output:

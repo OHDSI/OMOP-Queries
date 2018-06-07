@@ -759,10 +759,6 @@ Sample output record:
 |  to_concept_class |  LOINC Code |
 |  num_records |  2022 |
 
-
-
-
-
 G15: Statistic about Concepts, Vocabularies, Classes and Levels
 ---
 

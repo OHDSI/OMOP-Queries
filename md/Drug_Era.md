@@ -43,6 +43,7 @@ Sample query:
 Input:
 
 |  Parameter |  Example |  Mandatory |  Notes |
+| --- | --- | --- | --- |
 | drug_era_id | 20 | Yes |   |
 
 Output:
@@ -275,9 +276,9 @@ Sample query:
 
 Input:
 
-|   |
-| --- |
+
 |  Parameter |  Example |  Mandatory |  Notes |
+| --- | --- | --- | --- |
 | concept_id | 21001738 | Yes | Cold Symptoms |
 | list of relationship_id | 'Has FDA-appr ind', 'Has off-label ind', 'May treat', 'May prevent', 'CI by', 'Is off-label ind of', 'Is FDA-appr ind of', 'May be treated by' | Yes |   |
 
@@ -474,6 +475,7 @@ Sample query:
 Input:
 
 | Parameter |  Example |  Mandatory |  Notes |
+| --- | --- | --- | --- |
 | list of drug_concept_id | 1304643, 1549080 | Yes |   |
 
 Output:
@@ -538,6 +540,7 @@ None
 Output:
 
 |  Field |  Description |
+| --- | --- |
 | Min_date | Minimum drug era end date across all drug era records |
 | Max_date | Maximum drug era end date across all drug era records |
 | Avg_date | Average drug era end date across all drug era records |
@@ -592,6 +595,7 @@ None
 Output:
 
 |  Field |  Description |
+| --- | --- | 
 | Min_date | Minimum drug era start date across all drug era records |
 | Max_date | Maximum drug era start date across all drug era records |
 | Avg_date | Average drug era start date across all drug era records |
@@ -644,8 +648,6 @@ Sample output record:
 | --- | --- |
 | cntrecs | 6544017 |
 | drug_type_concept_id | 38000179 |
-
-
 
 DER13: Distribution of number of distinct drugs persons take
 ---
@@ -742,6 +744,7 @@ Sample query:
 Input:
 
 |  Parameter |  Example |  Mandatory |  Notes |
+| --- | --- | --- | --- |
 | list of drug_type_concept_id | 3, 4 | Yes |   |
 
 Output:
@@ -849,6 +852,7 @@ Sample query:
 Input:
 
 |  Parameter |  Example |  Mandatory |  Notes |
+| --- | --- | --- | --- |
 | list of drug_type_concept_id | 3, 4 | Yes |   |
 
 Output:
@@ -895,6 +899,7 @@ Sample query:
 Input:
 
 | Parameter |  Example |  Mandatory |  Notes |
+| --- | --- | --- | --- |
 | list of month numbers | 3, 5 | Yes |   |
 
 Output:
@@ -957,6 +962,7 @@ Sample query:
 Input:
 
 |  Parameter |  Example |  Mandatory |  Notes |
+| --- | --- | --- | --- |
 | list of concept_id | 1300978, 1304643, 1549080 | Yes |   |
 
 Output:
@@ -1147,6 +1153,7 @@ Sample query:
 Input:
 
 | Parameter |  Example |  Mandatory |  Notes |
+| --- | --- | --- | --- |
 | list of concept_id | 1300978, 1304643, 1549080 | Yes |   |
 | list of year_of_era | 2007, 2008 | Yes |   |
 
@@ -1230,6 +1237,7 @@ Sample query:
 Input:
 
 | Parameter |  Example |  Mandatory |  Notes |
+| --- | --- | --- | --- |
 | drug_concept_id | 1300978, 1304643, 1549080 | Yes |   |
 
 Output:
@@ -1288,12 +1296,14 @@ Sample query:
 Input:
 
 | Parameter |  Example |  Mandatory |  Notes |
+| --- | --- | --- | --- |
 | list of gender_concept_id | 8507, 8532 | Yes | Male, Female |
 | list of drug_concept_id | 1300978, 1304643, 1549080 | Yes |   |
 
 Output:
 
 |  Field |  Description |
+| --- | --- | 
 | gender_concept_id |   |
 | stat_valu |   |
 | drug_concept_id |   |

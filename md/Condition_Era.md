@@ -8,7 +8,9 @@ Compute minimum, maximum an average length of the medical condition.
 
 Input:
 
+| --- | --- | --- | --- |
 |  Parameter |  Example |  Mandatory |  Notes |
+| --- | --- | --- | --- |
 
 Sample query run:
 
@@ -154,6 +156,7 @@ List of patient counts of specific age and gender for specific medical condition
 Input:
 
 |  Parameter |  Example |  Mandatory |  Notes |
+| --- | --- | --- | --- | 
 | concept_name | OMOP Hip Fraction 1 |  Yes |  Concept ID=500000601 |
 
 
@@ -206,6 +209,7 @@ CE03: Min/max, average length of condition stratified by age/gender
 Input:
 
 |  Parameter |  Example |  Mandatory |  Notes |
+| --- | --- | --- | --- |
 | concept_name | OMOP Hip Fracture 1 |  Yes |  concept_id=500000601 |
 
 Sample query run:
@@ -294,6 +298,7 @@ This query is used to count conditions (condition_concept_id) across all conditi
 Input:
 
 |  Parameter |  Example |  Mandatory |  Notes |
+| --- | --- | --- | --- |
 | condition_concept_id |   |   |   |
 | gender_concept_id |   |   |   |
 | gender_concept_id |   |   |   |
@@ -504,6 +509,7 @@ This query is used to count conditions (condition_concept_id) across all conditi
 Input:
 
 |  Parameter |  Example |  Mandatory |  Notes |
+| --- | --- | --- | --- |
 | condition_concept_id |   |   |   |
 
 Sample query run:
@@ -575,6 +581,7 @@ CE06: Conditions most likely to result in death
 Input:
 
 |  Parameter |  Example |  Mandatory |  Notes |
+| --- | --- | --- | --- |
 | Number of days since condition era end | 30 |  Yes |   |
 
 Sample query run:
@@ -618,6 +625,7 @@ This query counts the top ten comorbidities for patients with diabetes
 Input:
 
 |  Parameter |  Example |  Mandatory |  Notes |
+| --- | --- | --- | --- |
 | condition_era_end_date |   |   |   |
 
 Sample query run:
@@ -694,6 +702,7 @@ Sample output record:
 Input:
 
 |  Parameter |  Example |  Mandatory |  Notes |
+| --- | --- | --- | --- |
 | condition_era_end_date |   |   |   |
 
 Sample query run:
@@ -777,6 +786,7 @@ This query is used to count conditions (condition_concept_id) across all conditi
 Input:
 
 |  Parameter |  Example |  Mandatory |  Notes |
+| --- | --- | --- | --- |
 | list of condition_concept_id | 254761, 257011, 320128, 432867, 25297 | No |   |
 
 Sample query run:
@@ -817,6 +827,7 @@ This query is used to count the persons with any number of eras of a certain con
 Input:
 
 |  Parameter |  Example |  Mandatory |  Notes |
+| --- | --- | --- | --- |
 | list of condition_concept_id | 320128, 432867, 254761, 257011, 257007 | No |   |
 
 Sample query run:
@@ -1031,6 +1042,7 @@ This query is used to provide summary statistics for the condition era length ac
 Input:
 
 |  Parameter |  Example |  Mandatory |  Notes |
+| --- | --- | --- | --- |
 | condition_concept_id |   | No |   |
 | condition_type_concept_id |   | No |   |
 
@@ -1099,6 +1111,7 @@ This query is used to provide summary statistics for condition occurrence count 
 Input:
 
 |  Parameter |  Example |  Mandatory |  Notes |
+| --- | --- | --- | --- |
 | condition_concept_id | 254761, 257011, 320128, 432867, 25297 | No |   |
 | condition_type_concept_id |   | No |   |
 

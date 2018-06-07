@@ -9,6 +9,7 @@ DEX01: Counts of persons with any number of exposures to a certain drug
 Input:
 
 |  Parameter |  Example |  Mandatory |  Notes | 
+| --- | --- | --- | --- |
 | list of drug_concept_id | 40165254, 40165258 | No | Crestor 20 and 40 mg tablets | 
 
 Sample query run:
@@ -30,6 +31,7 @@ Output:
 Output field list:
 
 |  Field |  Description |
+| --- | --- |
 | drug_name | An unambiguous, meaningful and descriptive name for the concept. |
 | drug_concept_id | A foreign key that refers to a standard concept identifier in the vocabulary for the drug concept.  |
 | num_persons | The patients count |
@@ -37,6 +39,7 @@ Output field list:
 Sample output record:
 
 |  Field |  Content |
+| --- | --- | 
 | drug_name |  Rosuvastatin calcium 20 MG Oral Tablet [Crestor] |
 | drug_concept_id |  40165254 |
 | num_persons |  191244 |
@@ -49,7 +52,9 @@ DEX02: Counts of persons taking a drug, by age, gender, and year of exposure
 Input:
 
 |  Parameter |  Example |  Mandatory |  Notes | 
+| --- | --- | --- | --- |
 | list of drug_concept_id | 40165254, 40165258 | No | Crestor 20 and 40 mg tablets | 
+
 Sample query run:
 
 The following is a sample run of the query. The input parameters are highlighted in  blue. s
@@ -73,6 +78,7 @@ Output:
 Output field list:
 
 |  Field |  Description |
+| --- | --- |
 |  concept_name | An unambiguous, meaningful and descriptive name for the concept. |
 |  year_of_exposure |   |
 |  age | The age of the person at the time of exposure |
@@ -82,6 +88,7 @@ Output field list:
 Sample output record:
 
 |  Field |  Content |
+| --- | --- | 
 | concept_name |  Rosuvastatin calcium 40 MG Oral Tablet [Crestor] |
 | year_of_exposure |  2010 |
 | age |  69 |
@@ -96,14 +103,12 @@ DEX03: Distribution of age, stratified by drug
 Input:
 
 |  Parameter |  Example |  Mandatory |  Notes | 
+| --- | --- | --- | --- |
 | drug_concept_id | 40165254, 40165258 | Yes | Crestor 20 and 40 mg tablets |
-
 
 Sample query run:
 
-
-The following is a sample run of the query. The input parameters are highlighted in  blue. S
-
+The following is a sample run of the query. The input parameters are highlighted in  blue. 
 
 	SELECT 
 		concept_name AS drug_name , 
@@ -131,10 +136,10 @@ The following is a sample run of the query. The input parameters are highlighted
 
 Output:
 
-
 Output field list:
 
 |  Field |  Description |
+| --- | --- | 
 | drug_name | An unambiguous, meaningful and descriptive name for the concept. |
 | drug_concept_id | A foreign key that refers to a standard concept identifier in the vocabulary for the drug concept. |
 | patient_count | The count of patients taking the drug |
@@ -150,6 +155,7 @@ Output field list:
 Sample output record:
 
 |  Field |  Content |
+| --- | --- | 
 | drug_name | Rosuvastatin calcium 20 MG Oral Tablet [Crestor] |
 | drug_concept_id | 40165254 |
 | patient_count | 30321 |
@@ -169,14 +175,12 @@ DEX04: Distribution of gender in persons taking a drug
 Input:
 
 |  Parameter |  Example |  Mandatory |  Notes | 
+| --- | --- | --- | --- |
 | list of drug_concept_id | 40165254, 40165258 | No | Crestor 20 and 40 mg tablets |
-
 
 Sample query run:
 
-
-The following is a sample run of the query. The input parameters are highlighted in  blue. s
-
+The following is a sample run of the query. The input parameters are highlighted in  blue. 
 
 	select drug.concept_name as drug_name, 
 			drug_concept_id,	
@@ -196,6 +200,7 @@ Output:
 Output field list:
 
 |  Field |  Description |
+| --- | --- | 
 | drug_name | An unambiguous, meaningful and descriptive name for the drug concept. |
 | drug_concept_id | A foreign key that refers to a standard concept identifier in the vocabulary for the drug concept. |
 | gender | The gender of the counted persons exposed to drug. |
@@ -205,6 +210,7 @@ Output field list:
 Sample output record:
 
 |  Field |  Content |
+| --- | --- | 
 | drug_name | Rosuvastatin calcium 20 MG Oral Tablet [Crestor] |
 | drug_concept_id | 40165254 |
 | gender | FEMALE |
@@ -213,16 +219,15 @@ Sample output record:
 DEX05: Counts of drug records for a particular drug
 ---
 
-| This query is used to count the drug exposure records for a certain drug (drug_concept_id). The input to the query is a value (or a comma-separated list of values) of a drug_concept_id. See  [vocabulary queries](http://vocabqueries.omop.org/drug-queries) for obtaining valid drug_concept_id values. If the input is omitted, all drugs in the data table are summarized.
+This query is used to count the drug exposure records for a certain drug (drug_concept_id). The input to the query is a value (or a comma-separated list of values) of a drug_concept_id. See  [vocabulary queries](http://vocabqueries.omop.org/drug-queries) for obtaining valid drug_concept_id values. If the input is omitted, all drugs in the data table are summarized.
 
 Input:
 
 |  Parameter |  Example |  Mandatory |  Notes |
+| --- | --- | --- | --- |
 | list of drug_concept_id | 40165254, 40165258 | No | Crestor 20 and 40 mg tablets | 
 
-
 Sample query run:
-
 
 The following is a sample run of the query. The input parameters are highlighted in  blue. S
 
@@ -243,6 +248,7 @@ Output:
 Output field list:
 
 |  Field |  Description |
+| --- | --- | 
 | drug_name | An unambiguous, meaningful and descriptive name for the drug concept. |
 | drug_concept_id | A foreign key that refers to a standard concept identifier in the vocabulary for the drug concept. |
 | num_records | The number of drug exposure records |
@@ -251,6 +257,7 @@ Output field list:
 Sample output record:
 
 |  Field |  Content |
+| --- | --- | 
 | drug_name | Rosuvastatin calcium 20 MG Oral Tablet [Crestor] |
 | drug_concept_id | 40165254 |
 | num_records | 191244 |
@@ -279,11 +286,13 @@ Output:
 Output field list:
 
 |  Field |  Description |
+| --- | --- | 
 | number_drugs | The count of distinct drug concepts. |
 
 Sample output record:
 
 |  Field |  Description |
+| --- | --- | 
 | number_drugs | 10889 |
 
 DEX07: Maximum number of drug exposure events per person over some time period
@@ -294,6 +303,7 @@ DEX07: Maximum number of drug exposure events per person over some time period
 Input:
 
 |  Parameter |  Example |  Mandatory |  Notes |
+| --- | --- | --- | --- |
 | date from | 01-Jan-2008 | Yes | | 
 | date to | 31-Dec-2008 | Yes |   | 
 
@@ -314,16 +324,17 @@ The following is a sample run of the query. The input parameters are highlighted
 
 Output:
 
-
 Output field list:
 
 |  Field |  Description |
+| --- | --- | 
 | exposures_count | The number of drug exposure records for the patient with the maximum number of such records. |
 
 
 Sample output record:
 
 |  Field |  Description |
+| --- | --- | 
 | exposures_count | 1137 |
 
 DEX08: Maximum number of distinct drugs per person over some time period
@@ -334,15 +345,13 @@ DEX08: Maximum number of distinct drugs per person over some time period
 Input:
 
 |  Parameter |  Example |  Mandatory |  Notes |
+| --- | --- | --- | --- |
 | date from | 01-Jan-2008 | Yes |   |
 | date to | 31-Dec-2008 | Yes |   | 
 
-
 Sample query run:
 
-
 The following is a sample run of the query. The input parameters are highlighted in  blue. s
-
 
 	select max(drugs) as drugs_count from 
 	(SELECT 
@@ -357,16 +366,16 @@ The following is a sample run of the query. The input parameters are highlighted
 
 Output:
 
-
 Output field list:
 
 |  Field |  Description |
+| --- | --- | 
 | drugs_count | The maximum number of distinct drugs a patient is exposed to during the time period |
-
 
 Sample output record:
 
 |  Field |  Content |
+| --- | --- | 
 | drugs_count | 141 |
 
 DEX09: Distribution of distinct drugs per person over some time period
@@ -377,15 +386,13 @@ DEX09: Distribution of distinct drugs per person over some time period
 Input:
 
 |  Parameter |  Example |  Mandatory |  Notes |
+| --- | --- | --- | --- |
 | date from | 01-Jan-2008 | Yes |   |
 | date to | 31-Dec-2008 | Yes |   | 
 
-
 Sample query run:
 
-
 The following is a sample run of the query. The input parameters are highlighted in  blue.  
-
 
 	SELECT MIN ( drugs ) AS min , 
 	approximate  PERCENTILE_DISC(0.25) WITHIN GROUP( ORDER BY drugs ) as percentile_25, 
@@ -404,6 +411,7 @@ Output:
 Output field list:
 
 | Field |  Description |
+| --- | --- | 
 | min | The minimum number of drugs taken by a patient |
 | percentile_25 | The 25th percentile of the distibution |
 | mean | The mean or average of drugs taken by patients |
@@ -416,6 +424,7 @@ Output field list:
 Sample output record:
 
 | Field |  Content |
+| --- | --- |
 | min | 0 |
 | percentile_25 | 0 |
 | mean | 1.73 |
@@ -427,17 +436,16 @@ Sample output record:
 DEX10: Other drugs (conmeds) patients exposed to a certain drug take over some time period
 ---
 
-| This query is used to establish the medication (conmeds) taken by patients who also are exposed to a certain drug in a given time period. The query returns the number of patients taking the drug at least once. The input to the query is a value (or a comma-separated list of values) of a drug_concept_id and the time period. See  [vocabulary queries](http://vocabqueries.omop.org/drug-queries) for obtaining valid drug_concept_id values. 
+This query is used to establish the medication (conmeds) taken by patients who also are exposed to a certain drug in a given time period. The query returns the number of patients taking the drug at least once. The input to the query is a value (or a comma-separated list of values) of a drug_concept_id and the time period. See  [vocabulary queries](http://vocabqueries.omop.org/drug-queries) for obtaining valid drug_concept_id values. 
 Input:
 
 |  Parameter |  Example |  Mandatory |  Notes |
+| --- | --- | --- | --- |
 | list of drug concept ids | 1336825, 19047763 | Yes | Bortezomib, Thalidomide 50 mg capsules |
 | from_date | 01-jan-2008 | Yes |   |
 | to_date | 31-dec-2009 | Yes |   |
 
-
 Sample query run:
-
 
 The following is a sample run of the query. The input parameters are highlighted in  blue.
 
@@ -469,6 +477,7 @@ Output:
 Output field list:
 
 |  Field |  Description |
+| --- | --- | 
 | drug_name | An unambiguous, meaningful and descriptive name for the conmeds. |
 | persons | count of patients taking the drug at least once |
 
@@ -476,6 +485,7 @@ Output field list:
 Sample output record:
 
 | Field |  Value |
+| --- | --- | 
 | drug_name | Dexamethasone 4 MG Oral Tablet |
 | persons | 190 |
 
@@ -487,14 +497,12 @@ DEX11: Distribution of brands used for a given generic drug
 Input:
 
 |  Parameter |  Example |  Mandatory |  Notes | 
+| --- | --- | --- | --- |
 | drug_concept_id | 19019306 | Yes | Nicotine Patch | 
-
 
 Sample query run:
 
-
 The following is a sample run of the query. The input parameters are highlighted in  blue. S
-
 
 	SELECT	tt.drug_name,
 			tt.brand_name,
@@ -537,18 +545,18 @@ The following is a sample run of the query. The input parameters are highlighted
 
 Output:
 
-
 Output field list:
 
 |  Field |  Description |
+| --- | --- | 
 | drug_name | The name of the query drug |
 | brand_name | The name of the brand |
 | perc_brand_count | The market share for each brand |
 
-
 Sample output record:
 
 |  Field |  Content |
+| --- | --- | 
 | drug_name |   |
 | brand_name |   |
 | perc_brand_count |   |
@@ -561,14 +569,12 @@ DEX12: Distribution of forms used for a given ingredient
 Input:
 
 |  Parameter |  Example |  Mandatory |  Notes |
+| --- | --- | --- | --- |
 |  ingredient.concept_id |  1125315 |  Yes |  Acetaminophen |
-
 
 Sample query run:
 
-
 The following is a sample run of the query. The input parameter is highlighted in  blue. 
-
 
 	SELECT tt.form_name,
 	(100.00 * tt.part_form / tt.total_forms) as percent_forms
@@ -603,13 +609,12 @@ The following is a sample run of the query. The input parameter is highlighted i
 	WHERE tt.total_forms > 0 --avoid division by 0
 	ORDER BY percent_forms desc;
 
-
 Output:
-
 
 Output field list:
 
 |  Field |  Description |
+| --- | --- | 
 | form_name | The concept name of the dose form |
 | percent_forms | The percent of forms drug products have containing the ingredient |
 
@@ -617,6 +622,7 @@ Output field list:
 Sample output record:
 
 |  Field |  Description |
+| --- | --- | 
 | form_name |  Oral Tablet |
 | percent_forms |  95.69 |
 
@@ -628,14 +634,12 @@ DEX13: Distribution of provider specialities prescribing a given drug
 Input:
 
 |  Parameter |  Example |  Mandatory |  Notes |
+| --- | --- | --- | --- |
 | drug_concept_id | 2213473 | Yes | Influenza virus vaccine |
-
 
 Sample query run:
 
-
 The following is a sample run of the query. The input parameters are highlighted in  blue.
-
 
 	SELECT  concept_name AS specialty, 
 	  count(*) AS prescriptions_count
@@ -659,6 +663,7 @@ Output:
 Output field list:
 
 |  Field |  Description |
+| --- | --- | 
 | specialty | The concept name of the specialty concept |
 | prescriptions_count | The count of drug exposure records providers from the specialties are listed as prescribing provider. |
 
@@ -666,6 +671,7 @@ Output field list:
 Sample output record:
 
 |  Field |  Value |
+| --- | --- |
 | specialty |  Family Practice |
 | prescriptions_count |  214825 |
 
@@ -675,6 +681,7 @@ DEX14: Among people who take drug A, how many take drug B at the same time?
 Input:
 
 |  Parameter |  Example |  Mandatory |  Notes | 
+| --- | --- | --- | --- |
 | concept_id | 21502747 | Yes | Statins | 
 | ancestor_concept_id | 21500223 | Yes | Antihypertensive Therapy Agents |
 
@@ -718,6 +725,7 @@ Output:
 Output field list:
 
 |  Field |  Description |
+| --- | --- | 
 | concept_name | An unambiguous, meaningful and descriptive name for the concept. |
 | person_id | A foreign key identifier to the person for whom the observation period is defined. The demographic details of that person are stored in the person table. |
 | ancestor_concept_id | A foreign key to the concept code in the concept table for the higher-level concept that forms the ancestor in the relationship. |
@@ -728,6 +736,7 @@ Output field list:
 Sample output record:
 
 |  Field |  Description |
+| --- | --- |
 | concept_name |   |
 | person_id |   |
 | ancestor_concept_id |   |
@@ -740,16 +749,12 @@ DEX15: Number of persons taking a given drug having at least a 180 day period pr
 Input:
 
 |  Parameter |  Example |  Mandatory |  Notes |
+| --- | --- | --- | --- |
 | concept_id | 21502747 | Yes | Statins |
-|   |   |   |   |
-|   |   |   |   |
-
 
 Sample query run:
 
-
-The following is a sample run of the query. The input parameters are highlighted in  blue. S
-
+The following is a sample run of the query. The input parameters are highlighted in  blue.
 
 	SELECT
 		floor( ( observation_period_end_date - index_date ) / 365 ) AS follow_up_years, 
@@ -780,10 +785,10 @@ The following is a sample run of the query. The input parameters are highlighted
 
 Output:
 
-
 Output field list:
 
 |  Field |  Description |
+| --- | --- | 
 | concept_name | An unambiguous, meaningful and descriptive name for the concept. |
 | person_id | A foreign key identifier to the person for whom the observation period is defined. The demographic details of that person are stored in the person table. |
 | ancestor_concept_id | A foreign key to the concept code in the concept table for the higher-level concept that forms the ancestor in the relationship. |
@@ -791,17 +796,16 @@ Output field list:
 | observation_period_start_date | The start date of the observation period for which data are available from the data source. |
 | observation_period_end_date | The end date of the observation period for which data are available from the data source. |
 
-
 Sample output record:
 
 |  Field |  Description |
+| --- | --- | 
 | concept_name |   |
 | person_id |   |
 | ancestor_concept_id |   |
 | descendant_concept_id |   |
 | observation_period_start_date |   |
 | observation_period_end_date |   |
-
 
 DEX16: Adherence/compliance - what is adherence rate for given drug?
 ---
@@ -811,14 +815,12 @@ Define adherence as sum of days supply divided by length of treatment period.
 Input:
 
 |  Parameter |  Example |  Mandatory |  Notes | 
+| --- | --- | --- | --- | 
 | drug_concept_id | 996416 | Yes | Finasteride | 
-
 
 Sample query run:
 
-
 The following is a sample run of the query. The input parameters are highlighted in  blue  S
-
 
 	SELECT concept_name, 
 	count(*) AS number_of_eras , 
@@ -857,6 +859,7 @@ Output:
 Output field list:
 
 |  Field |  Description |
+| --- | --- | 
 | concept_name | An unambiguous, meaningful and descriptive name for the concept. |
 | drug_concept_id | A foreign key that refers to a standard concept identifier in the vocabulary for the drug concept. |
 | concept_class | The category or class of the concept along both the hierarchical tree as well as different domains within a vocabulary. Examples are "Clinical Drug", "Ingredient", "Clinical Finding" etc. |
@@ -873,6 +876,7 @@ Output field list:
 Sample output record:
 
 |  Field |  Description |
+| --- | --- | 
 | concept_name |   |
 | drug_concept_id |   |
 | concept_class |   |
@@ -902,9 +906,11 @@ The following is a sample run of the query. The input parameters are highlighted
 	stop_reason IS NOT null GROUP BY stop_reason ORDER BY reason_freq DESC;
 
 Output:
+
 Output field list:
 
 |  Field |  Description |
+| --- | --- | 
 | stop_reason | The reason the medication was stopped, where available. Reasons include regimen completed, changed, removed, etc. |
 | reason_freq |  Frequency of stop reason |
 
@@ -912,6 +918,7 @@ Output field list:
 Sample output record:
 
 |  Field |  Description |
+| --- | --- | 
 | stop_reason |  Regimen Completed |
 | reason_freq |  14712428 |
 
@@ -919,11 +926,10 @@ DEX18: What is the distribution of DRUG_TYPE_CONCEPT_ID (modes of distribution) 
 ---
 
 Input: <None>
+
 Sample query run:
 
-
 The following is a sample run of the query. The input parameters are highlighted in blue.
-
 
 	SELECT 
 	concept_name, count(*) as drug_type_count 
@@ -934,10 +940,10 @@ The following is a sample run of the query. The input parameters are highlighted
 
 Output:
 
-
 Output field list:
 
 |  Field |  Description |
+| --- | --- | 
 | drug_type_concept_id | A foreign key to the predefined concept identifier in the vocabulary reflecting the type of drug exposure recorded. It indicates how the drug exposure was represented in the source data: as medication history, filled prescriptions, etc. |
 | drug_type_count |   |
 
@@ -945,6 +951,7 @@ Output field list:
 Sample output record:
 
 |  Field |  Description |
+| --- | --- |
 | drug_type_concept_id |   |
 | drug_type_count |   |
 
@@ -954,11 +961,10 @@ DEX19: How many people are taking a drug for a given indication?
 Input:
 
 |  Parameter |  Example |  Mandatory |  Notes |
+| --- | --- | --- | --- |
 | concept_name | Acute Tuberculosis | Yes | 
 
-
 Sample query run:
-
 
 The following is a sample run of the query. The input parameters are highlighted in 
 
@@ -981,10 +987,10 @@ The following is a sample run of the query. The input parameters are highlighted
 
 Output:
 
-
 Output field list:
 
 |  Field |  Description |
+| --- | --- | 
 | concept_name | The reason the medication was stopped, where available. Reasons include regimen completed, changed, removed, etc. |
 | count |   |
 
@@ -992,6 +998,7 @@ Output field list:
 Sample output record:
 
 |  Field |  Description |
+| --- | --- | 
 | concept_name |   |
 | count |   |
 
@@ -1001,6 +1008,7 @@ DEX20: How many people taking a drug for a given indicaton actually have that di
 Input:
 
 |  Parameter |  Example |  Mandatory |  Notes |
+| --- | --- | --- | --- |
 | concept_name | Acute Tuberculosis | Yes |   
 
 
@@ -1052,11 +1060,13 @@ Output:
 Output field list:
 
 |  Field |  Description |
+| --- | --- | 
 | count |   |
 
 Sample output record:
 
 |  Field |  Description |
+| --- | --- | 
 | count |   |
 
 DEX21: How many people have a diagnosis of a contraindication for the drug they are taking?
@@ -1065,7 +1075,8 @@ DEX21: How many people have a diagnosis of a contraindication for the drug they 
 Input:
 
 |  Parameter |  Example |  Mandatory |  Notes | 
-|   |   |   |  | --- | --- |
+| --- | --- | --- | --- |
+|   |   |   |  |
 
 
 Sample query run:
@@ -1100,16 +1111,16 @@ The following is a sample run of the query. The input parameters are highlighted
 
 Output:
 
-
 Output field list:
 
 |  Field |  Description |
+| --- | --- | 
 | count |   |
-
 
 Sample output record:
 
 |  Field |  Description |
+| --- | --- | 
 | count |   |
 
 DEX22: How many poeple take a drug in a given class?
@@ -1118,14 +1129,12 @@ DEX22: How many poeple take a drug in a given class?
 Input:
 
 |  Parameter |  Example |  Mandatory |  Notes |
+| --- | --- | --- | --- |
 | ancestor_concept_id | 4324992 |  Yes | Antithrombins | 
-
 
 Sample query run:
 
-
 The following is a sample run of the query. The input parameters are highlighted in  blue. S
-
 
 	SELECT count(distinct d.person_id) as person_count FROM concept_ancestor ca, drug_exposure d 
 	WHERE 
@@ -1135,16 +1144,16 @@ The following is a sample run of the query. The input parameters are highlighted
 
 Output:
 
-
 Output field list:
 
 |  Field |  Description |
+| --- | --- | 
 | person_count | A foreign key that refers to a standard concept identifier in the vocabulary for the drug concept. |
-
 
 Sample output record:
 
 |  Field |  Description |
+| --- | --- | 
 | person_count |   |
 
 DEX23: Distribution of days supply
@@ -1153,11 +1162,10 @@ DEX23: Distribution of days supply
 | This query is used to provide summary statistics for days supply (days_supply) across all drug exposure records: the mean, the standard deviation, the minimum, the 25th percentile, the median, the 75th percentile, the maximum and the number of missing values. No input is required for this query.
 
 Input: <None>
+
 Sample query run:
 
-
-The following is a sample run of the query. The input parameters are highlighted in  blue  S
-
+The following is a sample run of the query. The input parameters are highlighted in  blue  
 
 	SELECT 
 		min(tt.stat_value) AS min_value , 
@@ -1172,10 +1180,10 @@ The following is a sample run of the query. The input parameters are highlighted
 
 Output:
 
-
 Output field list:
 
 |  Field |  Description |
+| --- | --- | 
 | min_value |   |
 | max_value |   |
 | avg_value |   |
@@ -1188,6 +1196,7 @@ Output field list:
 Sample output record:
 
 |  Field |  Description |
+| --- | --- | 
 | min_value |   |
 | max_value |   |
 | avg_value |   |
@@ -1203,12 +1212,11 @@ DEX24: Counts of days supply
 
 Input:
 
-|  Parameter |  Example |  Mandatory |  Notes | --- | --- |
-| days_supply | 2,3 | Yes |   | --- | --- |
-
+|  Parameter |  Example |  Mandatory |  Notes | 
+| --- | --- | --- | --- |
+| days_supply | 2,3 | Yes |   | 
 
 Sample query run:
-
 
 The following is a sample run of the query. The input parameters are highlighted in  blue.  
 
@@ -1219,16 +1227,18 @@ The following is a sample run of the query. The input parameters are highlighted
 	ORDER BY days_supply;
 
 Output:
+
 Output field list:
 
 |  Field |  Description |
+| --- | --- | 
 | days_supply | The number of days of supply of the medication as recorded in the original prescription or dispensing record. |
 | cnt | Counts of records with the days_supply value |
-
 
 Sample output record:
 
 |  Field |  Description |
+| --- | --- | 
 | days_supply |  15 |
 | cnt |  240179 |
 
@@ -1239,12 +1249,11 @@ DEX25: Counts of drug records
 
 Input:
 
-|  Parameter |  Example |  Mandatory |  Notes | --- | --- |
-| list of drug_concept_id | 906805, 1517070, 19010522 | Yes | Metoclopramid, Desmopressin, Cyclosprin | --- | --- |
-
+|  Parameter |  Example |  Mandatory |  Notes | 
+| --- | --- | --- | --- |
+| list of drug_concept_id | 906805, 1517070, 19010522 | Yes | Metoclopramid, Desmopressin, Cyclosprin |
 
 Sample query run:
-
 
 The following is a sample run of the query. The input parameters are highlighted in  blue.
 
@@ -1255,16 +1264,16 @@ The following is a sample run of the query. The input parameters are highlighted
 
 Output:
 
-
 Output field list:
 
 |  Field |  Description |
+| --- | --- | 
 | exposure_occurrence_count | The number of individual drug exposure occurrences used to construct the drug era. |
-
 
 Sample output record:
 
 |  Field |  Value |
+| --- | --- | 
 | exposure_occurrence_count |  88318 |
 
 DEX26: Distribution of drug exposure end dates
@@ -1273,8 +1282,8 @@ DEX26: Distribution of drug exposure end dates
 | This query is used to to provide summary statistics for drug exposure end dates (drug_exposure_end_date) across all drug exposure records: the mean, the standard deviation, the minimum, the 25th percentile, the median, the 75th percentile, the maximum and the number of missing values. No input is required for this query.
 
 Input: <None>
-Sample query run:
 
+Sample query run:
 
 The following is a sample run of the query. 
 
@@ -1294,13 +1303,12 @@ The following is a sample run of the query.
 			 FROM drug_exposure t ) tt 
 	GROUP BY tt.min_date ;
 
-
 Output:
-
 
 Output field list:
 
 |  Field |  Description |
+| --- | --- | 
 | min_value |   |
 | max_value |   |
 | avg_value |   |
@@ -1309,10 +1317,10 @@ Output field list:
 | median_value |   |
 | percentile_75 |   |
 
-
 Sample output record:
 
 |  Field |  Description |
+| --- | --- | 
 | min_value |   |
 | max_value |   |
 | avg_value |   |
@@ -1328,7 +1336,6 @@ DEX27: Distribution of drug exposure start dates
 
 Input: <None>
 Sample query run:
-
 
 The following is a sample run of the query.  
 
@@ -1349,13 +1356,12 @@ The following is a sample run of the query.
 		) tt 
 	GROUP BY tt.min_date ; 
 
-
 Output:
-
 
 Output field list:
 
 |  Field |  Description |
+| --- | --- | 
 | min_value |   |
 | max_value |   |
 | avg_value |   |
@@ -1364,10 +1370,10 @@ Output field list:
 | median_value |   |
 | percentile_75 |   |
 
-
 Sample output record:
 
 |  Field |  Description |
+| --- | --- | 
 | min_value |   |
 | max_value |   |
 | avg_value |   |
@@ -1385,11 +1391,10 @@ DEX28: Counts of drug types
 Input:
 
 |  Parameter |  Example |  Mandatory |  Notes | 
+| --- | --- | --- | --- |
 | list of drug_type_concept_id | 38000175, 38000180 | Yes | 
 
-
 Sample query run:
-
 
 The following is a sample run of the query. The input parameters are highlighted in  blue 
 
@@ -1401,10 +1406,10 @@ The following is a sample run of the query. The input parameters are highlighted
 
 Output:
 
-
 Output field list:
 
 |  Field |  Description |
+| --- | --- | 
 | drug_type_concept_id | A foreign key to the predefined concept identifier in the vocabulary reflecting the type of drug exposure recorded. It indicates how the drug exposure was represented in the source data: as medication history, filled prescriptions, etc. |
 | exposure_occurrence_count | The number of individual drug exposure occurrences used to construct the drug era. |
 
@@ -1412,6 +1417,7 @@ Output field list:
 Sample output record:
 
 |  Field |  Description |
+| --- | --- | 
 | drug_type_concept_id |   |
 | exposure_occurrence_count |   |
 
@@ -1445,6 +1451,7 @@ Output:
 Output field list:
 
 |  Field |  Description |
+| --- | --- | 
 | min_value |   |
 | max_value |   |
 | avg_value |   |
@@ -1453,10 +1460,10 @@ Output field list:
 | median_value |   |
 | percentile_75 |   |
 
-
 Sample output record:
 
 |  Field |  Description |
+| --- | --- | 
 | min_value |   |
 | max_value |   |
 | avg_value |   |
@@ -1473,14 +1480,12 @@ DEX30: Counts of number of distinct drugs persons take
 Input:
 
 |  Parameter |  Example |  Mandatory |  Notes | 
+| --- | --- | --- | --- |
 | drug_concept_id | 15, 22 | Yes |   | 
-
 
 Sample query run:
 
-
 The following is a sample run of the query. The input parameters are highlighted in  blue  S
-
 
 	SELECT count(distinct t.drug_concept_id) AS stat_value, t.person_id
 	FROM drug_exposure t
@@ -1488,20 +1493,19 @@ The following is a sample run of the query. The input parameters are highlighted
 
 Output:
 
-
 Output field list:
 
 |  Field |  Description |
+| --- | --- | 
 | person_id | A foreign key identifier to the person who is subjected to the drug. The demographic details of that person are stored in the person table. |
 | stat_value | The number of individual drug exposure occurrences used to construct the drug era. |
-
 
 Sample output record:
 
 |  Field |  Description |
+| --- | --- | 
 | person |   |
 | stat_value |   |
-
 
 DEX31: Distribution of drug exposure records per person
 ---
@@ -1510,7 +1514,6 @@ DEX31: Distribution of drug exposure records per person
 
 Input: <None>
 Sample query run:
-
 
 The following is a sample run of the query. 
 
@@ -1528,13 +1531,12 @@ The following is a sample run of the query.
 			group by t.person_id 
 		) tt ; 
 
-
 Output:
-
 
 Output field list:
 
 |  Field |  Description |
+| --- | --- | 
 | min_value |   |
 | max_value |   |
 | avg_value |   |
@@ -1542,11 +1544,11 @@ Output field list:
 | percentile_25 |   |
 | median_value |   |
 | percentile_75 |   |
-
 
 Sample output record:
 
 |  Field |  Description |
+| --- | --- | 
 | min_value |   |
 | max_value |   |
 | avg_value |   |
@@ -1554,7 +1556,6 @@ Sample output record:
 | percentile_25 |   |
 | median_value |   |
 | percentile_75 |   |
-
 
 DEX32: Counts of drug exposure records per person
 ---
@@ -1564,14 +1565,12 @@ DEX32: Counts of drug exposure records per person
 Input:
 
 |  Parameter |  Example |  Mandatory |  Notes | 
+| --- | --- | --- | --- |
 | count | 3, 4 |  Yes |   
-
 
 Sample query run:
 
-
 The following is a sample run of the query. The input parameters are highlighted in  blue  S
-
 
 	SELECT count(1) AS stat_value, person_id
 	FROM drug_exposure
@@ -1580,10 +1579,10 @@ The following is a sample run of the query. The input parameters are highlighted
 
 Output:
 
-
 Output field list:
 
 |  Field |  Description |
+| --- | --- | 
 | person_id | A foreign key identifier to the person who is subjected to the drug. The demographic details of that person are stored in the person table. |
 | count | The number of individual drug exposure occurrences used to construct the drug era. |
 
@@ -1591,6 +1590,7 @@ Output field list:
 Sample output record:
 
 |  Field |  Description |
+| --- | --- | 
 | person_id |   |
 | count |   |
 
@@ -1603,11 +1603,10 @@ DEX33: Counts of drug exposure records stratified by observation month
 Input:
 
 |  Parameter |  Example |  Mandatory |  Notes | 
+| --- | --- | --- | --- |
 | list of month numbers | 3, 5 |  Yes |  
 
-
 Sample query run:
-
 
 The following is a sample run of the query. The input parameters are highlighted in  blue 
 
@@ -1618,10 +1617,10 @@ The following is a sample run of the query. The input parameters are highlighted
 
 Output:
 
-
 Output field list:
 
 |  Field |  Description |
+| --- | --- | 
 | drug_exposure_start_date | The start date for the current instance of drug utilization. Valid entries include a start date of a prescription, the date a prescription was filled, or the date on which a drug administration procedure was recorded. |
 | month |   |
 
@@ -1629,13 +1628,9 @@ Output field list:
 Sample output record:
 
 |  Field |  Description |
+| --- | --- | 
 | drug_exposure_start_date |   |
 | month |   |
-
-  |
-| --- |
-
-
 
 DEX34: Distribution of drug quantity
 ---
@@ -1662,13 +1657,12 @@ The following is a sample run of the query.
 			where t.quantity > 0 
 		) tt ;
 
-
 Output:
-
 
 Output field list:
 
 |  Field |  Description |
+| --- | --- | 
 | min_value |   |
 | max_value |   |
 | avg_value |   |
@@ -1681,6 +1675,7 @@ Output field list:
 Sample output record:
 
 |  Field |  Description |
+| --- | --- | 
 | min_value |   |
 | max_value |   |
 | avg_value |   |
@@ -1693,16 +1688,15 @@ Sample output record:
 DEX35: Counts of drug quantity
 ---
 
-| This query is used to count the drug quantity (quantity) across all drug exposure records. The input to the query is a value (or a comma-separated list of values) of a quantity. If the input is omitted, all possible values are summarized.
+This query is used to count the drug quantity (quantity) across all drug exposure records. The input to the query is a value (or a comma-separated list of values) of a quantity. If the input is omitted, all possible values are summarized.
 
 Input:
 
 |  Parameter |  Example |  Mandatory |  Notes |
+| --- | --- | --- | --- |
 | quantity (list of numbers) | 10,20 | Yes |  
 
-
 Sample query run:
-
 
 The following is a sample run of the query. 
 
@@ -1711,20 +1705,19 @@ The following is a sample run of the query.
 	WHERE d.quantity in (10, 20) 
 	GROUP BY d.quantity ;
 
-
 Output:
-
 
 Output field list:
 
 |  Field |  Description |
+| --- | --- | 
 | drug_quantity_count |   |
 | quantity | The quantity of drug as recorded in the original prescription or dispensing record. |
-
 
 Sample output record:
 
 |  Field |  Description |
+| --- | --- | 
 | drug_quantity_count |   |
 | quantity |   |
 
@@ -1736,7 +1729,6 @@ DEX36: Distribution of drug refills
 
 Input: <None>
 Sample query run:
-
 
 The following is a sample run of the query. 
 
@@ -1755,13 +1747,12 @@ The following is a sample run of the query.
 			where t.refills > 0 
 		) tt ; 
 
-
 Output:
-
 
 Output field list:
 
 |  Field |  Description |
+| --- | --- | 
 | min_value |   |
 | max_value |   |
 | avg_value |   |
@@ -1769,11 +1760,11 @@ Output field list:
 | percentile_25 |   |
 | median_value |   |
 | percentile_75 |   |
-
 
 Sample output record:
 
 |  Field |  Description |
+| --- | --- | 
 | min_value |   |
 | max_value |   |
 | avg_value |   |
@@ -1781,7 +1772,6 @@ Sample output record:
 | percentile_25 |   |
 | median_value |   |
 | percentile_75 |   |
-
 
 DEX37: Counts of drug refills
 ---
@@ -1791,6 +1781,7 @@ DEX37: Counts of drug refills
 Input:
 
 |  Parameter |  Example |  Mandatory |  Notes |
+| --- | --- | --- | --- |
 | refills count (list of numbers) | 10,20 | Yes |
 
 
@@ -1810,6 +1801,7 @@ Output:
 Output field list:
 
 |  Field |  Description |
+| --- | --- | 
 | drug_exposure_count | The number of individual drug exposure occurrences used to construct the drug era. |
 | Refills_Count | The number of refills after the initial prescription. The initial prescription is not counted, values start with 0. |
 
@@ -1817,12 +1809,9 @@ Output field list:
 Sample output record:
 
 |  Field |  Description |
+| --- | --- | 
 | drug_exposure_count |   |
 | Refills_Count |   |
-
-
-
-
 
 DEX38: Counts of stop reasons
 ---
@@ -1832,6 +1821,7 @@ DEX38: Counts of stop reasons
 Input:
 
 |  Parameter |  Example |  Mandatory |  Notes | 
+| --- | --- | --- | --- |
 | stop_reason | 1 | Yes |   
 
 
@@ -1850,6 +1840,7 @@ Output:
 Output field list:
 
 |  Field |  Description |
+| --- | --- | 
 | Count | The number of individual drug exposure occurrences used to construct the drug era. |
 | stop_reason | The reason the medication was stopped, where available. Reasons include regimen completed, changed, removed, etc. |
 
@@ -1857,6 +1848,7 @@ Output field list:
 Sample output record:
 
 |  Field |  Description |
+| --- | --- | 
 | Count |   |
 | stop_reason |   |
 
@@ -1869,6 +1861,7 @@ DEX39: Counts of drugs, stratified by drug type
 Input:
 
 |  Parameter |  Example |  Mandatory |  Notes | 
+| --- | --- | --- | --- |
 | list of drug_concept_id | 906805, 1517070, 19010522 | Yes |
 | list of drug_type_concept_id | 38000180 | Yes | 
 
@@ -1891,6 +1884,7 @@ Output:
 Output field list:
 
 |  Field |  Description |
+| --- | --- | 
 | drug_concept_id | A foreign key that refers to a standard concept identifier in the vocabulary for the drug concept. |
 | drug_type_concept_id | A foreign key to the predefined concept identifier in the vocabulary reflecting the parameters used to construct the drug era. |
 | count | A foreign key to the predefined concept identifier in the vocabulary reflecting the parameters used to construct the drug era. |
@@ -1899,13 +1893,10 @@ Output field list:
 Sample output record:
 
 |  Field |  Description |
+| --- | --- | 
 | drug_concept_id |   |
 | drug_type_concept_id |   |
 | count |   |
-
-
-
-
 
 DEX40: Counts of drugs, stratified by relevant condition
 ---
@@ -1915,12 +1906,11 @@ DEX40: Counts of drugs, stratified by relevant condition
 Input:
 
 |  Parameter |  Example |  Mandatory |  Notes | 
+| --- | --- | --- | --- |
 | list of drug_concept_id | 906805, 1517070, 19010522 | Yes |  
 | list of relevant_condition_concept_id | 26052, 258375 | Yes |   
 
-
 Sample query run:
-
 
 The following is a sample run of the query. The input parameters are highlighted in  blue 
 
@@ -1943,13 +1933,12 @@ The following is a sample run of the query. The input parameters are highlighted
 	group by  t.relevant_condition_concept_id, t.drug_concept_id
 	;
 
-
 Output:
-
 
 Output field list:
 
 |  Field |  Description |
+| --- | --- | 
 | drug_concept_id | A foreign key that refers to a standard concept identifier in the vocabulary for the drug concept. |
 | relevant_condition_concept_id | A foreign key to the predefined concept identifier in the vocabulary reflecting the condition that was the cause for initiation of the procedure. Note that this is not a direct reference to a specific condition record in the condition table, but rather a condition concept in the vocabulary |
 | Count | The number of individual drug exposure occurrences used to construct the drug era. |
@@ -1958,12 +1947,10 @@ Output field list:
 Sample output record:
 
 |  Field |  Description |
+| --- | --- | 
 | drug_concept_id |   
 | relevant_condition_concept_id |   
 | Count |   |
-
-
-
 
 DEX41: Distribution of drug exposure start date, stratified by drug
 ---
@@ -1973,11 +1960,10 @@ DEX41: Distribution of drug exposure start date, stratified by drug
 Input:
 
 |  Parameter |  Example |  Mandatory |  Notes | 
+| --- | --- | --- | --- |
 | drug_concept_id | 906805, 1517070, 19010522 | Yes |   
 
-
 Sample query run:
-
 
 The following is a sample run of the query. The input parameters are highlighted in  blue
 
@@ -2004,10 +1990,10 @@ The following is a sample run of the query. The input parameters are highlighted
 
 Output:
 
-
 Output field list:
 
 |  Field |  Description |
+| --- | --- | 
 | drug_concept_id | A foreign key that refers to a standard concept identifier in the vocabulary for the drug concept. |
 | min_value |   |
 | max_value |   |
@@ -2021,6 +2007,7 @@ Output field list:
 Sample output record:
 
 |  Field |  Description |
+| --- | --- | 
 | drug_concept_id |   |
 | min_value |   |
 | max_value |   |
@@ -2039,12 +2026,11 @@ DEX42: Counts of genders, stratified by drug
 Input:
 
 |  Parameter |  Example |  Mandatory |  Notes | 
+| --- | --- | --- | --- |
 | list of drug_concept_id | 906805, 1517070, 19010522 | Yes |   
 | list of gender_concept_id | 8507, 8532 | Yes | Male, Female | 
 
-
 Sample query run:
-
 
 The following is a sample run of the query. The input parameters are highlighted in  blue
 
@@ -2058,10 +2044,10 @@ The following is a sample run of the query. The input parameters are highlighted
 
 Output:
 
-
 Output field list:
 
 |  Field |  Description |
+| --- | --- | 
 | drug_concept_id | A foreign key that refers to a standard concept identifier in the vocabulary for the drug concept. |
 | gender_concept_id | A foreign key that refers to a standard concept identifier in the vocabulary for the gender of the person. |
 | Count | The number of individual drug exposure occurrences used to construct the drug era. |
@@ -2070,11 +2056,10 @@ Output field list:
 Sample output record:
 
 |  Field |  Description |
+| --- | --- | 
 | drug_concept_id |   |
 | gender_concept_id |   |
 | Count |   |
-
-
 
 DEX43: Counts of drug exposure records per person, stratified by drug
 ---
@@ -2084,11 +2069,10 @@ DEX43: Counts of drug exposure records per person, stratified by drug
 Input:
 
 |  Parameter |  Example |  Mandatory |  Notes | 
+| --- | --- | --- | --- |
 | list of drug_concept_id | 906805, 1517070, 19010522 | Yes |  
 
-
 Sample query run:
-
 
 The following is a sample run of the query. The input parameters are highlighted in  blue 
 
@@ -2098,13 +2082,12 @@ The following is a sample run of the query. The input parameters are highlighted
 	group by t.person_id, t.drug_concept_id 
 	order by t.drug_concept_id, t.person_id;
 
-
 Output:
-
 
 Output field list:
 
 |  Field |  Description |
+| --- | --- | 
 | drug_concept_id | A foreign key that refers to a standard concept identifier in the vocabulary for the drug concept. |
 | person_id | A system-generated unique identifier for each person. |
 | count |   |
@@ -2113,6 +2096,7 @@ Output field list:
 Sample output record:
 
 |  Field |  Description |
+| --- | --- | 
 | drug_concept_id |   |
 | person_id |   |
 | count |   |

@@ -97,8 +97,6 @@ Sample output record:
 |  Drug_Concept_Vocab_Name |  RxNorm |
 |  Is_Drug_Concept_Flag |  No |
 
-
-
 D02: Find drug or class by keyword
 ---
 
@@ -194,8 +192,6 @@ Sample output record:
 |  Entity_Concept_Class |  Branded Drug |
 |  Entity_Vocabulary_ID |  8 |
 |  Entity_Vocabulary_Name |  RxNorm |
-
-
 
 D03: Find ingredients of a drug
 ---
@@ -582,8 +578,6 @@ Sample output record:
 |  Drug_Concept_ID |  40227201 |
 |  Drug_Concept_Name |  Ondansetron 0.16 MG/ML Injectable Solution |
 |  Drug_Concept_Class |  Clinical Drug |
-
-
 
 D08: Find drug classes for a drug or ingredient
 ---
@@ -1279,8 +1273,6 @@ Sample output record:
 |  Drug_Concept_Name |  Cycloserine |
 |  Drug_Concept_Code |  3007 |
 
-
-
 D15: Find drugs for an indication provided as condition concepts
 ---
 
@@ -1569,8 +1561,6 @@ Sample output record:
 |  Ingredient_Concept_Name |  Amikacin |
 |  Ingredient_Concept_Code |  641 |
 
-
-
 D19: Find ingredients for an indication by indication type
 ---
 
@@ -1644,8 +1634,6 @@ Sample output record:
 |  Ingredient_Concept_Code |  8076 |
 |  Indication_Type |  Inferred ingredient of (OMOP) |
 |  Relationship_id |  281 |
-
-
 
 D20: Find dose form of a drug
 ---
@@ -1727,8 +1715,6 @@ Sample output record:
 |  Dose_Form_Concept_name |  Inhalant Powder |
 |  Dose_Form_Concept_code |  317000 |
 
-
-
 D21: Find route of administration of a drug
 ---
 
@@ -1779,8 +1765,6 @@ Sample query:
 
         AND                sysdate                                BETWEEN CR.valid_start_date AND CR.valid_end_date
 
-
-
 Input:
 
 |  Parameter |  Example |  Mandatory |  Notes |
@@ -1807,8 +1791,6 @@ Sample output record:
 |  Drug_Concept_Code |  247047 |
 |  Dose_Form_Concept_name |  Inhalant Powder |
 |  Route_Of_Administration |  Inhaled |
-
-
 
 D22: Find drugs by class and dose form
 ---
@@ -1879,8 +1861,6 @@ Sample output record:
 |  Drug_Concept_ID |  904131 |
 |  Drug_Name |  Triamcinolone 0.055 MG/ACTUAT Nasal Spray |
 |  Drug_Concept_Code |  245785 |
-
-
 
 D23:  Find drugs by class and route of administration
 ---
