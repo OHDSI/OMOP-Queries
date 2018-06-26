@@ -50,7 +50,7 @@ Sample query:
 	group by cs.place_of_service_concept_id
 
 	order by 1;
-```sql
+```
 
 Input:
 
