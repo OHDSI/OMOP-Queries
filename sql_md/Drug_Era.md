@@ -451,8 +451,8 @@ This query is used to count the drug concepts across all drug era records. The i
 
 Sample query:
 
+```sql
     SELECT count(1) AS total_count FROM drug_era r WHERE r.drug_concept_id in (1304643, 1549080);
-```
 
 Input:
 
@@ -481,7 +481,6 @@ This query is used to count the persons with any number of eras with exposure to
 
 Sample query:
 
-```sql
     select count(distinct r.person_id) as persons_count
 
     from drug_era r

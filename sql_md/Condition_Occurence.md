@@ -8,6 +8,7 @@ Returns the distribution of the visit place of service where the condition was r
 
 Sample query:
 
+```sql
 	SELECT concept_name AS place_of_service_name, place_freq
 
 	FROM (
@@ -47,6 +48,7 @@ Sample query:
 	FROM concept) AS place_concept ON place_id_count.care_site_id=place_concept.concept_id
 
 	ORDER BY place_freq;
+```
 
 Input:
 
@@ -80,6 +82,7 @@ Returns the distribution of condition breakouts per gender and age.
 
 Sample query:
 
+```sql
 	SELECT
 
 	  concept_name AS gender,
@@ -109,7 +112,6 @@ Sample query:
 	      day_of_birth,
 
     	  gender_concept_id,
-```
 
 	      condition_start_date,
 
@@ -148,6 +150,7 @@ Sample query:
 	LEFT JOIN concept as concept_list ON gender_id_age_count.gender_concept_id=concept_list.concept_id
 
 	ORDER BY gender_age_freq DESC;
+```
 
 Input:
 
@@ -179,6 +182,7 @@ Returns all coexisting conditions for a given person as defined in the condition
 
 Sample query:
 
+```sql
 	SELECT DISTINCT
 
 	  CASE WHEN concept_name_1>concept_name_2 THEN concept_name_1 ELSE concept_name_2 END as condition1,
@@ -232,6 +236,7 @@ Sample query:
 	  LEFT JOIN concept AS concept_list ON comorb2.condition_concept_id_2=concept_list.concept_id
 
 	) AS condition_pairs;
+```
 
 Input:
 
@@ -261,6 +266,7 @@ Returns the distribution of number of times a person has been hospitalized where
 
 Sample query:
 
+```sql
 	SELECT
 
 	  number_of_hospitlizations,
@@ -364,6 +370,7 @@ Sample query:
 	ORDER BY persons_freq desc
 
 	;
+```
 
 Input:
 
@@ -393,6 +400,7 @@ Returns the the average length in days of all hospitalizations where a certain c
 
 Sample query:
 
+```sql
 	SELECT
 
 	  avg(hosp_no_days) AS average_hosp_duration_count
@@ -444,6 +452,7 @@ Sample query:
 	  ) AS from_visit
 
 	    ON from_cond.visit_occurrence_id = from_visit.visit_occurrence_id );
+```
 
 
 
@@ -479,6 +488,7 @@ Returns the distribution of condition occurrence per season in the northern hemi
 
 Sample query:
 
+```sql
 	SELECT season, COUNT(\*) as season_freq
 
 	FROM (
@@ -512,6 +522,7 @@ Sample query:
 	GROUP BY season
 
 	ORDER BY season_freq;
+```
 
 Input:
 
@@ -541,6 +552,7 @@ This query is used to to provide summary statistics for condition occurrence end
 
 Sample query:
 
+```sql
 	with end_rank as (
 
 	  SELECT
@@ -644,6 +656,7 @@ Sample query:
 	      (rownumasc=cast (rowno\*0.75 as int)+1 and mod(rowno\*75,100)>0)
 
 	  ) AS condition_end_date_75percentile;
+```
 
 Input:
 
@@ -687,6 +700,7 @@ This query is used to to provide summary statistics for condition occurrence sta
 
 Sample query:
 
+```sql
 	with end_rank as (
 
 	  SELECT
@@ -790,6 +804,7 @@ Sample query:
 	      (rownumasc=cast (rowno\*0.75 as int)+1 and mod(rowno\*75,100)>0)
 
 	  ) AS condition_start_date_75percentile;
+```
 
 Input:
 
@@ -831,6 +846,7 @@ This query is used to count the condition type concepts (condition_type_concept_
 
 Sample query:
 
+```sql
 	SELECT condition_type_freq, condition_type_concept_id, concept_name
 
 	FROM (
@@ -854,6 +870,7 @@ Sample query:
 	FROM concept) AS type_concept ON condition_type_count.condition_type_concept_id=type_concept.concept_id
 
 	ORDER BY condition_type_freq;
+```
 
 Input:
 
@@ -885,6 +902,7 @@ This query is used to provide summary statistics for the number of different dis
 
 Sample query:
 
+```sql
 	with ranked as (
 
 	  SELECT
@@ -1006,6 +1024,7 @@ Sample query:
 	      (rownumasc=cast (rowno\*0.75 as int)+1 and mod(rowno\*75,100)>0)
 
 	  ) AS condition_end_date_75percentile;
+```
 
 Input:
 
@@ -1047,6 +1066,7 @@ This query is used to count the number of different distinct conditions (conditi
 
 Sample query:
 
+```sql
 	SELECT count(c.condition_concept_id) conditions_count, c.person_id
 
 	FROM condition_occurrence c
@@ -1058,6 +1078,7 @@ Sample query:
 	ORDER BY 1
 
 	DESC;
+```
 
 Input:
 
@@ -1087,6 +1108,7 @@ This query is used to provide summary statistics for the number of condition occ
 
 Sample query:
 
+```sql
 	with ranked as
 
 	  (
@@ -1097,7 +1119,6 @@ Sample query:
 
 	  FROM (
 
-```sql
                                         SELECT count(\*) as num_of_conditions
 
                                         FROM condition_occurrence
@@ -1107,7 +1128,6 @@ Sample query:
                                         GROUP BY person_id
 
                                 )
-```
 
 	  ),
 
@@ -1117,7 +1137,6 @@ Sample query:
 
 	   SELECT count(num_of_conditions) AS condition_num_count,
 
-```sql
                         min(num_of_conditions) AS condition_num_min,
 
       max(num_of_conditions) AS condition_num_max,
@@ -1125,11 +1144,9 @@ Sample query:
                         avg(num_of_conditions) AS condition_num_averege,
 
       stddev(num_of_conditions) as condition_num_stddev
-```
 
 	   FROM (
 
-```sql
                                    SELECT count(\*) AS num_of_conditions, person_id
 
                                    FROM   condition_occurrence
@@ -1139,7 +1156,6 @@ Sample query:
                                    GROUP BY person_id
 
                            )
-```
 
 	  )
 
@@ -1198,6 +1214,7 @@ Sample query:
 	     (rownumasc=cast (rowno\*0.75 as int)+1 AND mod(rowno\*75,100)>0)
 
 	 ) AS condition_num_75percentile
+```
 
 Input:
 
@@ -1239,6 +1256,7 @@ This query is used to count the condition occurrence records stratified by obser
 
 Sample query:
 
+```sql
 	SELECT extract(month
 
 	from condition_start_date) month_number, count(\*) as number_of_conditions_in_month
@@ -1250,6 +1268,7 @@ Sample query:
 	from condition_start_date)
 
 	ORDER BY 1;
+```
 
 Input:
 
@@ -1279,6 +1298,7 @@ Oracle specific query.
 
 Sample query:
 
+```sql
 	SELECT concept_name AS condition
 
 	     , condition_concept_id
@@ -1374,6 +1394,7 @@ Sample query:
 	GROUP BY concept_name, condition_concept_id, age
 
 	ORDER BY condition_occurrences DESC
+```
 
 Input:
 
@@ -1417,6 +1438,7 @@ This query is used to count conditions across all condition occurrence records s
 
 Sample query:
 
+```sql
 	SELECT concept_name AS condition_occurrence_type , condition_type_concept_id , count(\*) AS occurrence_type_count
 
 	FROM condition_occurrence
@@ -1424,6 +1446,7 @@ Sample query:
 	JOIN concept ON concept_id = condition_type_concept_id
 
 	GROUP BY concept_name, condition_type_concept_id;
+```
 
 Input:
 
@@ -1453,6 +1476,7 @@ This query is used to summary statistics of the condition month/year start dates
 
 Sample query:
 
+```sql
 	SELECT        condition_concept_id,
 
 	                concept_name,
@@ -1490,6 +1514,7 @@ Sample query:
 	                        m1
 
 	ORDER BY        m1
+```
 
 Input:
 
@@ -1523,6 +1548,7 @@ This query is used to count all genders (gender_concept_id), stratified by condi
 
 Sample query:
 
+```sql
 	SELECT  ( CASE WHEN (male_id<> null)
 
 	            THEN (male_id)
@@ -1592,6 +1618,7 @@ Sample query:
 	GROUP BY  condition_concept_id, concept_name) as female_list
 
 	          on male_list.condition_concept_id=female_list.condition_concept_id)
+```
 
 Input:
 
@@ -1623,6 +1650,7 @@ Count number of condition per person stratified by condition.
 
 Sample query:
 
+```sql
 	SELECT condition_concept_id, num_of_occurrences, count(\*) num_of_patients
 
 	FROM (
@@ -1636,6 +1664,7 @@ Sample query:
 	GROUP BY person_id, condition_concept_id)
 
 	GROUP BY condition_concept_id, num_of_occurrences;
+```
 
 Input:
 

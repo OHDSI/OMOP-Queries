@@ -20,6 +20,7 @@ Sample query run:
 
 The following is a sample run of the query to run a search of the Observation domain for keyword 'LDL'. The input parameters are highlighted in  blue.
 
+```sql
 	SELECT  T.Entity_Concept_Id,
 	        T.Entity_Name,
 	        T.Entity_Code,
@@ -47,6 +48,7 @@ The following is a sample run of the query to run a search of the Observation do
 	WHERE  REGEXP_INSTR(LOWER(REPLACE(REPLACE(T.Entity_Name, ' ', ''), '-', '')), 
 	             LOWER(REPLACE(REPLACE('LDL' , ' ', ''), '-', ''))) > 0
 	AND     sysdate BETWEEN T.valid_start_date AND T.valid_end_date
+```
 
 Output:
 

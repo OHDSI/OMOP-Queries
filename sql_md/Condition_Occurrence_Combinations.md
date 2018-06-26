@@ -15,6 +15,7 @@ Sample query run:
 
 The following is a sample run of the query. The input parameters are highlighted in  blue  
 
+```sql
 	SELECT 
 	  ingredient_name, 
 	  ingredient_concept_id, 
@@ -57,6 +58,7 @@ The following is a sample run of the query. The input parameters are highlighted
 	) 
 	GROUP by ingredient_name, ingredient_concept_id 
 	ORDER BY num_patients DESC;
+```
 
 
 
@@ -91,6 +93,7 @@ Sample query run:
 
 The following is a sample run of the query. The input parameters are highlighted in  blue  
 
+```sql
 	SELECT	ingredient_name,
 			ingredient_concept_id,
 			count(*) AS num_patients,
@@ -141,6 +144,7 @@ The following is a sample run of the query. The input parameters are highlighted
 	GROUP BY	ingredient_name,
 				ingredient_concept_id
 	ORDER BY	num_patients DESC;
+```
 
 
 Output:
@@ -174,6 +178,7 @@ Sample query run:
 
 The following is a sample run of the query. The input parameters are highlighted in  blue  
 
+```sql
 	SELECT 
 	  COUNT( DISTINCT diagnosed.person_id ) AS all_infarctions , 
 	  SUM( CASE WHEN death.person_id IS NULL THEN 0 ELSE 1 END ) AS death_from_infarction 
@@ -210,6 +215,7 @@ The following is a sample run of the query. The input parameters are highlighted
 	LEFT OUTER JOIN death /* death within a year */ 
 	  ON death.person_id = diagnosed.person_id AND 
 	  death.death_date <= condition_era_start_date + 360; 
+```
 
 
 Output:
@@ -241,6 +247,7 @@ Sample query run:
 
 The following is a sample run of the query. The input parameters are highlighted in  blue  
 
+```sql
 	SELECT COUNT( DISTINCT diagnosed.person_id ) AS all_infarction_deaths
 	     , ROUND( min( death_date - condition_era_start_date )/365, 1 ) AS min_years
 	     , ROUND( max( death_date - condition_era_start_date )/365, 1 ) AS max_years
@@ -273,6 +280,7 @@ The following is a sample run of the query. The input parameters are highlighted
 	     ) diagnosed
 	  JOIN death 
 	    ON death.person_id = diagnosed.person_id
+```
 
 Output:
 
@@ -310,6 +318,7 @@ Sample query run:
 The following is a sample run of the query. The input parameters are highlighted in  blue  
 
 
+```sql
 	SELECT DISTINCT	condition.person_id,
 					procedure_date,
 					condition_era_start_date
@@ -334,6 +343,7 @@ The following is a sample run of the query. The input parameters are highlighted
 	WHERE
 		proc.procedure_concept_id IN ( 2002382, 2002403, 2108452, 2108453, 2212660, 2212662, 3045142, 3048879, 36359239, 37586183 )
 	AND procedure_date BETWEEN condition_era_start_date - 60 AND condition_era_start_date;
+```
 
 Output:
 
@@ -368,6 +378,7 @@ Sample query run:
 
 The following is a sample run of the query. The input parameters are highlighted in  blue  
 
+```sql
 	SELECT DISTINCT 
 	  condition.person_id , 
 	  observation_date, 
@@ -393,6 +404,7 @@ The following is a sample run of the query. The input parameters are highlighted
 	  observation_concept_id IN /* leukocytes #/volume in blood */ ( 3000905, 3003282, 3010813 ) AND 
 	  unit_concept_id = 8961 /* Thousand per cubic millimeter */ AND 
 	  value_as_number <= 3.5;
+```
 
 Output:
 
@@ -425,6 +437,7 @@ Sample query run:
 
 The following is a sample run of the query. The input parameters are highlighted in  blue  
 
+```sql
 	SELECT	state,
 			count(*) AS total_enroled,
 			sum( lymed ) AS lyme_cases,
@@ -453,6 +466,7 @@ The following is a sample run of the query. The input parameters are highlighted
 		)
 	GROUP BY	state
 	ORDER BY	4 DESC;
+```
 
 Output:
 
@@ -491,6 +505,7 @@ Sample query run:
 
 The following is a sample run of the query. The input parameters are highlighted in  blue  
 
+```sql
 	SELECT 
 	  treatment, 
 	  count(*), 
@@ -600,6 +615,7 @@ The following is a sample run of the query. The input parameters are highlighted
 	) 
 	GROUP BY treatment 
 	ORDER BY treatment;
+```
 
 Output:
 
@@ -636,6 +652,7 @@ Sample query run:
 
 The following is a sample run of the query. The input parameters are highlighted in  blue  
 
+```sql
 	SELECT treatment, count(*) 
 	FROM
 	(
@@ -731,6 +748,7 @@ The following is a sample run of the query. The input parameters are highlighted
 	)
 	)
 	GROUP BY treatment ORDER BY treatment;
+```
 
 
 

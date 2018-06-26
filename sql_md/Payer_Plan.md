@@ -8,6 +8,7 @@ List number of patients who have continuous payer plan of at least one year
 
 Sample query:
 
+```sql
 	SELECT floor((p.payer_plan_period_end_date - p.payer_plan_period_start_date)/365) AS year_int, count(1) AS num_patients
 
 	FROM payer_plan_period p
@@ -15,6 +16,7 @@ Sample query:
 	GROUP BY floor((p.payer_plan_period_end_date - p.payer_plan_period_start_date)/365)
 
 	ORDER BY 1;
+```
 
 Input:
 
@@ -40,6 +42,7 @@ PP02: Patient distribution by plan type
 
 Sample query:
 
+```sql
 	select
 
 	  t.plan_source_value,
@@ -59,6 +62,7 @@ Sample query:
 	) t
 
 	order by t.plan_source_value;
+```
 
 Input:
 

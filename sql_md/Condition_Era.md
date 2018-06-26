@@ -16,6 +16,7 @@ Sample query run:
 
 The following is a sample run of the query. The input parameters are highlighted in blue.
 
+```sql
 	SELECT 
 	  treatment, 
 	  count(*), 
@@ -124,6 +125,7 @@ The following is a sample run of the query. The input parameters are highlighted
 	) 
 	GROUP BY treatment 
 	ORDER BY treatment; 
+```
 
 
 Output:
@@ -164,6 +166,7 @@ Sample query run:
 
 The following is a sample run of the query. The input parameters are highlighted in  blue
 
+```sql
 	SELECT gender, age, count(*) num_patients 
 	FROM -- patient with hip fracture, age, gender 
 	( 
@@ -184,6 +187,7 @@ The following is a sample run of the query. The input parameters are highlighted
 	JOIN concept gender ON gender.concept_id = gender_concept_id ) 
 	GROUP BY gender, age 
 	ORDER BY gender, age;
+```
 
 Output:
 
@@ -216,6 +220,7 @@ Sample query run:
 
 The following is a sample run of the query. The input parameters are highlighted in blue
 
+```sql
 	SELECT 
 	  gender, 
 	  CASE 
@@ -264,6 +269,7 @@ The following is a sample run of the query. The input parameters are highlighted
 	  age_grp, 
 	  age 
 	ORDER BY age_grp, gender
+```
 
 
 Output:
@@ -308,6 +314,7 @@ Sample query run:
 
 The following is a sample run of the query. The input parameters are highlighted in  blue
 
+```sql
 	CREATE TEMP TABLE
 		age_age_grp
 	(
@@ -476,6 +483,7 @@ The following is a sample run of the query. The input parameters are highlighted
 		year,
 		age_grp,
 		gender;
+```
 
 
 
@@ -516,6 +524,7 @@ Sample query run:
 
 The following is a sample run of the query. The input parameters are highlighted in blue
 
+```sql
 	SELECT season, count(*) AS cases
 	FROM /* Extrinsic Asthma/season */
 	( SELECT CASE 
@@ -557,6 +566,7 @@ The following is a sample run of the query. The input parameters are highlighted
 
 	ON snomed_asthma = condition_concept_id
 	) GROUP BY season;
+```
 
 Output:
 
@@ -588,6 +598,7 @@ Sample query run:
 
 The following is a sample run of the query. The input parameters are highlighted in  blue
 
+```sql
 	SELECT concept_name, count(*) as conditions_count 
 	FROM  ( 
 	SELECT death.person_id, concept_name 
@@ -598,6 +609,7 @@ The following is a sample run of the query. The input parameters are highlighted
 	GROUP BY concept_name 
 	ORDER BY conditions_count 
 	DESC;
+```
 
 Output:
 
@@ -632,6 +644,7 @@ Sample query run:
 
 The following is a sample run of the query. The input parameters are highlighted in  blue
 
+```sql
 	WITH SNOMed_diabetes AS ( 
 	  SELECT DISTINCT 
 	    descendant_concept_id AS snomed_diabetes_id 
@@ -679,6 +692,7 @@ The following is a sample run of the query. The input parameters are highlighted
 	  ORDER BY frequency DESC 
 	) 
 	limit 10;
+```
 
 Output:
 
@@ -709,6 +723,7 @@ Sample query run:
 
 The following is a sample run of the query. The input parameters are highlighted in blue
 
+```sql
 	WITH SNOMed_diabetes AS ( 
 	  SELECT DISTINCT descendant_concept_id AS snomed_diabetes_id 
 	  FROM source_to_concept_map map 
@@ -752,6 +767,7 @@ The following is a sample run of the query. The input parameters are highlighted
 	  (select distinct PERCENTILE_DISC(0.5) WITHIN GROUP (ORDER BY comorbidities) over() from tt) AS median , 
 	  (select distinct PERCENTILE_DISC(0.75) WITHIN GROUP (ORDER BY comorbidities) over() from tt) AS percentile_75 
 	FROM tt;
+```
 
 
 Output:
@@ -793,6 +809,7 @@ Sample query run:
 
 The following is a sample run of the query. The input parameters are highlighted in  blue
 
+```sql
 	SELECT condition_concept_id, concept_name, count(*) records_count
 	  FROM condition_era
 	  JOIN concept ON concept_id = condition_concept_id
@@ -801,6 +818,7 @@ The following is a sample run of the query. The input parameters are highlighted
 	       ( 254761, 257011, 320128, 432867, 25297 )
 	 GROUP BY condition_concept_id, concept_name
 	 ORDER BY records_count DESC;
+```
 
 Output:
 
@@ -834,6 +852,7 @@ Sample query run:
 
 The following is a sample run of the query. The input parameters are highlighted in  blue
 
+```sql
 	SELECT condition_concept_id, concept_name, count( distinct person_id ) num_people
 	  FROM condition_era
 	  JOIN concept ON concept_id = condition_concept_id
@@ -842,6 +861,7 @@ The following is a sample run of the query. The input parameters are highlighted
 	       ( 320128, 432867, 254761, 257011, 257007 )
 	 GROUP BY condition_concept_id, concept_name
 	 ORDER BY num_people DESC;
+```
 
 Output:
 
@@ -872,6 +892,7 @@ Sample query run:
 
 The following is a sample run of the query. The input parameters are highlighted in  blue
 
+```sql
 	SELECT condition_concept_id
 	     , min(condition_era_end_date)
 	     , max(condition_era_end_date)
@@ -886,6 +907,7 @@ The following is a sample run of the query. The input parameters are highlighted
 	  FROM condition_era
 	 WHERE condition_concept_id IN( 254761, 257011, 320128, 432867, 25297 )
 	  GROUP BY condition_concept_id;
+```
 
 Output:
 
@@ -926,6 +948,7 @@ Sample query run:
 
 The following is a sample run of the query. The input parameters are highlighted in  blue
 
+```sql
 	SELECT condition_concept_id
 	     , min(condition_era_start_date)
 	     , max(condition_era_start_date)
@@ -940,6 +963,7 @@ The following is a sample run of the query. The input parameters are highlighted
 	  FROM condition_era
 	 WHERE condition_concept_id IN( 254761, 257011, 320128, 432867, 25297 )
 	  GROUP BY condition_concept_id;
+```
 
 Output:
 
@@ -980,6 +1004,7 @@ Sample query run:
 
 The following is a sample run of the query. The input parameters are highlighted in  blue
 
+```sql
 	SELECT 
 	  condition_concept_id,
 	  MIN( condition_occurrence_count ) AS min , 
@@ -1005,6 +1030,7 @@ The following is a sample run of the query. The input parameters are highlighted
 	  median,
 	  percentile_75
 	;
+```
 
 Output:
 
@@ -1050,6 +1076,7 @@ Sample query run:
 
 The following is a sample run of the query. The input parameters are highlighted in  blue
 
+```sql
 	SELECT 
 	  condition_concept_id,
 	  MIN( condition_occurrence_count ) AS min , 
@@ -1075,6 +1102,7 @@ The following is a sample run of the query. The input parameters are highlighted
 	  median,
 	  percentile_75
 	;
+```
 
 Output:
 
@@ -1119,6 +1147,7 @@ Sample query run:
 
 The following is a sample run of the query. The input parameters are highlighted in  blue
 
+```sql
 	SELECT 
 	  condition_concept_id,
 	  MIN( occurrences ) AS min , 
@@ -1152,6 +1181,7 @@ The following is a sample run of the query. The input parameters are highlighted
 	  percentile_25,
 	  median,
 	  percentile_75
+```
 
 Output:
 

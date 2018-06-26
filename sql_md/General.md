@@ -622,8 +622,8 @@ This query returns current vocabulary release number.
 
 Sample query:
 
+```sql
     SELECT vocabulary_name, vocabulary_version FROM vocabulary;
-```
 
 Input:
 

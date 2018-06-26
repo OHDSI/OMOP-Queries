@@ -120,6 +120,7 @@ The following is a sample run of the query to run a search of the Condition doma
 	ORDER BY 6,2;
 ```
 
+
 Output:
 
 Output field list:
