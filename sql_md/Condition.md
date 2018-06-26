@@ -566,7 +566,7 @@ Sample query run:
 
 The following is a sample run of the query to list all pathogens specified using a keyword as input. The sample parameter substitutions are highlighted in  blue.
 
-```
+```sql
 	SELECT
 	  C.concept_id Agent_Concept_ID,
 	  C.concept_name Agent_Concept_Name,
