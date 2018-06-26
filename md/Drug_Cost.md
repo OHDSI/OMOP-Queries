@@ -6,6 +6,7 @@ DRC01: What is the average/max/min cost per pill (total cost / quantity) per dru
 
 Sample query:
 
+```sql
     SELECT avg(t.cost_per_pill) avg_val_num, max(t.cost_per_pill) max_val_num, min(t.cost_per_pill) min_val_num, t.drug_concept_id
 
     from (
@@ -27,6 +28,7 @@ Sample query:
     GROUP BY t.drug_concept_id
 
     ORDER BY t.drug_concept_id;
+```
 
 Input:
 
@@ -61,6 +63,7 @@ DRC03: What is out-of-pocket cost for a given drug?
 
 Sample query:
 
+```sql
     SELECT avg(c.paid_by_patient - c.paid_patient_copay) AS avg_out_pocket_cost, d.drug_concept_id
 
     FROM cost c, drug_exposure d
@@ -74,6 +77,7 @@ Sample query:
     IN (906805, 1517070, 19010522)
 
     GROUP BY d.drug_concept_id;
+```
 
 Input:
 
@@ -105,6 +109,7 @@ This query is used to to provide summary statistics for costs paid by coinsuranc
 
 Sample query:
 
+```sql
     with tt as (
 
       SELECT t.paid_patient_coinsurance AS stat_value
@@ -134,6 +139,7 @@ Sample query:
     FROM
 
      tt;
+```
 
 Input:
 

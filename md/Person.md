@@ -8,11 +8,13 @@ Use this query to determine the number of women and men in an a databse. The gen
 
 Sample query:
 
+```sql
     SELECT COUNT(person_ID) AS num_persons_count
 
     FROM Person
 
     WHERE GENDER_CONCEPT_ID = 8532
+```
 
 Input:
 
@@ -40,6 +42,7 @@ This query is similar to PE02, but it lists all available genders (male, female,
 
 Sample query:
 
+```sql
     SELECT person.GENDER_CONCEPT_ID, concept.CONCEPT_NAME AS gender_name, COUNT(person.person_ID) AS num_persons_count
 
     FROM person
@@ -47,6 +50,7 @@ Sample query:
     INNER JOIN concept ON person.GENDER_CONCEPT_ID = concept.CONCEPT_ID
 
     GROUP BY person.GENDER_CONCEPT_ID, concept.CONCEPT_NAME;
+```
 
 Input:
 
@@ -76,6 +80,7 @@ Counts the year of birth (year_of_birth) across all person records. All existing
 
 Sample query:
 
+```sql
     SELECT year_of_birth, COUNT(person_id) AS Num_Persons_count
 
     FROM person
@@ -83,6 +88,7 @@ Sample query:
     GROUP BY year_of_birth
 
     ORDER BY year_of_birth;
+```
 
 Input:
 
@@ -110,6 +116,7 @@ This query is used to count the locations (location_id) across all person record
 
 Sample query:
 
+```sql
     SELECT NVL( state, 'XX' )
 
     AS state_abbr, count(\*) as Num_Persons_count
@@ -123,6 +130,7 @@ Sample query:
     GROUP BY NVL( state, 'XX' )
 
     ORDER BY 1;
+```
 
 Input:
 
@@ -150,6 +158,7 @@ Counts the patients' zip of their residence location across all person records. 
 
 Sample query:
 
+```sql
     SELECT state, NVL( zip, '9999999' ) AS zip, count(\*) Num_Persons_count
 
     FROM person
@@ -161,6 +170,7 @@ Sample query:
     GROUP BY state, NVL( zip, '9999999' )
 
     ORDER BY 1, 2;
+```
 
 Input:
 
@@ -190,6 +200,7 @@ Count the genders (gender_concept_id) across all person records, arrange into gr
 
 Sample query:
 
+```sql
     SELECT gender_concept_id, c.concept_name AS gender_name, year_of_birth, COUNT(p.person_id) AS num_persons
 
     FROM person p
@@ -199,6 +210,7 @@ Sample query:
     GROUP BY gender_concept_id, c.concept_name, year_of_birth
 
     ORDER BY concept_name, year_of_birth;
+```
 
 Input:
 
@@ -230,6 +242,7 @@ This query is used to count the day of birth (day_of_birth) across all person re
 
 Sample query:
 
+```sql
     SELECT day_of_birth, COUNT(person_ID) AS num_persons
 
     FROM person
@@ -237,6 +250,7 @@ Sample query:
     GROUP BY day_of_birth
 
     ORDER BY day_of_birth;
+```
 
 Input:
 
@@ -264,6 +278,7 @@ This query is used to count number of patients grouped by month of birth within 
 
 Sample query:
 
+```sql
     SELECT NVL(month_of_birth,1) AS month_of_year, count(\*) AS num_records
 
     FROM person
@@ -271,6 +286,7 @@ Sample query:
     GROUP BY month_of_birth
 
     ORDER BY 1;
+```
 
 Input:
 
@@ -298,6 +314,7 @@ This query is used to to provide summary statistics for the age across all patie
 
 Sample query:
 
+```sql
     SELECT percentile_25
 
          , median
@@ -367,6 +384,7 @@ Sample query:
     ) percentile_table, person
 
     GROUP BY percentile_25, median, percentile_75
+```
 
 Input:
 

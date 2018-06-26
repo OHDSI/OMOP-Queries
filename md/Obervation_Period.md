@@ -6,11 +6,13 @@ OP01: Count number of people who have at least one observation period in the dat
 
 Sample query:
 
+```sql
     SELECT COUNT(DISTINCT person_ID) AS NUM_persons
 
     FROM observation_period
 
     WHERE observation_period_END_DATE - observation_period_START_DATE >= 365;
+```
 
 Input:
 
@@ -36,6 +38,7 @@ Count distribution of length of observation, in months, among first observation 
 
 Sample query:
 
+```sql
     SELECT        DATEDIFF(month, observation_period_start_date, observation_period_end_date) as num_months,
 
                     COUNT(distinct person_id) AS num_persons
@@ -65,6 +68,7 @@ Sample query:
     GROUP BY        DATEDIFF(month,observation_period_START_DATE, observation_period_END_DATE)
 
     ORDER BY        DATEDIFF(month,observation_period_START_DATE, observation_period_END_DATE) ASC
+```
 
 Input:
 
@@ -93,6 +97,7 @@ Count number of people continuously observed throughout a specified year.
 
 Sample query:
 
+```sql
     SELECT COUNT(DISTINCT person_ID) AS NUM_persons
 
     FROM observation_period
@@ -100,6 +105,7 @@ Sample query:
     WHERE observation_period_start_date <= '01-jan-2011'
 
     AND observation_period_end_date >= '31-dec-2011';
+```
 
 Input:
 
@@ -126,6 +132,7 @@ Count number of people who have two or more observations.
 
 Sample query:
 
+```sql
     SELECT count( person_id ) AS num_persons
 
     FROM -- more than one observatio period
@@ -135,6 +142,7 @@ Sample query:
     FROM observation_period GROUP BY person_id
 
     HAVING COUNT( person_id ) > 1 );
+```
 
 Input:
 
@@ -161,11 +169,13 @@ Count average length of observation period in month.
 
 Sample query:
 
+```sql
     SELECT avg(
 
     datediff(month, observation_period_start_date , observation_period_end_date ) ) AS num_months
 
     FROM observation_period;
+```
 
 Input:
 
@@ -190,9 +200,11 @@ Count average number of observation days.
 
 Sample query:
 
+```sql
     SELECT avg( observation_period_end_date - observation_period_start_date ) AS num_days
 
     FROM observation_period;
+```
 
 Input:
 
@@ -217,6 +229,7 @@ Count distribution of age across all observation period records:  the mean, the 
 
 Sample query:
 
+```sql
     WITH t AS (
 
     SELECT DISTINCT
@@ -256,6 +269,7 @@ Sample query:
          , (SELECT DISTINCT PERCENTILE_DISC(0.75) WITHIN GROUP (ORDER BY age ) over () FROM t) AS percentile_75
 
             FROM t;
+```
 
 Input:
 
@@ -294,6 +308,7 @@ Counts the number of observation period records (observation_period_id) for all 
 
 Sample query:
 
+```sql
     WITH obser_person AS
 
     (
@@ -327,6 +342,7 @@ Sample query:
     FROM
 
             obser_person
+```
 
 Input:
 
@@ -364,6 +380,7 @@ List all people (person_id) who has specific number of observations. The input t
 
 Sample query:
 
+```sql
     SELECT p.person_id, count(1) observation_period_count
 
     FROM observation_period p
@@ -371,6 +388,7 @@ Sample query:
     GROUP BY p.person_id
 
     having count(1) = 3;
+```
 
 Input:
 
@@ -398,6 +416,7 @@ Counts the observation period records stratified by observation month. All possi
 
 Sample query:
 
+```sql
     SELECT
 
       month,
@@ -507,6 +526,7 @@ Sample query:
       )
 
     ) GROUP BY month order by month;
+```
 
 Input:
 
@@ -535,6 +555,7 @@ This query is used to to provide summary statistics for observation period end d
 
 Sample query:
 
+```sql
     WITH op AS
 
     ( SELECT to_number( to_char( observation_period_end_date, 'J' ), 9999999 )::INT AS end_date
@@ -556,6 +577,7 @@ Sample query:
          , to_date( (SELECT DISTINCT PERCENTILE_DISC(0.75) WITHIN GROUP (ORDER BY end_date ) OVER () FROM op), 'J' ) AS percentile_75
 
       FROM op; /\* end_date \*/
+```
 
 Input:
 
@@ -594,6 +616,7 @@ This query is used to provide summary statistics for the observation period leng
 
 Sample query:
 
+```sql
     SELECT
 
             min( period_length ) OVER() AS min_period,
@@ -623,6 +646,7 @@ Sample query:
                             observation_period
 
             )
+```
 
 Input:
 
@@ -659,6 +683,7 @@ This query is used to to provide summary statistics for observation period start
 
 Sample query:
 
+```sql
     WITH op AS
 
             ( SELECT to_number( to_char( observation_period_start_date, 'J' ), 9999999)::INT AS start_date FROM observation_period )
@@ -684,6 +709,7 @@ Sample query:
                     op
 
     ;
+```
 
 Input:
 
@@ -720,6 +746,7 @@ This query is used to provide summary statistics for the age across all observat
 
 Sample query:
 
+```sql
     WITH t AS /\* person, gender, age \*/
 
          ( SELECT person_id, NVL( concept_name, 'MISSING' ) AS gender
@@ -773,6 +800,7 @@ Sample query:
       FROM t
 
     GROUP BY gender
+```
 
 Input:
 
@@ -815,6 +843,7 @@ This query is used to count the age across all observation records stratified by
 
 Sample query:
 
+```sql
     SELECT        age,
 
                     gender,
@@ -870,6 +899,7 @@ Sample query:
     ORDER BY        age,
 
                             gender
+```
 
 Input:
 
@@ -900,6 +930,7 @@ This query is used to count the genders (gender_concept_id) across all observati
 
 Sample query:
 
+```sql
     SELECT
 
       observation_year,
@@ -997,6 +1028,7 @@ Sample query:
       age_group,
 
       gender;
+```
 
 Input:
 
@@ -1031,6 +1063,7 @@ This query is used to count the observation period records stratified by observa
 
 Sample query:
 
+```sql
     SELECT EXTRACT( month
 
     FROM observation_period_end_date ) observation_month , count(\*) AS num_observations
@@ -1040,6 +1073,7 @@ Sample query:
     GROUP BY observation_month
 
     ORDER BY 1;
+```
 
 Input:
 
@@ -1068,6 +1102,7 @@ This query is used to count the observation period records stratified by observa
 
 Sample query:
 
+```sql
     SELECT EXTRACT( month
 
     FROM observation_period_start_date ) observation_month , count(\*) AS num_observations
@@ -1077,6 +1112,7 @@ Sample query:
     GROUP BY observation_month
 
     ORDER BY 1;
+```
 
 Input:
 
@@ -1105,6 +1141,7 @@ This query is used to provide summary statistics for the observation period leng
 
 Sample query:
 
+```sql
     SELECT
 
       age,
@@ -1192,6 +1229,7 @@ Sample query:
       median ,
 
       percentile_75;
+```
 
 Input:
 
@@ -1234,6 +1272,7 @@ This query is used to provide summary statistics for the observation period leng
 
 Sample query:
 
+```sql
     SELECT
 
       gender,
@@ -1323,6 +1362,7 @@ Sample query:
       median ,
 
       percentile_75;
+```
 
 Input:
 

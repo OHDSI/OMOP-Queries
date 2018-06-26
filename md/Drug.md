@@ -9,6 +9,7 @@ This query is equivalent to  [G01](http://vocabqueries.omop.org/general-queries/
 
 Sample query:
 
+```sql
         SELECT
 
                 C.concept_id Drug_concept_id,
@@ -60,6 +61,7 @@ Sample query:
                 AND sysdate BETWEEN C.valid_start_date AND C.valid_end_date
 
                 AND C.concept_id = 1545999;
+```
 
 
 
@@ -110,6 +112,7 @@ This query enables search of vocabulary entities in the drug domain by keyword. 
 
 Sample query:
 
+```sql
         SELECT c.concept_id Entity_Concept_Id, c.concept_name Entity_Name, c.concept_code Entity_Code, 'Concept' Entity_Type, c.concept_class_id Entity_concept_class_id, c.vocabulary_id Entity_vocabulary_id
 
         FROM concept c
@@ -157,6 +160,7 @@ Sample query:
         , ' ', ''), '-', ''))) > 0
 
         AND sysdate BETWEEN c.valid_start_date AND c.valid_end_date;
+```
 
 Input:
 
@@ -200,6 +204,7 @@ This query is designed to accept a drug concept (both clinical or branded) as in
 
 Sample query:
 
+```sql
         SELECT
 
                 D.Concept_Id drug_concept_id,
@@ -239,6 +244,7 @@ Sample query:
                 AND sysdate BETWEEN D.VALID_START_DATE AND D.VALID_END_DATE
 
                 AND CA.descendant_concept_id IN (939355, 19102189, 19033566)
+```
 
 Input:
 
@@ -283,6 +289,7 @@ The query requires the ingredient concept ID as the input. A list of these ingre
 
 Sample query:
 
+```sql
         SELECT
 
                 A.concept_id Ingredient_concept_id,
@@ -320,6 +327,7 @@ Sample query:
                 AND sysdate BETWEEN D.valid_start_date AND D.valid_end_date
 
                 AND CA.ancestor_concept_id = 966991;
+```
 
 Input:
 
@@ -365,6 +373,7 @@ The query requires the ingredient concept ID as the input. A list of these ingre
 
 Sample query:
 
+```sql
         SELECT        A.concept_id Ingredient_concept_id,
 
                         A.concept_Name Ingredient_name,
@@ -398,6 +407,7 @@ Sample query:
         AND        D.concept_class_id                        = 'Clinical Drug'
 
         AND        sysdate                                                BETWEEN A.valid_start_date AND A.valid_end_date AND sysdate BETWEEN D.valid_start_date AND D.valid_end_date
+```
 
 Input:
 
@@ -442,6 +452,7 @@ This query is designed to extract all branded drugs that have a specified ingred
 
 Sample query:
 
+```sql
         SELECT        A.concept_id Ingredient_concept_id,
 
                         A.concept_name Ingredient_concept_name,
@@ -475,6 +486,7 @@ Sample query:
         AND        D.concept_class_id                        = 'Branded Drug'
 
         AND        sysdate                                                BETWEEN A.valid_start_date AND A.valid_end_date AND sysdate BETWEEN D.valid_start_date AND D.valid_end_date
+```
 
 Input:
 
@@ -518,6 +530,7 @@ This query accepts accepts an ingredient concept ID and returns all drugs which 
 
 Sample query:
 
+```sql
         SELECT
 
               c.concept_id     as drug_concept_id,
@@ -555,6 +568,7 @@ Sample query:
         ) onesie ON onesie.cid = c.concept_id
 
         WHERE sysdate BETWEEN valid_start_date AND valid_end_date
+```
 
 Input:
 
@@ -595,6 +609,7 @@ By default, the query returns therapeutic classes based on all the classificatio
 
 Sample query:
 
+```sql
         SELECT
 
          c1.concept_id                 Class_Concept_Id,
@@ -630,6 +645,7 @@ Sample query:
         AND    ca.descendant_concept_id = 1545999
 
         AND    sysdate BETWEEN c1.valid_start_date AND c1.valid_end_date;
+```
 
 
 
@@ -685,6 +701,7 @@ Therapeutic classes could be obtained using query  [D02](http://vocabqueries.omo
 
 Sample query:
 
+```sql
         SELECT  c.concept_id      drug_concept_id,
 
                 c.concept_name   drug_concept_name,
@@ -708,6 +725,7 @@ Sample query:
                 AND  c.standard_concept = 'S'
 
                    AND sysdate BETWEEN c.valid_start_date AND c.valid_end_date;
+```
 
 Input:
 
@@ -755,6 +773,7 @@ Therapeutic classes could be obtained using query  [D02](http://vocabqueries.omo
 
 Sample query:
 
+```sql
         SELECT  c.concept_id    ingredient_concept_id,
 
                 c.concept_name  ingredient_concept_name,
@@ -776,6 +795,7 @@ Sample query:
            AND c.concept_class_id = 'Ingredient'
 
            AND  sysdate BETWEEN c.valid_start_date AND c.valid_end_date;
+```
 
 Input:
 
@@ -813,6 +833,7 @@ This query is designed to extract codes from a non-standard drug vocabulary that
 
 Sample query:
 
+```sql
         SELECT  d.concept_code,
 
                 d.vocabulary_id,
@@ -834,6 +855,7 @@ Sample query:
            AND  d.domain_id = 'Drug'
 
            AND sysdate BETWEEN d.valid_start_date AND d.valid_end_date;
+```
 
 Input:
 
@@ -876,6 +898,7 @@ FDB also distinguishes indications based on their presence in the drug label (or
 
 Sample query:
 
+```sql
         SELECT
 
           r.relationship_name as type_of_indication,
@@ -1009,6 +1032,7 @@ Sample query:
             vn.vocabulary_id=c.vocabulary_id AND
 
             sysdate BETWEEN c.valid_start_date AND c.valid_end_date;
+```
 
 Input:
 
@@ -1049,6 +1073,7 @@ This query accepts a mapped drug code instead of a standard drug concept ID as t
 
 Sample query:
 
+```sql
         SELECT
 
           rn.relationship_name as type_of_indication,
@@ -1186,6 +1211,7 @@ Sample query:
             vn.vocabulary_id=c.vocabulary_id AND
 
             sysdate BETWEEN c.valid_start_date AND c.valid_end_date;
+```
 
 Input:
 
@@ -1226,6 +1252,7 @@ This query provides all clinical or branded drugs that are indicated for a certa
 
 Sample query:
 
+```sql
         SELECT
 
                 drug.concept_id      as drug_concept_id,
@@ -1249,6 +1276,7 @@ Sample query:
          AND    drug.vocabulary_id = 'RxNorm'
 
          AND    sysdate BETWEEN drug.valid_start_date AND drug.valid_end_date
+```
 
 Input:
 
@@ -1280,6 +1308,7 @@ This query provides all clinical/branded drugs that are indicated for a certain 
 
 Sample query:
 
+```sql
         SELECT DISTINCT
 
           drug.concept_id as drug_concept_id,
@@ -1315,6 +1344,7 @@ Sample query:
           drug.vocabulary_id = 8 AND
 
           sysdate BETWEEN drug.valid_start_date AND drug.valid_end_date;
+```
 
 Input:
 
@@ -1348,6 +1378,7 @@ This query provides all drugs that are indicated for a certain condition. In add
 
 Sample query:
 
+```sql
         SELECT DISTINCT
 
          drug.concept_id      as drug_concept_id,
@@ -1405,6 +1436,7 @@ Sample query:
                 'Has inferred class')
 
           AND sysdate BETWEEN drug.valid_start_date AND drug.valid_end_date;
+```
 
 
 
@@ -1444,6 +1476,7 @@ This query provides ingredients that are designated for a certain indication. In
 
 Sample query:
 
+```sql
         SELECT
 
           ingredient.concept_id as ingredient_concept_id,
@@ -1469,6 +1502,7 @@ Sample query:
           ingredient.vocabulary_id = 8 AND
 
           sysdate BETWEEN ingredient.valid_start_date AND ingredient.valid_end_date;
+```
 
 Input:
 
@@ -1502,6 +1536,7 @@ This query provides all ingredients that are indicated for a certain indication.
 
 Sample query:
 
+```sql
         SELECT DISTINCT
 
           ingredient.concept_id as ingredient_concept_id,
@@ -1537,6 +1572,7 @@ Sample query:
           ingredient.vocabulary_id = 8 AND
 
           sysdate BETWEEN ingredient.valid_start_date AND ingredient.valid_end_date;
+```
 
 Input:
 
@@ -1568,6 +1604,7 @@ This query provides all ingredients that are indicated for a certain condition. 
 
 Sample query:
 
+```sql
         SELECT DISTINCT
 
           ingredient.concept_id as ingredient_concept_id,
@@ -1607,6 +1644,7 @@ Sample query:
           indication_relation.relationship_id in (21,23,155,157,126,127,240,241,281,282) AND
 
           sysdate BETWEEN ingredient.valid_start_date AND ingredient.valid_end_date;
+```
 
 Input:
 
@@ -1644,6 +1682,7 @@ The query relies on RxNorm concept relationship (4 – 'Has dose form (RxNorm)')
 
 Sample query:
 
+```sql
         SELECT
 
                 A.concept_id drug_concept_id,
@@ -1685,6 +1724,7 @@ Sample query:
                 --AND A.vocabulary_id = 'RxNorm'
 
                 ;
+```
 
 Input:
 
@@ -1735,6 +1775,7 @@ This query accepts concept IDs for a drug product (clinical or branded drug or p
 
 Sample query:
 
+```sql
         SELECT        A.concept_id drug_concept_id,
 
                         A.concept_name drug_concept_name,
@@ -1764,6 +1805,7 @@ Sample query:
         AND                D.concept_id                = R.concept_id
 
         AND                sysdate                                BETWEEN CR.valid_start_date AND CR.valid_end_date
+```
 
 Input:
 
@@ -1804,6 +1846,7 @@ The results are combined to present a list of drugs from a specific therapeutic 
 
 Sample query:
 
+```sql
         SELECT C.concept_id drug_concept_id,
 
         C.concept_name drug_concept_name,
@@ -1837,6 +1880,7 @@ Sample query:
                 LOWER(REPLACE(REPLACE('Nasal spray' , ' ', ''), '-', ''))) > 0
 
                 AND sysdate BETWEEN CRF.valid_start_date AND CRF.valid_end_date
+```
 
 Input:
 
@@ -1888,6 +1932,7 @@ The results are combined to present a list of drugs from a specific therapeutic 
 
 Sample query:
 
+```sql
         SELECT        C.concept_id drug_concept_id,
 
                         C.concept_name drug_concept_name,
@@ -1925,6 +1970,7 @@ Sample query:
         AND        sysdate                                        BETWEEN CRF.valid_start_date AND CRF.valid_end_date
 
         AND        POSITION(LOWER(REPLACE(REPLACE(route.route_of_administration, ' ', ''), '-', '')) IN LOWER(REPLACE(REPLACE('vaginal' , ' ', ''), '-', ''))) > 0
+```
 
 Input:
 
@@ -1959,6 +2005,7 @@ This query is designed to identify branded drug concepts from a list of standard
 
 Sample query:
 
+```sql
         SELECT C.concept_id drug_concept_id,
 
                 C.concept_name drug_name,
@@ -1984,6 +2031,7 @@ Sample query:
                         AND C.vocabulary_id = V.vocabulary_id
 
                         AND sysdate BETWEEN C.valid_start_date AND C.valid_end_date
+```
 
 Input:
 
@@ -2023,6 +2071,7 @@ This query is designed to identify generic drug concepts among from a list of st
 
 Sample query:
 
+```sql
         SELECT C.concept_id drug_concept_id,
 
                 C.concept_name drug_name,
@@ -2048,6 +2097,7 @@ Sample query:
                 AND C.vocabulary_id = V.vocabulary_id
 
                 AND sysdate BETWEEN C.valid_start_date AND C.valid_end_date
+```
 
 Input:
 
@@ -2087,6 +2137,7 @@ This query is designed to accept a drug concept (both clinical and branded) as i
 
 Sample query:
 
+```sql
         SELECT A.Concept_Id               drug_concept_id,
 
                 A.Concept_Name            drug_name,
@@ -2178,6 +2229,7 @@ Sample query:
         AND    A.concept_Id           = 939355
 
         AND    sysdate BETWEEN CR006.VALID_START_DATE AND CR006.VALID_END_DATE
+```
 
 Input:
 
@@ -2222,6 +2274,7 @@ The query requires a brand name concept ID as the input. Brand name concept IDs 
 
 Sample query:
 
+```sql
         SELECT  A.Concept_Id               drug_concept_id,
 
                 A.Concept_Name             drug_name,
@@ -2317,6 +2370,7 @@ Sample query:
         AND    sysdate BETWEEN CR006.valid_start_date AND CR006.valid_end_date
 
         AND    sysdate BETWEEN CR007.valid_start_date AND CR007.valid_end_date;
+```
 
 Input:
 

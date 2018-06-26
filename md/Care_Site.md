@@ -5,6 +5,7 @@ This query is used to count the care sites associated with the place of service 
 
 Sample query:
 
+```sql
 	select cs.place_of_service_concept_id, count(1) places_of_service_count
 
 	from care_site cs
@@ -12,6 +13,7 @@ Sample query:
 	group by cs.place_of_service_concept_id
 
 	order by 1;
+```
 
 Input:
 
@@ -38,6 +40,7 @@ This query is used to count patients per care site place of service. This query 
 
 Sample query:
 
+```sql
 	select cs.place_of_service_concept_id, count(1) num_patients
 
 	from care_site cs, person p
@@ -47,6 +50,7 @@ Sample query:
 	group by cs.place_of_service_concept_id
 
 	order by 1;
+```
 
 Input:
 

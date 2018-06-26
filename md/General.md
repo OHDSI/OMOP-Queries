@@ -8,6 +8,7 @@ This is the most generic look-up for obtaining concept details associated with a
 
 Sample query:
 
+```sql
     SELECT C.concept_id, C.concept_name, C.concept_code, C.concept_class_id, C.standard_concept, C.vocabulary_id, V.vocabulary_name
 
     FROM concept C, vocabulary V
@@ -19,6 +20,7 @@ Sample query:
     AND sysdate BETWEEN valid_start_date
 
     AND valid_end_date;
+```
 
 Input:
 
@@ -58,6 +60,7 @@ This query extracts all synonyms in the vocabulary for a given Concept ID.
 
 Sample query:
 
+```sql
     SELECT C.concept_id, S.concept_synonym_name
 
     FROM concept C, concept_synonym S, vocabulary V
@@ -69,6 +72,7 @@ Sample query:
     AND C.vocabulary_id = V.vocabulary_id
 
     AND sysdate BETWEEN C.valid_start_date AND C.valid_end_date;
+```
 
 Input:
 
@@ -99,6 +103,7 @@ Note that to unambiguously identify a source code, the vocabulary id has to be p
 
 Sample query:
 
+```sql
     SELECT DISTINCT
 
             c1.domain_id,
@@ -128,6 +133,7 @@ Sample query:
     AND c1.vocabulary_id = 'ICD9CM'
 
     AND sysdate BETWEEN cr.valid_start_date AND cr.valid_end_date;
+```
 
 Input:
 
@@ -177,6 +183,7 @@ In the query only FDB indications and contraindications are returned, but not ND
 
 Sample query:
 
+```sql
     WITH dm AS ( -- collect direct maps
 
     SELECT  c1.concept_code as source_code,
@@ -236,6 +243,7 @@ Sample query:
     JOIN concept dc ON ca.descendant_concept_id = dc.concept_id
 
     WHERE dc.standard_concept = 'S';
+```
 
 Input:
 
@@ -293,6 +301,7 @@ In vocabulary Version 4.0 and above all relationships are bi-directional, ie. al
 
 Sample query:
 
+```sql
     SELECT 'Relates to' relationship_polarity, CR.relationship_ID, RT.relationship_name, D.concept_Id concept_id, D.concept_Name concept_name, D.concept_Code concept_code, D.concept_class_id concept_class_id, D.vocabulary_id concept_vocab_ID, VS.vocabulary_name concept_vocab_name
 
     FROM concept_relationship CR, concept A, concept D, vocabulary VA, vocabulary VS, relationship RT
@@ -332,6 +341,7 @@ Sample query:
     AND sysdate BETWEEN CR.valid_start_date
 
     AND CR.valid_end_date;
+```
 
 Input:
 
@@ -379,6 +389,7 @@ For a concept identifier entered as the input parameter, this query lists all an
 
 Sample query:
 
+```sql
     SELECT C.concept_id as ancestor_concept_id, C.concept_name as ancestor_concept_name, C.concept_code as ancestor_concept_code, C.concept_class_id as ancestor_concept_class_id, C.vocabulary_id, VA.vocabulary_name, A.min_levels_of_separation, A.max_levels_of_separation
 
     FROM concept_ancestor A, concept C, vocabulary VA
@@ -396,6 +407,7 @@ Sample query:
     AND valid_end_date
 
     ORDER BY 5,7;
+```
 
 Input:
 
@@ -437,6 +449,7 @@ For a concept identifier entered as the input parameter, this query lists all de
 
 Sample query:
 
+```sql
     SELECT C.concept_id as descendant_concept_id, C.concept_name as descendant_concept_name, C.concept_code as descendant_concept_code, C.concept_class_id as descendant_concept_class_id, C.vocabulary_id, VA.vocabulary_name, A.min_levels_of_separation, A.max_levels_of_separation
 
     FROM concept_ancestor A, concept C, vocabulary VA
@@ -454,6 +467,7 @@ Sample query:
     AND valid_end_date
 
     ORDER BY 5,7;
+```
 
 Input:
 
@@ -496,6 +510,7 @@ The query returns only the immediate parent concepts that are directly linked to
 
 Sample query:
 
+```sql
     SELECT A.concept_id Parent_concept_id, A.concept_name Parent_concept_name, A.concept_code Parent_concept_code, A.concept_class_id Parent_concept_class_id, A.vocabulary_id Parent_concept_vocab_ID, VA.vocabulary_name Parent_concept_vocab_name
 
     FROM concept_ancestor CA, concept A, concept D, vocabulary VA
@@ -513,6 +528,7 @@ Sample query:
     AND sysdate BETWEEN A.valid_start_date
 
     AND A.valid_end_date;
+```
 
 Input:
 
@@ -552,6 +568,7 @@ The query returns only the immediate child concepts that are directly linked to 
 
 Sample query:
 
+```sql
     SELECT D.concept_id Child_concept_id, D.concept_name Child_concept_name, D.concept_code Child_concept_code, D.concept_class_id Child_concept_class_id, D.vocabulary_id Child_concept_vocab_ID, VS.vocabulary_name Child_concept_vocab_name
 
     FROM concept_ancestor CA, concept D, vocabulary VS
@@ -567,6 +584,7 @@ Sample query:
     AND sysdate BETWEEN D.valid_start_date
 
     AND D.valid_end_date;
+```
 
 Input:
 
@@ -604,6 +622,7 @@ This query returns current vocabulary release number.
 
 Sample query:
 
+```sql
     SELECT vocabulary_name, vocabulary_version FROM vocabulary;
 
 Input:
@@ -631,6 +650,7 @@ This query returns list of available vocabularies.
 Sample query:
 
     SELECT vocabulary_id, vocabulary_name FROM vocabulary WHERE vocabulary_id IS NOT NULL;
+```
 
 Input:
 
@@ -657,6 +677,7 @@ This query produces list and frequency of all relationships between concepts (St
 
 Sample query:
 
+```sql
     SELECT
 
       R.relationship_id,
@@ -726,6 +747,7 @@ Sample query:
       R.relationship_id,
 
       C1.concept_class_id;
+```
 
 Input:
 
@@ -766,6 +788,7 @@ This query generates the list of all vocabularies in the CONCEPT table (Standard
 
 Sample query:
 
+```sql
     SELECT
 
       voc.vocabulary_id,
@@ -803,6 +826,7 @@ Sample query:
     JOIN vocabulary r ON voc.vocabulary_id=r.vocabulary_ID
 
     ORDER BY 1,2,4,3;
+```
 
 Input:
 
@@ -835,6 +859,7 @@ The following query contains the coverage for mapped source vocabularies in the 
 
 Sample query:
 
+```sql
     SELECT
 
       mapped.vocabulary_id,
@@ -920,6 +945,7 @@ Sample query:
       GROUP BY c1.vocabulary_id, v.vocabulary_name, c2.standard_concept
 
     ) mapped;
+```
 
 Input:
 
@@ -960,6 +986,7 @@ The following query contains the coverage for mapped source vocabularies in the 
 
 Sample query:
 
+```sql
     SELECT
 
       mapped.vocabulary_id,
@@ -1041,6 +1068,7 @@ Sample query:
       GROUP BY c1.vocabulary_id, v.vocabulary_name, c2.standard_concept
 
     ) mapped;
+```
 
 Input:
 

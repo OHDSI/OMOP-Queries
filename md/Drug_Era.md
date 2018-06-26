@@ -8,6 +8,7 @@ This query is used to count all gender values (gender_concept_id) for all expose
 
 Sample query:
 
+```sql
     select *
 
      from        drug_exposure e
@@ -39,6 +40,7 @@ Sample query:
                     and e.drug_exposure_start_date BETWEEN r.drug_era_start_date AND r.drug_era_end_date
 
                     )
+```
 
 Input:
 
@@ -73,6 +75,7 @@ This query is used to count all gender values (gender_concept_id) for all expose
 
 Sample query:
 
+```sql
     SELECT        sum(nvl(c.total_paid, 0)) as total_cost4era
 
     FROM        drug_exposure e,
@@ -106,6 +109,7 @@ Sample query:
                     )
 
     AND e. drug_exposure_id = c.cost_event_id
+```
 
 Input:
 
@@ -134,6 +138,7 @@ Average number of distinct ingredients for all patients.
 
 Sample query:
 
+```sql
     SELECT
 
             avg(cnt)
@@ -157,6 +162,7 @@ Sample query:
                             r.person_id
 
             )
+```
 
 Input:
 
@@ -181,6 +187,7 @@ DER04: What proportion of observation time is a person exposed to a given drug?
 
 Sample query:
 
+```sql
     SELECT        decode(o.totalObs, 0, 0, 100\*(e.totExposure\*1.0/o.totalObs\*1.0)) as proportion
 
     FROM
@@ -216,6 +223,7 @@ Sample query:
     where
 
             o.person_id = e.person_id
+```
 
 Input:
 
@@ -242,6 +250,7 @@ DER05: For a given indication, what proportion of patients take each indicated t
 
 Sample query:
 
+```sql
     SELECT tt.concept_id, tt.concept_name, 100\*(tt.cntPersons\*1.0/tt.total\*1.0) AS proportion FROM (
 
     SELECT c.concept_id, c.concept_name, t.cntPersons, sum(cntPersons) over() AS total
@@ -273,6 +282,7 @@ Sample query:
     WHERE t.drug_concept_id = c.concept_id
 
     ) tt
+```
 
 Input:
 
@@ -307,6 +317,7 @@ DER06: For a given class, what proportion of patients take each treatment in the
 
 Sample query:
 
+```sql
     select        tt.concept_id,
 
                     tt.concept_name,
@@ -354,6 +365,7 @@ Sample query:
                     t.drug_concept_id = c.concept_id
 
             ) tt;
+```
 
 Input:
 
@@ -384,6 +396,7 @@ DER07: What is the average time between eras for a given ingredient? ex. steroid
 
 Sample query:
 
+```sql
     select
 
             avg(t.next_era_start - t.drug_era_end_date) as num_days
@@ -409,6 +422,7 @@ Sample query:
     where
 
             t.next_era_start is not null
+```
 
 Input:
 
@@ -437,6 +451,7 @@ This query is used to count the drug concepts across all drug era records. The i
 
 Sample query:
 
+```sql
     SELECT count(1) AS total_count FROM drug_era r WHERE r.drug_concept_id in (1304643, 1549080);
 
 Input:
@@ -471,6 +486,7 @@ Sample query:
     from drug_era r
 
     where r.drug_concept_id in (1304643, 1549080);
+```
 
 Input:
 
@@ -499,6 +515,7 @@ This query is used to to provide summary statistics for drug era end dates (drug
 
 Sample query:
 
+```sql
     SELECT DISTINCT min(tt.end_date) over () AS min_date
 
          , max(tt.end_date) over () AS max_date
@@ -532,6 +549,7 @@ Sample query:
         ) tt
 
             GROUP BY tt.min_date, tt.end_date, tt.end_date_num;
+```
 
 Input:
 
@@ -568,6 +586,7 @@ This query is used to to provide summary statistics for drug era start dates (dr
 
 Sample query:
 
+```sql
     SELECT distinct min(tt.start_date) over () AS min_date , max(tt.start_date) over () AS max_date ,
 
     avg(tt.start_date_num) over () + tt.min_date AS avg_date , (round(stdDev(tt.start_date_num) over ())) AS stdDev_days ,
@@ -587,6 +606,7 @@ Sample query:
     FROM drug_era t ) tt
 
     GROUP BY tt.start_date, tt.start_date_num, tt.min_date;
+```
 
 Input:
 
@@ -625,11 +645,13 @@ This query is used to count the drug types (drug_type_concept_id) across all dru
 
 Sample query:
 
+```sql
     select count(1) as cntRecs, r.drug_type_concept_id
 
     from drug_exposure r
 
     group by r.drug_type_concept_id;
+```
 
 Input:
 
@@ -656,6 +678,7 @@ This query is used to provide summary statistics for the number of number of dif
 
 Sample query:
 
+```sql
     with tt as (
 
       SELECT
@@ -689,6 +712,7 @@ Sample query:
     FROM tt
 
     ;
+```
 
 Input:
 
@@ -727,6 +751,7 @@ This query is used to count the number of different distinct drugs (drug_concept
 
 Sample query:
 
+```sql
     SELECT count(
 
     distinct t.drug_concept_id) AS drug_count, t.person_id
@@ -740,6 +765,7 @@ Sample query:
     distinct t.drug_concept_id)
 
     in (3, 4);
+```
 
 Input:
 
@@ -770,6 +796,7 @@ This query is used to provide summary statistics for the number of drug era reco
 
 Sample query:
 
+```sql
     with tt as
 
     (
@@ -799,6 +826,7 @@ Sample query:
       (select distinct PERCENTILE_DISC(0.75) WITHIN GROUP (ORDER BY tt.stat_value) OVER() from tt) AS percential_75
 
     FROM tt;
+```
 
 Input:
 
@@ -837,6 +865,7 @@ This query is used to count the number of drug era records (drug_era_id) for all
 
 Sample query:
 
+```sql
     SELECT
 
       count(1) AS s_count,
@@ -848,6 +877,7 @@ Sample query:
     group by t.person_id
 
     having count(1) in (3, 4);
+```
 
 Input:
 
@@ -878,6 +908,7 @@ This query is used to count the drug era records stratified by observation month
 
 Sample query:
 
+```sql
     SELECT extract(month
 
     FROM er.drug_era_start_date) month_num, COUNT(1) as eras_in_month_count
@@ -895,6 +926,7 @@ Sample query:
     FROM er.drug_era_start_date)
 
     ORDER BY 1;
+```
 
 Input:
 
@@ -925,6 +957,7 @@ This query is used to provide summary statistics for the age across all drug era
 
 Sample query:
 
+```sql
     SELECT DISTINCT tt.drug_concept_id,
 
             min(tt.stat_value) over () AS min_value,
@@ -956,6 +989,7 @@ Sample query:
            and t.drug_concept_id in (1300978, 1304643, 1549080)
 
         ) tt
+```
 
 
 
@@ -996,6 +1030,7 @@ This query is used to count drugs (drug_concept_id) across all drug exposure rec
 
 Sample query:
 
+```sql
     with tt as (
 
       SELECT
@@ -1039,6 +1074,7 @@ Sample query:
     FROM tt
 
     group by drug_concept_id;
+```
 
 
 
@@ -1084,6 +1120,7 @@ This query is used to count drugs (drug_concept_id) across all drug era records 
 
 Sample query:
 
+```sql
     SELECT
 
       tt.drug_concept_id,
@@ -1149,6 +1186,7 @@ Sample query:
       tt.drug_concept_id
 
     ;
+```
 
 Input:
 
@@ -1186,6 +1224,7 @@ This query is used to summary statistics of the drug era start dates (drug_era_s
 
 Sample query:
 
+```sql
     with tt as (
 
       SELECT
@@ -1233,6 +1272,7 @@ Sample query:
       drug_concept_id
 
     ;
+```
 
 Input:
 
@@ -1275,6 +1315,7 @@ This query is used to count all genders (gender concept_id), stratified by drug 
 
 Sample query:
 
+```sql
     SELECT p.gender_concept_id, count(1) AS stat_value, t.drug_concept_id
 
     FROM drug_era t, person p
@@ -1292,6 +1333,7 @@ Sample query:
     GROUP BY t.drug_concept_id, p.gender_concept_id
 
     ORDER BY t.drug_concept_id, p.gender_concept_id;
+```
 
 Input:
 

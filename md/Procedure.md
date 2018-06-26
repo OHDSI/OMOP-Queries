@@ -11,6 +11,7 @@ The query only returns concepts that are part of the Standard Vocabulary, ie. th
 
 Sample query:
 
+```sql
     SELECT C.concept_id         Entity_Concept_Id,
 
            C.concept_name       Entity_Name,
@@ -52,6 +53,7 @@ Sample query:
            )
 
     AND    sysdate BETWEEN C.valid_start_date AND C.valid_end_date;
+```
 
 Input:
 

@@ -16,6 +16,7 @@ Sample query run:
 
 The following is a sample run of the query. The input parameters are highlighted in  blue.  
 
+```sql
 	set search_path to full_201706_omop_v5;
 
 	SELECT concept.concept_name, drug_concept_id, count(person_id) as num_persons 
@@ -25,6 +26,7 @@ The following is a sample run of the query. The input parameters are highlighted
 	lower(domain_id)='drug' and vocabulary_id='RxNorm' and standard_concept='S'
 	and drug_concept_id in (40165254, 40165258 )
 	GROUP BY concept.concept_name, drug_concept_id;
+```
    
 Output:
 
@@ -59,6 +61,7 @@ Sample query run:
 
 The following is a sample run of the query. The input parameters are highlighted in  blue. s
 
+```sql
 	select drug.concept_name, 
 		EXTRACT( YEAR FROM drug_exposure_start_date ) as year_of_exposure,
 		EXTRACT( YEAR FROM drug_exposure_start_date ) - year_of_birth as age , 
@@ -72,6 +75,7 @@ The following is a sample run of the query. The input parameters are highlighted
 	GROUP by drug.concept_name, gender.concept_name, EXTRACT( YEAR FROM drug_exposure_start_date ),
 	EXTRACT( YEAR FROM drug_exposure_start_date ) - year_of_birth 
 	ORDER BY concept_name, year_of_exposure, age, gender
+```
 
 Output:
 
@@ -110,6 +114,7 @@ Sample query run:
 
 The following is a sample run of the query. The input parameters are highlighted in  blue. 
 
+```sql
 	SELECT 
 		concept_name AS drug_name , 
 		drug_concept_id , 
@@ -133,6 +138,7 @@ The following is a sample run of the query. The input parameters are highlighted
 	JOIN concept ON concept_id = drug_concept_id 
 	WHERE domain_id='Drug' and standard_concept='S'
 	GROUP BY concept_name, drug_concept_id;
+```
 
 Output:
 
@@ -182,6 +188,7 @@ Sample query run:
 
 The following is a sample run of the query. The input parameters are highlighted in  blue. 
 
+```sql
 	select drug.concept_name as drug_name, 
 			drug_concept_id,	
 			gender.concept_name as gender,
@@ -193,6 +200,7 @@ The following is a sample run of the query. The input parameters are highlighted
 	where drug_concept_id IN ( 40165254, 40165258 ) 
 	GROUP by drug.concept_name, drug_concept_id, gender.concept_name 
 	ORDER BY drug_name, drug_concept_id, gender;
+```
 
 Output:
 
@@ -232,6 +240,7 @@ Sample query run:
 The following is a sample run of the query. The input parameters are highlighted in  blue. S
 
 
+```sql
 	SELECT 
 	concept_name as drug_name, drug_concept_id, count(*) as num_records 
 	FROM 
@@ -241,6 +250,7 @@ The following is a sample run of the query. The input parameters are highlighted
 	lower(domain_id)='drug' and vocabulary_id='RxNorm' and standard_concept='S'
 	and drug_concept_id IN (40165254,40165258)
 	GROUP BY concept_name, drug_concept_id;
+```
 
 Output:
 
@@ -273,6 +283,7 @@ Sample query run:
 
 The following is a sample run of the query.  
 
+```sql
 	SELECT 
 	count(distinct drug_concept_id) as number_drugs 
 	FROM 
@@ -280,6 +291,7 @@ The following is a sample run of the query.
 	ON concept_id = drug_concept_id 
 	WHERE 
 	lower(domain_id)='drug' and vocabulary_id='RxNorm' and standard_concept='S'; 
+```
 
 Output:
 
@@ -311,6 +323,7 @@ Sample query run:
 
 The following is a sample run of the query. The input parameters are highlighted in  blue. 
 
+```sql
 	select max(exposures ) as exposures_count from 
 	(SELECT 
 	drug_exposure.person_id, COUNT(*) exposures 
@@ -321,6 +334,7 @@ The following is a sample run of the query. The input parameters are highlighted
 							WHERE lower(domain_id)='drug' and vocabulary_id='RxNorm' and standard_concept='S')
 	AND drug_exposure_start_date BETWEEN '2017-01-01' AND '2017-12-31' 
 	GROUP BY drug_exposure.person_id);
+```
 
 Output:
 
@@ -353,6 +367,7 @@ Sample query run:
 
 The following is a sample run of the query. The input parameters are highlighted in  blue. s
 
+```sql
 	select max(drugs) as drugs_count from 
 	(SELECT 
 	COUNT( DISTINCT drug_concept_id) drugs 
@@ -363,6 +378,7 @@ The following is a sample run of the query. The input parameters are highlighted
 							WHERE lower(domain_id)='drug' and vocabulary_id='RxNorm' and standard_concept='S')
 	AND drug_exposure_start_date BETWEEN '2017-01-01' AND '2017-12-31' 
 	GROUP BY drug_exposure.person_id);
+```
 
 Output:
 
@@ -394,6 +410,7 @@ Sample query run:
 
 The following is a sample run of the query. The input parameters are highlighted in  blue.  
 
+```sql
 	SELECT MIN ( drugs ) AS min , 
 	approximate  PERCENTILE_DISC(0.25) WITHIN GROUP( ORDER BY drugs ) as percentile_25, 
 	ROUND ( AVG ( drugs ), 2 ) AS mean, 
@@ -404,6 +421,7 @@ The following is a sample run of the query. The input parameters are highlighted
 	 FROM  (SELECT person_id, NVL( drugs, 0 ) AS drugs FROM person  JOIN 
 	 ( SELECT person_id, COUNT( DISTINCT drug_concept_id ) AS drugs FROM drug_exposure 
 	 WHERE drug_exposure_start_date BETWEEN '2017-01-01' AND '2017-12-31' GROUP BY person_id ) USING( person_id ) );
+```
 
 Output:
 
@@ -449,6 +467,7 @@ Sample query run:
 
 The following is a sample run of the query. The input parameters are highlighted in  blue.
 
+```sql
 	SELECT concept_name, COUNT(1) as persons
 	FROM ( 
 	--Other drugs people are taking
@@ -471,6 +490,7 @@ The following is a sample run of the query. The input parameters are highlighted
 	  )
 	JOIN concept ON concept_id = drug_concept_id
 	GROUP By concept_name ORDER BY persons DESC;
+```
 
 Output:
 
@@ -504,6 +524,7 @@ Sample query run:
 
 The following is a sample run of the query. The input parameters are highlighted in  blue. S
 
+```sql
 	SELECT	tt.drug_name,
 			tt.brand_name,
 			100.00*tt.part_brand/tt.total_brand as perc_brand_count
@@ -542,6 +563,7 @@ The following is a sample run of the query. The input parameters are highlighted
 					) t 
 		) tt
 	WHERE tt.total_brand > 0 ;
+```
 
 Output:
 
@@ -576,6 +598,7 @@ Sample query run:
 
 The following is a sample run of the query. The input parameter is highlighted in  blue. 
 
+```sql
 	SELECT tt.form_name,
 	(100.00 * tt.part_form / tt.total_forms) as percent_forms
 	FROM (
@@ -608,6 +631,7 @@ The following is a sample run of the query. The input parameter is highlighted i
 	) tt
 	WHERE tt.total_forms > 0 --avoid division by 0
 	ORDER BY percent_forms desc;
+```
 
 Output:
 
@@ -641,6 +665,7 @@ Sample query run:
 
 The following is a sample run of the query. The input parameters are highlighted in  blue.
 
+```sql
 	SELECT  concept_name AS specialty, 
 	  count(*) AS prescriptions_count
 	  FROM 
@@ -656,6 +681,7 @@ The following is a sample run of the query. The input parameters are highlighted
 	  AND concept.standard_concept='S'
 	  GROUP BY concept_name
 	  ORDER BY prescriptions_count desc;
+```
 
 Output:
 
@@ -689,6 +715,7 @@ Sample query run:
 
 The following is a sample run of the query. The input parameters are highlighted in  blue  S
 
+```sql
 	SELECT count(*) AS num_A_users , SUM( bp_also ) AS num_also_using_B 
 	FROM /* people taking statin and possible taking antihypertensive agent */ 
 		( SELECT statin.person_id, MAX( NVL( bp, 0 ) ) AS bp_also 
@@ -718,6 +745,7 @@ The following is a sample run of the query. The input parameters are highlighted
 		AND bp.drug_exposure_start_date < statin.drug_exposure_end_date 
 		AND bp.drug_exposure_end_date > statin.drug_exposure_start_date 
 		GROUP BY statin.person_id );
+```
 
 Output:
 
@@ -756,6 +784,7 @@ Sample query run:
 
 The following is a sample run of the query. The input parameters are highlighted in  blue.
 
+```sql
 	SELECT
 		floor( ( observation_period_end_date - index_date ) / 365 ) AS follow_up_years, 
 		count(*) AS persons FROM /* statin users with 180 clean period and at least 1 year follow up period */ 
@@ -782,6 +811,7 @@ The following is a sample run of the query. The input parameters are highlighted
 		) 
 	GROUP BY floor( ( observation_period_end_date - index_date ) / 365 ) 
 	ORDER BY 1; 
+```
 
 Output:
 
@@ -822,6 +852,7 @@ Sample query run:
 
 The following is a sample run of the query. The input parameters are highlighted in  blue  S
 
+```sql
 	SELECT concept_name, 
 	count(*) AS number_of_eras , 
 	avg( treatment_length ) AS average_treatment_length_count , 
@@ -852,6 +883,7 @@ The following is a sample run of the query. The input parameters are highlighted
 		GROUP BY person_id, concept_name, drug_era_start_date, treatment_length ) 
 	WHERE treatment_length > 100 and null_day_supply > 0 
 	GROUP BY concept_name;
+```
 
 Output:
 
@@ -900,10 +932,12 @@ Sample query run:
 
 The following is a sample run of the query. The input parameters are highlighted in  blue. S
 
+```sql
 	SELECT stop_reason, count(*) AS reason_freq 
 	FROM drug_exposure 
 	WHERE 
 	stop_reason IS NOT null GROUP BY stop_reason ORDER BY reason_freq DESC;
+```
 
 Output:
 
@@ -931,12 +965,14 @@ Sample query run:
 
 The following is a sample run of the query. The input parameters are highlighted in blue.
 
+```sql
 	SELECT 
 	concept_name, count(*) as drug_type_count 
 	FROM 
 	drug_exposure JOIN concept 
 	ON concept_id = drug_type_concept_id 
 	GROUP BY concept_name ORDER BY drug_type_count DESC; 
+```
 
 Output:
 
@@ -968,6 +1004,7 @@ Sample query run:
 
 The following is a sample run of the query. The input parameters are highlighted in 
 
+```sql
 	SELECT concept_name, count( distinct person_id ) 
 	 FROM drug_exposure JOIN /* indication and associated drug ids */
 	 	(select indication.concept_name, drug.concept_id
@@ -984,6 +1021,7 @@ The following is a sample run of the query. The input parameters are highlighted
 			AND drug.standard_concept='S'
 		)
 	ON concept_id = drug_concept_id GROUP BY concept_name;
+```
 
 Output:
 
@@ -1018,6 +1056,7 @@ Sample query run:
 The following is a sample run of the query. The input parameters are highlighted in  blue 
 
 
+```sql
 	SELECT 
 		count(*) AS treated 
 		FROM /* person and tuberculosis treatment start date */ 
@@ -1054,6 +1093,7 @@ The following is a sample run of the query. The input parameters are highlighted
 				AND	vocabulary_id ='ICD9CM'
 				GROUP BY person_id
 		) diagnosed 
+```
 
 Output:
 
@@ -1085,6 +1125,7 @@ Sample query run:
 The following is a sample run of the query. The input parameters are highlighted in  blue  ;
 
 
+```sql
 	;WITH con_rel AS		
 		(
 		SELECT
@@ -1108,6 +1149,7 @@ The following is a sample run of the query. The input parameters are highlighted
 				AND	d.person_id		= c.person_id
 	where
 		d.drug_exposure_start_date >= c.condition_start_date 
+```
 
 Output:
 
@@ -1136,11 +1178,13 @@ Sample query run:
 
 The following is a sample run of the query. The input parameters are highlighted in  blue. S
 
+```sql
 	SELECT count(distinct d.person_id) as person_count FROM concept_ancestor ca, drug_exposure d 
 	WHERE 
 	d.drug_concept_id = ca.descendant_concept_id 
 	and ca.ancestor_concept_id = 4324992
 	group by ca.ancestor_concept_id ;
+```
 
 Output:
 
@@ -1167,6 +1211,7 @@ Sample query run:
 
 The following is a sample run of the query. The input parameters are highlighted in  blue  
 
+```sql
 	SELECT 
 		min(tt.stat_value) AS min_value , 
 		max(tt.stat_value) AS max_value , 
@@ -1177,6 +1222,7 @@ The following is a sample run of the query. The input parameters are highlighted
 		APPROXIMATE PERCENTILE_DISC(0.75) WITHIN GROUP (ORDER BY tt.stat_value ) AS percential_75 
 	FROM 
 		( SELECT t.days_supply AS stat_value FROM drug_exposure t where t.days_supply > 0 ) tt ;
+```
 
 Output:
 
@@ -1220,11 +1266,13 @@ Sample query run:
 
 The following is a sample run of the query. The input parameters are highlighted in  blue.  
 
+```sql
 	SELECT t.days_supply, count(1) AS cnt
 	FROM drug_exposure t
 	WHERE t.days_supply in (2,3) 
 	GROUP BY t.days_supply
 	ORDER BY days_supply;
+```
 
 Output:
 
@@ -1257,10 +1305,12 @@ Sample query run:
 
 The following is a sample run of the query. The input parameters are highlighted in  blue.
 
+```sql
 	SELECT count(1) as exposure_occurrence_count  
 	FROM drug_exposure 
 	WHERE 
 	drug_concept_id in (906805, 1517070, 19010522);
+```
 
 Output:
 
@@ -1287,6 +1337,7 @@ Sample query run:
 
 The following is a sample run of the query. 
 
+```sql
 	SELECT			
 		min(tt.end_date) AS min_date , 
 		max(tt.end_date) AS max_date , 
@@ -1302,6 +1353,7 @@ The following is a sample run of the query.
 				MIN(t.drug_exposure_end_date) OVER() min_date 
 			 FROM drug_exposure t ) tt 
 	GROUP BY tt.min_date ;
+```
 
 Output:
 
@@ -1339,6 +1391,7 @@ Sample query run:
 
 The following is a sample run of the query.  
 
+```sql
 	SELECT
 		min(tt.start_date) AS min_date , 
 		max(tt.start_date) AS max_date , 
@@ -1355,6 +1408,7 @@ The following is a sample run of the query.
 		FROM drug_exposure t 
 		) tt 
 	GROUP BY tt.min_date ; 
+```
 
 Output:
 
@@ -1398,11 +1452,13 @@ Sample query run:
 
 The following is a sample run of the query. The input parameters are highlighted in  blue 
 
+```sql
 	SELECT count(1) as exposure_occurrence_count , drug_type_concept_id FROM drug_exposure 
 	WHERE 
 	drug_concept_id in (select distinct drug_concept_id from drug_era)
 	AND drug_type_concept_id in (38000175, 38000180) 
 	GROUP BY drug_type_concept_id ;
+```
 
 Output:
 
@@ -1432,6 +1488,7 @@ Sample query run:
 
 The following is a sample run of the query. The input parameters are highlighted in  blue
 
+```sql
 	SELECT 
 	 	min(tt.stat_value) AS min_value , 
 		max(tt.stat_value) AS max_value , 
@@ -1445,6 +1502,7 @@ The following is a sample run of the query. The input parameters are highlighted
 			FROM drug_exposure t 
 	 		where nvl(t.drug_concept_id, 0) > 0 
 			group by t.person_id ) tt ;
+```
 
 Output:
 
@@ -1487,9 +1545,11 @@ Sample query run:
 
 The following is a sample run of the query. The input parameters are highlighted in  blue  S
 
+```sql
 	SELECT count(distinct t.drug_concept_id) AS stat_value, t.person_id
 	FROM drug_exposure t
 	GROUP BY t.person_id HAVING count(DISTINCT t.drug_concept_id) in (15,22);
+```
 
 Output:
 
@@ -1517,6 +1577,7 @@ Sample query run:
 
 The following is a sample run of the query. 
 
+```sql
 	SELECT 
 		min(tt.stat_value) AS min_value , 
 		max(tt.stat_value) AS max_value , 
@@ -1530,6 +1591,7 @@ The following is a sample run of the query.
 			FROM drug_exposure t 
 			group by t.person_id 
 		) tt ; 
+```
 
 Output:
 
@@ -1572,10 +1634,12 @@ Sample query run:
 
 The following is a sample run of the query. The input parameters are highlighted in  blue  S
 
+```sql
 	SELECT count(1) AS stat_value, person_id
 	FROM drug_exposure
 	group by person_id
 	having count(1) in (3,4);
+```
 
 Output:
 
@@ -1610,10 +1674,12 @@ Sample query run:
 
 The following is a sample run of the query. The input parameters are highlighted in  blue 
 
+```sql
 	select extract(month from d.drug_exposure_start_date) month_num, COUNT(1) as exp_in_month_count 
 	from drug_exposure d 
 	where extract(month from d.drug_exposure_start_date) in (3, 5) 
 	group by extract(month from d.drug_exposure_start_date) order by 1 
+```
 
 Output:
 
@@ -1643,6 +1709,7 @@ Sample query run:
 
 The following is a sample run of the query. 
 
+```sql
 	SELECT 
 		min(tt.stat_value) AS min_value , 
 		max(tt.stat_value) AS max_value , 
@@ -1656,6 +1723,7 @@ The following is a sample run of the query.
 			FROM drug_exposure t 
 			where t.quantity > 0 
 		) tt ;
+```
 
 Output:
 
@@ -1700,10 +1768,12 @@ Sample query run:
 
 The following is a sample run of the query. 
 
+```sql
 	SELECT count(1) as drug_quantity_count, d.quantity
 	FROM drug_exposure d 
 	WHERE d.quantity in (10, 20) 
 	GROUP BY d.quantity ;
+```
 
 Output:
 
@@ -1732,6 +1802,7 @@ Sample query run:
 
 The following is a sample run of the query. 
 
+```sql
 	SELECT 
 		min(tt.stat_value) AS min_value , 
 		max(tt.stat_value) AS max_value , 
@@ -1746,6 +1817,7 @@ The following is a sample run of the query.
 			FROM drug_exposure t 
 			where t.refills > 0 
 		) tt ; 
+```
 
 Output:
 
@@ -1790,10 +1862,12 @@ Sample query run:
 
 The following is a sample run of the query. The input parameters are highlighted in  blue 
 
+```sql
 	SELECT count(1) as drug_exposure_count, d.refills AS refills_count 
 	FROM drug_exposure d 
 	WHERE d.refills in (10, 20) 
 	GROUP BY d.refills ;
+```
 
 Output:
 
@@ -1830,9 +1904,11 @@ Sample query run:
 
 The following is a sample run of the query. The input parameters are highlighted in  blue 
 
+```sql
 	select count(1) as totExp , d.stop_reason from drug_exposure d 
 	where d.stop_reason in ('INVALID') 
 	group by d.stop_reason ;
+```
 
 Output:
 
@@ -1871,12 +1947,14 @@ Sample query run:
 
 The following is a sample run of the query. The input parameters are highlighted in  blue 
 
+```sql
 	SELECT t.drug_concept_id, count(1) as drugs_count, t.drug_TYPE_concept_id 
 	FROM drug_exposure t 
 	where
 	    t.drug_concept_id in (906805, 1517070, 19010522) 
 	and t.drug_TYPE_concept_id in ( 38000175,38000179 ) 
 	group by t.drug_TYPE_concept_id, t.drug_concept_id ;
+```
 
 Output:
 
@@ -1914,6 +1992,7 @@ Sample query run:
 
 The following is a sample run of the query. The input parameters are highlighted in  blue 
 
+```sql
 	SELECT 
 	  t.drug_concept_id,
 	  count(1) as drugs_count,
@@ -1932,6 +2011,7 @@ The following is a sample run of the query. The input parameters are highlighted
 	  and t.relevant_condition_concept_id in (26052, 258375)
 	group by  t.relevant_condition_concept_id, t.drug_concept_id
 	;
+```
 
 Output:
 
@@ -1967,6 +2047,7 @@ Sample query run:
 
 The following is a sample run of the query. The input parameters are highlighted in  blue
 
+```sql
 	SELECT 
 		tt.drug_concept_id , 
 		min(tt.start_date) AS min_date , 
@@ -1987,6 +2068,7 @@ The following is a sample run of the query. The input parameters are highlighted
 			where t.drug_concept_id in (906805, 1517070, 19010522) 
 		) tt 
 	GROUP BY tt.min_date , tt.drug_concept_id order by tt.drug_concept_id ;
+```
 
 Output:
 
@@ -2034,6 +2116,7 @@ Sample query run:
 
 The following is a sample run of the query. The input parameters are highlighted in  blue
 
+```sql
 	SELECT p.gender_concept_id, count(1) as gender_count, t.drug_concept_id 
 	FROM drug_exposure t, person p 
 	where p.person_id = t.person_id
@@ -2041,6 +2124,7 @@ The following is a sample run of the query. The input parameters are highlighted
 	and p.gender_concept_id in (8507, 8532)
 	group by t.drug_concept_id, p.gender_concept_id
 	order by t.drug_concept_id, p.gender_concept_id; 
+```
 
 Output:
 
@@ -2076,11 +2160,13 @@ Sample query run:
 
 The following is a sample run of the query. The input parameters are highlighted in  blue 
 
+```sql
 	SELECT t.drug_concept_id, t.person_id, count(1) as drug_exposure_count 
 	FROM drug_exposure t 
 	where t.drug_concept_id in (906805, 1517070, 19010522) 
 	group by t.person_id, t.drug_concept_id 
 	order by t.drug_concept_id, t.person_id;
+```
 
 Output:
 
