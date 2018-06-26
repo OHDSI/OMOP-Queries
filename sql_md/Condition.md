@@ -20,6 +20,7 @@ The following is a sample run of the query to run a search for specific disease 
 
 The input parameters are highlighted in  blue.
 
+```sql
 	SELECT 
 	  C.concept_id Condition_concept_id, 
 	  C.concept_name Condition_concept_name, 
@@ -38,6 +39,7 @@ The input parameters are highlighted in  blue.
 	  C.concept_id = 192671 AND 
 	  C.vocabulary_id = V.vocabulary_id AND 
 	  sysdate BETWEEN valid_start_date AND valid_end_date;
+```
 
 Output:
 
@@ -84,6 +86,7 @@ Sample query run:
 
 The following is a sample run of the query to run a search of the Condition domain for keyword 'myocardial infarction'. The input parameters are highlighted in  blue.
 
+```sql
 	SELECT 
 	  T.Entity_Concept_Id, 
 	  T.Entity_Name, 
@@ -115,7 +118,7 @@ The following is a sample run of the query to run a search of the Condition doma
 	  ) T
 	WHERE sysdate BETWEEN valid_start_date AND valid_end_date 
 	ORDER BY 6,2;
-
+```
 
 Output:
 
@@ -168,6 +171,7 @@ Sample query run:
 
 The following is a sample run of the query to list MedDRA equivalents for SNOMED-CT concept whose concept ID is entered as input. 
 
+```sql
 	SELECT	D.concept_id Snomed_concept_id,
 			D.concept_name Snomed_concept_name,
 			D.concept_code Snomed_concept_code,
@@ -186,6 +190,7 @@ The following is a sample run of the query to list MedDRA equivalents for SNOMED
 	AND CR.relationship_id = RT.relationship_id 
 	AND sysdate BETWEEN CR.valid_start_date 
 	AND CR.valid_end_date;
+```
 
 Output:
 
@@ -236,6 +241,7 @@ Sample query run:
 
 The following is a sample run of the query to list all MedDRA concepts that have SNOMED-CT equivalents. Sample parameter substitution is highlighted in  blue.
 
+```sql
 	SELECT	D.concept_id MedDRA_concept_id,
 			D.concept_name MedDRA_concept_name,
 			D.concept_code MedDRA_concept_code,
@@ -255,6 +261,7 @@ The following is a sample run of the query to list all MedDRA concepts that have
 	AND CR.relationship_id = RT.relationship_id 
 	AND sysdate BETWEEN CR.valid_start_date 
 	AND CR.valid_end_date;
+```
 
 Output:
 
@@ -315,6 +322,7 @@ Sample query run:
 
 The following is a sample run of the query to list SNOMED-CT concepts that a set of mapped codes entered as input map to. The sample parameter substitutions are highlighted in  blue 
 
+```sql
 	set search_path to full_201612_omop_v5;
 
 	SELECT DISTINCT 
@@ -349,6 +357,7 @@ The following is a sample run of the query to list SNOMED-CT concepts that a set
 	AND
 	sysdate                                           
 	BETWEEN c1.valid_start_date AND c1.valid_end_date;
+```
 
 Output:
 
@@ -401,6 +410,7 @@ Sample query run:
 
 The following is a sample run of the query to list all source codes that map to a SNOMED-CT concept entered as input. The sample parameter substitutions are highlighted in  blue.
 
+```sql
 	SELECT DISTINCT
 	  c1.concept_code,
 	  c1.concept_name,
@@ -433,6 +443,7 @@ The following is a sample run of the query to list all source codes that map to 
 	AND
 	sysdate                                           
 	BETWEEN c2.valid_start_date AND c2.valid_end_date;
+```
 
 Output:
 
@@ -484,6 +495,7 @@ Sample query run:
 
 The following is a sample run of the query to list all pathogens specified using a keyword as input. The sample parameter substitutions are highlighted in  blue.
 
+```sql
 	SELECT 
 	  C.concept_id Pathogen_Concept_ID, 
 	  C.concept_name Pathogen_Concept_Name, 
@@ -502,6 +514,7 @@ The following is a sample run of the query to list all pathogens specified using
 	AND C.vocabulary_id = V.vocabulary_id AND
 	sysdate                                        
 	BETWEEN C.valid_start_date AND C.valid_end_date;
+```
 
 Output:
 
@@ -553,6 +566,7 @@ Sample query run:
 
 The following is a sample run of the query to list all pathogens specified using a keyword as input. The sample parameter substitutions are highlighted in  blue.
 
+```
 	SELECT
 	  C.concept_id Agent_Concept_ID,
 	  C.concept_name Agent_Concept_Name,
@@ -572,6 +586,7 @@ The following is a sample run of the query to list all pathogens specified using
 	AND C.vocabulary_id = V.vocabulary_id AND
 	sysdate                                        
 	BETWEEN C.valid_start_date AND C.valid_end_date;
+```
 
 Output:
 
@@ -615,6 +630,7 @@ Sample query run:
 
 The following is a sample run of the query to list conditions caused by pathogen or causative agent. Sample parameter substitution is highlighted in  blue.
 
+```sql
 	SELECT 
 	  A.concept_Id Condition_ID, 
 	  A.concept_Name Condition_name, 
@@ -644,6 +660,7 @@ The following is a sample run of the query to list conditions caused by pathogen
 	  AND D.vocabulary_id = VS.vocabulary_id AND 
 	sysdate                                             
 	  BETWEEN CR.valid_start_date AND CR.valid_end_date;
+```
 
 Output:
 
@@ -697,6 +714,7 @@ Sample query run:
 
 The following is a sample run of the query to list all anatomical site concept IDs specified using a keyword as input. The sample parameter substitutions are highlighted in  blue.
 
+```sql
 	SELECT 
 	  C.concept_id Anatomical_site_ID, 
 	  C.concept_name Anatomical_site_Name, 
@@ -715,6 +733,7 @@ The following is a sample run of the query to list all anatomical site concept I
 	AND C.vocabulary_id = V.vocabulary_id AND
 	sysdate                                          
 	BETWEEN C.valid_start_date AND C.valid_end_date;
+```
 
 Output:
 
@@ -754,6 +773,7 @@ Sample query run:
 
 The following is a sample run of the query to list conditions located in the anatomical site.
 
+```sql
 	SELECT
 	  A.concept_Id Condition_ID,
 	  A.concept_Name Condition_name,
@@ -783,6 +803,7 @@ The following is a sample run of the query to list conditions located in the ana
 	  AND D.vocabulary_id = VS.vocabulary_id AND
 	sysdate                                             --input
 	  BETWEEN CR.valid_start_date AND CR.valid_end_date;
+```
 
  Output: 
 
