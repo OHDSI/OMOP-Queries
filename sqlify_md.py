@@ -53,7 +53,7 @@ def write_md(fl, flnm):
 
 if __name__ == '__main__':
     if len(sys.argv[1:]) != 1:
-        stop('This script accepts one parameter: the path to a folder containing markdown files.')
+        raise ValueError('This script accepts one parameter: the path to a folder containing markdown files.')
     md_fldr = sys.argv[1]
     os.makedirs('sql_' + md_fldr)
     filenames = sorted(os.listdir("./md"))
